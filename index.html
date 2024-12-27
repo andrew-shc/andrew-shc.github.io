@@ -148,8 +148,8 @@
 
     const x_1 = 50;
     const p_2 = [0.70*width, 0.62*height];
-    const p_3 = [0.95*width, 0.68*height];
-    const p_4 = [0.80*width, 1.20*height];
+    const p_3 = [0.90*width, 0.68*height];
+    const p_4 = [0.80*width, 1.10*height];
 
     const m = (p_3[1]-p_2[1])/(p_3[0]-p_2[0]);
     const p_1 = [x_1,m*x_1-m*p_4[0]+p_4[1]];
@@ -172,9 +172,15 @@
     // });
 
     window.addEventListener('scroll', function() {
-        // Get the scroll position of the scrollable element
-        let scrollPosition = scrollableDiv.scrollTop;
-        console.log(scrollPosition);
+        const scrollTop = window.scrollY; // Vertical scroll position
+        const docHeight = document.documentElement.scrollHeight; // Total height of the document
+        const winHeight = window.innerHeight; // Height of the visible part of the window
+
+        // Calculate the scroll percentage
+        const scrollPercentage = (scrollTop / (docHeight - winHeight)) * 100;
+        
+        console.log(scrollPercentage);
+        console.log(window.scrollY);
     });
 
     // drawPoint(p_1, "blue");
