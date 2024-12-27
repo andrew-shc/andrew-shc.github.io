@@ -129,8 +129,8 @@ header, section {
 }
 
 article {
-    margin-left: 5px;
-    margin-right: 15px;
+    margin-left: 7px;
+    margin-right: 7px;
 
     border-radius: 0px;
     border-width: 1px;
@@ -177,26 +177,4 @@ footer {
     margin-left: -5px;
     margin-top: -15px;
     margin-bottom: 15px;
-}
-
-.line {
-    position: absolute;
-    width: 1px; /* Thickness of the line */
-    background-color: red;
-    transform-origin: top left;
-}
-
-#1 {
-    transform: rotate(45deg);
-    margin: 20px;
-}
-
-#2 {
-    transform: rotate(45deg);
-    margin: 50px;
-}
-
-#3 {
-    transform: rotate(75deg);
-    margin: 20px;
 }
