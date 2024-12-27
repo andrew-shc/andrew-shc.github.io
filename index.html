@@ -146,23 +146,28 @@
         return [(1-t)*x_a + t*x_b, (1-t)*y_a + t*y_b];
     }
 
-    const x_1 = 50;
-    const p_2 = [0.70*width, 0.62*height];
-    const p_3 = [0.90*width, 0.68*height];
-    const p_4 = [0.80*width, 1.10*height];
+    function renderLattice(x_1, p_2, x_3, x_4) {
+        const m = (p_3[1]-p_2[1])/(p_3[0]-p_2[0]);
+        const p_1 = [x_1,m*x_1-m*p_4[0]+p_4[1]];
 
-    const m = (p_3[1]-p_2[1])/(p_3[0]-p_2[0]);
-    const p_1 = [x_1,m*x_1-m*p_4[0]+p_4[1]];
+        const N_x = 30;
+        const N_y = 30;
 
-    const N_x = 30;
-    const N_y = 30;
-
-    for(let i=0; i<=N_x; i++) {
-        infLine(lerp(i/N_x,p_1,p_4), lerp(i/N_x,p_2,p_3));
+        for(let i=0; i<=N_x; i++) {
+            infLine(lerp(i/N_x,p_1,p_4), lerp(i/N_x,p_2,p_3));
+        }
+        for(let i=0; i<=N_y; i++) {
+            infLine(lerp(i/N_y,p_1,p_2), lerp(i/N_y,p_4,p_3));
+        }
     }
-    for(let i=0; i<=N_y; i++) {
-        infLine(lerp(i/N_y,p_1,p_2), lerp(i/N_y,p_4,p_3));
-    }
+
+    renderLattice(
+        /*x_1*/ 50,
+        /*p_2*/ [0.70*width, 0.62*height],
+        /*p_3*/ [0.90*width, 0.68*height],
+        /*p_4*/ [0.80*width, 1.10*height],
+    );
+
     // document.querySelectorAll('.main').forEach(function(el) {
     //     el.addEventListener('scroll', function() {
     //         // Get the scroll position of the scrollable element
@@ -177,10 +182,17 @@
         const winHeight = window.innerHeight; // Height of the visible part of the window
 
         // Calculate the scroll percentage
-        const scrollPercentage = (scrollTop / (docHeight - winHeight)) * 100;
+        const scrollP = (scrollTop / (docHeight - winHeight)) * 100;
         
-        console.log(scrollPercentage);
+        console.log(scrollP);
         console.log(window.scrollY);
+
+        renderLattice(
+            /*x_1*/ 50,
+            /*p_2*/ [0.70*width, (0.62+0.05*scrollP)*height],
+            /*p_3*/ [0.90*width, (0.68+0.07*scrollP)*height],
+            /*p_4*/ [0.80*width, (1.10+0.15*scrollP)*height],
+        );
     });
 
     // drawPoint(p_1, "blue");
