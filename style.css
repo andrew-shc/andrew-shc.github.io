@@ -1,6 +1,46 @@
+/* font (make sure to ctrl+shift+r) */
+
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-bolditalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+
 h1, h2, h3 {
     font-family: 'Lora', serif;
 }
+
+p, a {
+    font-family: 'Zed', sans-serif;
+}
+
+/* colors */
+
+body {
+    background-color: aqua;
+}
+
+/* layout */
 
 html {
     height: 100%;
@@ -8,9 +48,6 @@ html {
     margin: 0;       /* Remove any default margin on html */
     padding: 0;      /* Remove any default padding on html */
 }
-
-/* html, body {
-} */
 
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1200px) {
@@ -34,7 +71,6 @@ body {
     scroll-behavior: smooth;
 
     width: 100%;
-    max-width: 600px;
     padding: 20px;
     margin: 0 auto; /* Horizontally center the body */
     min-height: 100%;
@@ -43,11 +79,15 @@ body {
 header, footer, section {
     text-align: left;  /* Ensure text is aligned to the left */
     width: 100%; /* Make sure each section takes full width */
+    margin-left: 20px;
 }
 
+
+/* custom CSS components */
+
 .horizontal-bar {
-    width: 80%;         /* Set the width to 80% of the body */
-    height: 10px;       /* Set the height of the bar */
+    width: 95%;         /* Set the width to 80% of the body */
+    height: 2px;       /* Set the height of the bar */
     background-color: #3498db; /* Optional: Set a background color for the bar */
     margin: 0 auto;     /* Center the bar horizontally */
 }
