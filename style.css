@@ -148,6 +148,15 @@ footer {
     text-align: center;
 }
 
+svg {
+    position: absolute; /* Position the SVG behind all content */
+    top: 0;
+    left: 0;
+    width: 100vw;   /* Full width of the viewport */
+    height: 100vh;  /* Full height of the viewport */
+    z-index: -1;    /* Place it behind other elements */
+}
+
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
     body {

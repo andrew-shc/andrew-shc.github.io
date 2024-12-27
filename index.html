@@ -96,7 +96,7 @@
         <p>&copy; 2024 Andrew Shen</p>
     </footer>
 
-    <svg id="lattice" height="100%" width="100%">
+    <svg id="lattice">
         <line x1="0" y1="0" x2="300" y2="200" style="stroke:red;stroke-width:2" />
         <line x1="0" y1="0" x2="200" y2="500" style="stroke:red;stroke-width:2" />
         <line x1="0" y1="0" x2="100" y2="1000" style="stroke:red;stroke-width:2" />
@@ -105,9 +105,11 @@
 
 <script>
     const svg = document.getElementById('lattice');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
     // Function to create a line dynamically
-    function createLine(x1, y1, x2, y2, strokeColor = 'red', strokeWidth = 1) {
+    function createLine([x1, y1], [x2, y2], strokeColor = 'red', strokeWidth = 1) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
         line.setAttribute('x1', x1);  // Starting X position
@@ -118,11 +120,55 @@
         line.setAttribute('stroke-width', strokeWidth);  // Line width
         svg.appendChild(line);  // Add the line to the SVG container
     }
+    function drawPoint([x, y], color = "blue", radius = 5) {
+        // Create a circle element for the point
+        const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 
-    // Example: Generate multiple lines dynamically
-    createLine(50, 50, 200, 50);  // Horizontal line from (50, 50) to (200, 50)
-    createLine(50, 100, 200, 200); // Diagonal line from (50, 100) to (200, 200)
-    createLine(150, 150, 350, 150);
+        // Set the properties for the point (circle)
+        point.setAttribute("cx", x);      // X position
+        point.setAttribute("cy", y);      // Y position
+        point.setAttribute("r", radius);  // Radius (thickness of the point)
+        point.setAttribute("fill", color); // Color of the point
+
+        // Append the point (circle) to the SVG container
+        svg.appendChild(point);
+    }
+
+    function evalLine(x, [x_a, y_a],[x_b, y_b]) {
+        return ((y_a-y_b)/(x_a-x_b)) * (x-x_a) + y_a;
+    }
+
+    function infLine(p_a, p_b, start=0, end=700) {
+        createLine([start, evalLine(start, p_a, p_b)],
+                [end,   evalLine(end,   p_a, p_b)]);
+    }
+
+    function lerp(t,[x_a, y_a],[x_b, y_b]) {
+        return [(1-t)*x_a + t*x_b, (1-t)*y_a + t*y_b];
+    }
+
+    const x_1 = 200;
+    const p_2 = [500, 200];
+    const p_3 = [600, 250];
+    const p_4 = [550, 400];
+
+    const m = (p_3[1]-p_2[1])/(p_3[0]-p_2[0]);
+    const p_1 = [x_1,m*x_1-m*p_4[0]+p_4[1]];
+
+    const N_x = 30;
+    const N_y = 30;
+
+    for(let i=0; i<=N_x; i++) {
+        infLine(lerp(i/N_x,p_1,p_4), lerp(i/N_x,p_2,p_3));
+    }
+    for(let i=0; i<=N_y; i++) {
+        infLine(lerp(i/N_y,p_1,p_2), lerp(i/N_y,p_4,p_3));
+    }
+
+    // drawPoint(p_1, "blue");
+    // drawPoint(p_2, "orange");
+    // drawPoint(p_3, "green");
+    // drawPoint(p_4, "blue");
 
     // JavaScript to get the last modified date of the document
     document.getElementById("last-updated").textContent = document.lastModified;
