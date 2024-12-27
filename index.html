@@ -147,9 +147,9 @@
     }
 
     const x_1 = 50;
-    const p_2 = [0.60*width, 0.60*height];
-    const p_3 = [0.75*width, 0.68*height];
-    const p_4 = [0.65*width, 0.95*height];
+    const p_2 = [0.70*width, 0.60*height];
+    const p_3 = [0.85*width, 0.68*height];
+    const p_4 = [0.75*width, 1.20*height];
 
     const m = (p_3[1]-p_2[1])/(p_3[0]-p_2[0]);
     const p_1 = [x_1,m*x_1-m*p_4[0]+p_4[1]];
@@ -163,11 +163,12 @@
     for(let i=0; i<=N_y; i++) {
         infLine(lerp(i/N_y,p_1,p_2), lerp(i/N_y,p_4,p_3));
     }
-
-    document.getElementsByClassName('main').addEventListener('scroll', function() {
-        // Get the scroll position of the scrollable element
-        let scrollPosition = scrollableDiv.scrollTop;
-        console.log(scrollPosition);
+    document.querySelectorAll('.main').forEach(function(el) {
+        el.addEventListener('scroll', function() {
+            // Get the scroll position of the scrollable element
+            let scrollPosition = scrollableDiv.scrollTop;
+            console.log(scrollPosition);
+        });
     });
 
     // drawPoint(p_1, "blue");
