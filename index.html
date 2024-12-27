@@ -108,7 +108,7 @@
     let height = window.innerHeight;
 
     // Function to create a line dynamically
-    function createLine([x1, y1], [x2, y2], strokeColor = 'red', strokeWidth = 1) {
+    function createLine([x1, y1], [x2, y2], strokeColor = '#b4637a', strokeWidth = 1) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
         line.setAttribute('x1', x1);  // Starting X position
@@ -119,19 +119,19 @@
         line.setAttribute('stroke-width', strokeWidth);  // Line width
         svg.appendChild(line);  // Add the line to the SVG container
     }
-    function drawPoint([x, y], color = "blue", radius = 5) {
-        // Create a circle element for the point
-        const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    // function drawPoint([x, y], color = "blue", radius = 5) {
+    //     // Create a circle element for the point
+    //     const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 
-        // Set the properties for the point (circle)
-        point.setAttribute("cx", x);      // X position
-        point.setAttribute("cy", y);      // Y position
-        point.setAttribute("r", radius);  // Radius (thickness of the point)
-        point.setAttribute("fill", color); // Color of the point
+    //     // Set the properties for the point (circle)
+    //     point.setAttribute("cx", x);      // X position
+    //     point.setAttribute("cy", y);      // Y position
+    //     point.setAttribute("r", radius);  // Radius (thickness of the point)
+    //     point.setAttribute("fill", color); // Color of the point
 
-        // Append the point (circle) to the SVG container
-        svg.appendChild(point);
-    }
+    //     // Append the point (circle) to the SVG container
+    //     svg.appendChild(point);
+    // }
 
     function evalLine(x, [x_a, y_a],[x_b, y_b]) {
         return ((y_a-y_b)/(x_a-x_b)) * (x-x_a) + y_a;
@@ -157,7 +157,7 @@
             infLine(lerp(i/N_x,p_1,p_4), lerp(i/N_x,p_2,p_3));
         }
         for(let i=0; i<=N_y; i++) {
-            infLine(lerp(i/N_y,p_1,p_2), lerp(i/N_y,p_4,p_3));
+            infLine(lerp((i/N_y)**(1/2),p_1,p_2), lerp((i/N_y)**(1/2),p_4,p_3));
         }
     }
 
