@@ -8,13 +8,16 @@ html, body {
     display: flex;
     flex-direction: column;  /* Align children vertically */
     justify-content: center; /* Center the body vertically */
+    overflow: auto;
+    scroll-behavior: smooth;
 }
 
 body {
     width: 100%;
-    max-width: 1200px;
+    max-width: 600px;
     padding: 20px;
     margin: 0 auto; /* Horizontally center the body */
+    min-height: 100%;
 }
 
 header, footer, section {
