@@ -34,10 +34,14 @@ p, a {
     font-family: 'Zed', sans-serif;
 }
 
-/* colors */
+/* colors  https://rosepinetheme.com/palette/ */
+
+html {
+    background-color: #9893a5;
+}
 
 body {
-    background-color: aqua;
+    background-color: #faf4ed;
 }
 
 /* layout */
@@ -47,20 +51,6 @@ html {
     overflow: auto;  /* Enable scrolling on the html element */
     margin: 0;       /* Remove any default margin on html */
     padding: 0;      /* Remove any default padding on html */
-}
-
-/* For smaller screens (below 600px), reduce the max-width */
-@media (max-width: 1200px) {
-    body {
-        max-width: 90%;   /* Adjust to 90% of the screen width */
-    }
-}
-
-/* For larger screens, retain the max-width as 1200px */
-@media (min-width: 1200px) {
-    body {
-        max-width: 1200px;  /* 1200px max-width */
-    }
 }
 
 body {
@@ -79,7 +69,28 @@ body {
 header, footer, section {
     text-align: left;  /* Ensure text is aligned to the left */
     width: 100%; /* Make sure each section takes full width */
-    margin-left: 20px;
+}
+
+/* For smaller screens (below 600px), reduce the max-width */
+@media (max-width: 1000px) {
+    body {
+        max-width: 90%;   /* Adjust to 90% of the screen width */
+    }
+    header, footer, section {
+        margin-left: 7px;
+        margin-right: 7px;
+    }
+}
+
+/* For larger screens, retain the max-width as 1200px */
+@media (min-width: 1000px) {
+    body {
+        max-width: 1200px;  /* 1200px max-width */
+    }
+    header, footer, section {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 }
 
 
