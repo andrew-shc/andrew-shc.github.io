@@ -30,7 +30,7 @@ h1, h2, h3 {
     font-family: 'Lora', serif;
 }
 
-p, a {
+p, a, ul {
     font-family: 'Zed', sans-serif;
 }
 
@@ -40,7 +40,7 @@ html {
     background-color: #9893a5;
 }
 
-body {
+.main {
     background-color: #faf4ed;
 }
 
@@ -61,7 +61,7 @@ html {
     padding: 0;      /* Remove any default padding on html */
 }
 
-body {
+.main {
     display: flex;
     flex-direction: column;  /* Align children vertically */
     justify-content: center; /* Center the body vertically */
@@ -97,7 +97,7 @@ footer {
 
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
-    body {
+    .main {
         max-width: 90%;   /* Adjust to 90% of the screen width */
     }
     header, section {
@@ -108,8 +108,8 @@ footer {
 
 /* For larger screens, retain the max-width as 1200px */
 @media (min-width: 1000px) {
-    body {
-        max-width: 1200px;  /* 1200px max-width */
+    .main {
+        max-width: 1000px;  /* 1200px max-width */
     }
     header, section {
         margin-left: 20px;
@@ -121,8 +121,9 @@ footer {
 /* custom CSS components */
 
 .horizontal-bar {
+    position: absolute;
     height: 2px;       /* Set the height of the bar */
     margin-left: -5px;
-    margin-top: -10px;
-    margin-bottom: 10px;
+    margin-top: -15px;
+    margin-bottom: 15px;
 }
