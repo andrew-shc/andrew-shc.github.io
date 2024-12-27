@@ -53,7 +53,7 @@ html {
 }
 
 h1, h2, h3 {
-    color: #084CCF;
+    color: #286983;
 }
 
 p, a, ul {
@@ -75,7 +75,7 @@ article {
 }
 
 .horizontal-bar {
-    background-color: #084CCF;
+    background-color: #286983;
 }
 
 /* layout */
@@ -123,9 +123,16 @@ nav {
 }
 
 header, section {
-    text-align: left;  /* Ensure text is aligned to the left */
     width: 100%; /* Make sure each section takes full width */
     scroll-margin-top: 35px;
+}
+
+section {
+    text-align: right;
+}
+
+header {
+    text-align: right;
 }
 
 article {
