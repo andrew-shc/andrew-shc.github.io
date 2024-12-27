@@ -149,7 +149,7 @@ footer {
 }
 
 svg {
-    position: absolute; /* Position the SVG behind all content */
+    position: fixed; /* Position the SVG behind all content */
     top: 0;
     left: 0;
     width: 100vw;   /* Full width of the viewport */
