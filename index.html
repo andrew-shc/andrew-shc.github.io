@@ -108,7 +108,7 @@
     let height = window.innerHeight;
 
     // Function to create a line dynamically
-    function createLine([x1, y1], [x2, y2], strokeColor = '#b4637a', strokeWidth = 1) {
+    function createLine([x1, y1], [x2, y2], strokeColor = '#907aa9', strokeWidth = 1) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
         line.setAttribute('x1', x1);  // Starting X position
@@ -157,7 +157,7 @@
             infLine(lerp(i/N_x,p_1,p_4), lerp(i/N_x,p_2,p_3));
         }
         for(let i=0; i<=N_y; i++) {
-            infLine(lerp((i/N_y)**(1/2),p_1,p_2), lerp((i/N_y)**(1/2),p_4,p_3));
+            infLine(lerp((i/N_y)**(1/3),p_1,p_2), lerp((i/N_y)**(1/3),p_4,p_3));
         }
     }
 
@@ -165,7 +165,7 @@
         /*x_1*/ 50,
         /*p_2*/ [0.70*width, 0.62*height],
         /*p_3*/ [0.90*width, 0.68*height],
-        /*p_4*/ [0.80*width, 1.10*height],
+        /*p_4*/ [0.80*width, 1.20*height],
     );
 
     // document.querySelectorAll('.main').forEach(function(el) {
