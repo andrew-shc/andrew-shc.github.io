@@ -14,18 +14,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="#about">About Me</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#teaching">Teaching</a></li>
+            <li><a href="#random">Books</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
     <header>
         <h1>Andrew Shen </h1>
         <p>Hi! I’m Andrew Shen, studying computer science and math at UCI.</p>
-        <nav>
-            <ul>
-                <li><a href="#about">About Me</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#teaching">Teaching</a></li>
-                <li><a href="#random">Books</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
     </header>
 
     <section id="about">
@@ -86,9 +87,16 @@
         <p>You can reach me via email at <a href="mailto:shena8@uci.edu">shena8@uci.edu</a>.</p>
         <p>Follow me on <a href="https://github.com/your-profile" target="_blank">GitHub</a> and <a href="https://linkedin.com/in/your-profile" target="_blank">LinkedIn</a>.</p>
     </section>
-
-    <footer>
-        <p>&copy; 2024 Andrew Shen</p>
-    </footer>
 </body>
+
+<footer>
+    <p>Last updated: <span id="last-updated"></span></p>
+    <p>&copy; 2024 Andrew Shen</p>
+</footer>
+
+<script>
+    // JavaScript to get the last modified date of the document
+    document.getElementById("last-updated").textContent = document.lastModified;
+</script>
+
 </html>
