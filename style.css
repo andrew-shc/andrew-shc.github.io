@@ -28,27 +28,36 @@
 
 h1, h2, h3 {
     font-family: 'Lora', serif;
+    font-weight: bold;
 }
 
 p, a, ul {
     font-family: 'Zed', sans-serif;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 h1 {
-    font-size: 49px;
+    font-size: 64px;
 }
 h2 {
-    font-size: 20px;
+    font-size: 28px;
 }
 h3 {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 /* colors  https://rosepinetheme.com/palette/ */
 
 html {
     background-color: #faf4ed;
+}
+
+h1, h2, h3 {
+    color: #286983;
+}
+
+p, a, ul {
+    color: #575279;
 }
 
 .main {
@@ -59,6 +68,10 @@ html {
 nav {
     background-color: #f2e9e1;
     border-color: #797593;
+}
+
+article {
+    border-color: #ea9d34;
 }
 
 .horizontal-bar {
@@ -116,7 +129,11 @@ header, section {
 
 article {
     margin-left: 5px;
-    margin-right: 5px;
+    margin-right: 15px;
+
+    border-radius: 0px;
+    border-width: 1px;
+    border-style: solid;
 }
 
 footer {
