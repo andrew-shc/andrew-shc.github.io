@@ -125,6 +125,7 @@ nav {
 header, section {
     text-align: left;  /* Ensure text is aligned to the left */
     width: 100%; /* Make sure each section takes full width */
+    scroll-margin-top: 35px;
 }
 
 article {
@@ -167,7 +168,8 @@ footer {
 
 .horizontal-bar {
     /* position: absolute; */
-    height: 2px;       /* Set the height of the bar */
+    width: 80%;
+    height: 1px;       /* Set the height of the bar */
     margin-left: -5px;
     margin-top: -15px;
     margin-bottom: 15px;
