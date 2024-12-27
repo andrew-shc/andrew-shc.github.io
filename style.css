@@ -65,16 +65,18 @@ body {
     display: flex;
     flex-direction: column;  /* Align children vertically */
     justify-content: center; /* Center the body vertically */
+    width: 100%;
+    margin: 0 auto; /* Horizontally center the body */
 }
 
 .main {
     overflow: auto;
     scroll-behavior: smooth;
 
-    width: 100%;
     padding: 20px;
-    margin: 0 auto; /* Horizontally center the body */
     min-height: 100%;
+
+    border-radius: 4px;
 }
 
 nav {
