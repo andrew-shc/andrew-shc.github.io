@@ -88,7 +88,7 @@ header, section {
 
 article {
     margin-left: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 footer {
@@ -97,7 +97,7 @@ footer {
 
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
-    .main {
+    body {
         max-width: 90%;   /* Adjust to 90% of the screen width */
     }
     header, section {
@@ -108,7 +108,7 @@ footer {
 
 /* For larger screens, retain the max-width as 1200px */
 @media (min-width: 1000px) {
-    .main {
+    body {
         max-width: 1000px;  /* 1200px max-width */
     }
     header, section {
