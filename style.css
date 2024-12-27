@@ -2,17 +2,37 @@ h1, h2, h3 {
     font-family: 'Lora', serif;
 }
 
-html, body {
+html {
     height: 100%;
-    margin: 0;
+    overflow: auto;  /* Enable scrolling on the html element */
+    margin: 0;       /* Remove any default margin on html */
+    padding: 0;      /* Remove any default padding on html */
+}
+
+/* html, body {
+} */
+
+/* For smaller screens (below 600px), reduce the max-width */
+@media (max-width: 1200px) {
+    body {
+        max-width: 90%;   /* Adjust to 90% of the screen width */
+    }
+}
+
+/* For larger screens, retain the max-width as 1200px */
+@media (min-width: 1200px) {
+    body {
+        max-width: 1200px;  /* 1200px max-width */
+    }
+}
+
+body {
     display: flex;
     flex-direction: column;  /* Align children vertically */
     justify-content: center; /* Center the body vertically */
     overflow: auto;
     scroll-behavior: smooth;
-}
 
-body {
     width: 100%;
     max-width: 600px;
     padding: 20px;
@@ -23,4 +43,11 @@ body {
 header, footer, section {
     text-align: left;  /* Ensure text is aligned to the left */
     width: 100%; /* Make sure each section takes full width */
+}
+
+.horizontal-bar {
+    width: 80%;         /* Set the width to 80% of the body */
+    height: 10px;       /* Set the height of the bar */
+    background-color: #3498db; /* Optional: Set a background color for the bar */
+    margin: 0 auto;     /* Center the bar horizontally */
 }
