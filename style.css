@@ -3,7 +3,6 @@ h1, h2, h3 {
 }
 
 body {
-    display: flex;
     align-items: center;
     max-width: 1200px;
 }
