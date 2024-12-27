@@ -81,7 +81,7 @@ nav {
     width: 100%;
 }
 
-header, footer, section {
+header, section {
     text-align: left;  /* Ensure text is aligned to the left */
     width: 100%; /* Make sure each section takes full width */
 }
@@ -92,9 +92,7 @@ article {
 }
 
 footer {
-    display: flex;
-    flex-direction: column;  /* Align children vertically */
-    justify-content: center; /* Center the body vertically */
+    text-align: center;
 }
 
 /* For smaller screens (below 600px), reduce the max-width */
@@ -123,7 +121,6 @@ footer {
 /* custom CSS components */
 
 .horizontal-bar {
-    width: 105%;         /* Set the width to 80% of the body */
     height: 2px;       /* Set the height of the bar */
     margin-left: -5px;
     margin-top: -10px;
