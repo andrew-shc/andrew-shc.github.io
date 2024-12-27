@@ -96,7 +96,7 @@
         <p>&copy; 2024 Andrew Shen</p>
     </footer>
 
-    <svg height="200" width="300">
+    <svg id="lattice" height="100%" width="100%">
         <line x1="0" y1="0" x2="300" y2="200" style="stroke:red;stroke-width:2" />
         <line x1="0" y1="0" x2="200" y2="500" style="stroke:red;stroke-width:2" />
         <line x1="0" y1="0" x2="100" y2="1000" style="stroke:red;stroke-width:2" />
@@ -104,6 +104,26 @@
 </body>
 
 <script>
+    const svg = document.getElementById('lattice');
+
+    // Function to create a line dynamically
+    function createLine(x1, y1, x2, y2, strokeColor = 'red', strokeWidth = 1) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+        line.setAttribute('x1', x1);  // Starting X position
+        line.setAttribute('y1', y1);  // Starting Y position
+        line.setAttribute('x2', x2);  // Ending X position
+        line.setAttribute('y2', y2);  // Ending Y position
+        line.setAttribute('stroke', strokeColor);  // Line color
+        line.setAttribute('stroke-width', strokeWidth);  // Line width
+        svgContainer.appendChild(line);  // Add the line to the SVG container
+    }
+
+    // Example: Generate multiple lines dynamically
+    createLine(50, 50, 200, 50);  // Horizontal line from (50, 50) to (200, 50)
+    createLine(50, 100, 200, 200); // Diagonal line from (50, 100) to (200, 200)
+    createLine(150, 150, 350, 150);
+
     // JavaScript to get the last modified date of the document
     document.getElementById("last-updated").textContent = document.lastModified;
 </script>
