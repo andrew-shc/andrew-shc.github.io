@@ -180,21 +180,21 @@ svg {
     object-fit: cover; /* Crop the image without distorting it */
 }
 
-/* .proj-container {
-    display: flex;         /* Us
-    justify-content: flex-start;
-    align-items: center;   /* Ve
-    gap: 20px;             /* Sp
+.proj-container {
+    display: flex;         /* Use Flexbox to lay out the items */
+    justify-content: flex-start; /* Align items at the start */
+    align-items: center;   /* Vertically center the items */
+    gap: 20px;             /* Space between the image and the text */
 }
 
 .proj-image-container {
-    width: 150px;          /* Se
-    height: auto;          /* Ke
+    width: 150px;          /* Set a fixed width for the image */
+    height: auto;          /* Keep aspect ratio */
 }
 
 .proj-blurb-container {
-    flex-grow: 1;          /* Al
-} */
+    flex-grow: 1;          /* Allow the text to take up remaining space */
+}
 
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
