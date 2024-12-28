@@ -15,7 +15,9 @@
 </head>
 <body>
     <nav>
-        <ul></ul>
+        <ul>
+            <h1>Andrew Shen</h1>
+        </ul>
         <ul>
             <li><a href="#about">About Me</a></li>
             <li><a href="#projects">Projects</a></li>
@@ -27,15 +29,19 @@
 
     <div class="main">
         <header>
-            <h1>Andrew Shen </h1>
-            <p>Hi! I’m Andrew Shen, studying computer science and math at UCI.</p>
+            <img src="./img/Matrixagon003.png" alt="Matrixagon003.png" />
         </header>
     
         <section id="about">
             <h2>About Me</h2>
             <div class="horizontal-bar"></div>
     
-            <p>Hello! I'm a second-year computer science major with a passion for computer vision. I'm currently exploring research in this field and aiming to pursue a PhD in the future. In addition, I'm working on various industry-related projects to enhance my skills.</p>
+            <p>
+                I'm studying computer science and a bit of math at UC Irvine to advance computer vision research and software.
+                At the intersection of vision, graphics, and geometry, 3D understanding has many challenging problems with useful
+                applications that are just awesome to work with. In combination with reinforcement learning, I'm also interested
+                where 3D understanding are less reliant on data.
+            </p>
         </section>
     
         <section id="projects">
@@ -179,8 +185,8 @@
         // Calculate the scroll percentage
         const scrollP = (scrollTop / (docHeight - winHeight)) * 100;
         
-        console.log(scrollP);
-        console.log(window.scrollY);
+        // console.log(scrollP);
+        // console.log(window.scrollY);
 
         svg.innerHTML = '';  // clears svg
         renderLattice(
