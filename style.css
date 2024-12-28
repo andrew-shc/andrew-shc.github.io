@@ -190,6 +190,7 @@ svg {
 .proj-image-container {
     width: 150px;          /* Set a fixed width for the image */
     height: auto;          /* Keep aspect ratio */
+    flex-shrink: 0;          /* Prevent image from shrinking */
 }
 
 .proj-blurb-container {
