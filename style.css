@@ -198,9 +198,11 @@ svg {
 }
 
 .icon {
-    width: 32px; 
-    height: 32px;
-    object-fit: cover; /* Crop the image without distorting it */
+    width: 28px; 
+    height: 28px;
+    object-fit: contain; /* Crop the image without distorting it */
+
+    margin: 5px;
 }
 
 /* For smaller screens (below 600px), reduce the max-width */
