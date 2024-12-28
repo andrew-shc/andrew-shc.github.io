@@ -20,7 +20,7 @@
             <li><a href="#about">About Me</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#teaching">Teaching</a></li>
-            <li><a href="#random">:)</a></li>
+            <li><a href="#random">😄</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
@@ -72,7 +72,7 @@
         </section>
     
         <section id="random">
-            <h2>Book Reviews :)</h2>
+            <h2>Book Reviews 😄</h2>
             <div class="horizontal-bar"></div>
             
             <ul>
@@ -104,8 +104,6 @@
     // https://www.desmos.com/calculator/zuo8ac32sb
 
     const svg = document.getElementById('lattice');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
 
     // Function to create a line dynamically
     function createLine([x1, y1], [x2, y2], strokeColor = '#ea9d34', strokeWidth = 1) {
@@ -137,7 +135,8 @@
         return ((y_a-y_b)/(x_a-x_b)) * (x-x_a) + y_a;
     }
 
-    function infLine(p_a, p_b, start=0, end=width) {
+    function infLine(p_a, p_b, start=0) {
+        let end = window.innerWidth;
         createLine([start, evalLine(start, p_a, p_b)],
                 [end,   evalLine(end,   p_a, p_b)]);
     }
@@ -161,13 +160,6 @@
         }
     }
 
-    renderLattice(
-        /*x_1*/ 50,
-        /*p_2*/ [0.70*width, 0.62*height],
-        /*p_3*/ [0.90*width, 0.68*height],
-        /*p_4*/ [0.80*width, 1.20*height],
-    );
-
     // document.querySelectorAll('.main').forEach(function(el) {
     //     el.addEventListener('scroll', function() {
     //         // Get the scroll position of the scrollable element
@@ -177,6 +169,9 @@
     // });
 
     function renderScrollAwareLattice() {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
         const scrollTop = window.scrollY; // Vertical scroll position
         const docHeight = document.documentElement.scrollHeight; // Total height of the document
         const winHeight = window.innerHeight; // Height of the visible part of the window
@@ -195,6 +190,7 @@
             /*p_4*/ [0.80*width, (1.10-0.0010*scrollP)*height],
         );
     }
+    renderScrollAwareLattice();
 
     window.addEventListener('scroll', renderScrollAwareLattice);
     window.addEventListener('resize', renderScrollAwareLattice);
