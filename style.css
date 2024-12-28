@@ -245,4 +245,7 @@ svg {
     margin-left: -5px;
     margin-top: -15px;
     margin-bottom: 15px;
+    /* to prevent random increase of bar height */
+    box-sizing: border-box;
+    overflow: hidden;
 }
