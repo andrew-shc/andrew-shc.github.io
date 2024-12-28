@@ -158,18 +158,29 @@ svg {
     z-index: -1;    /* Place it behind other elements */
 }
 
-.image-container {
-    height: 200px;         /* Set the height of the container */
-    overflow: hidden;      /* Hide anything that overflows the container */
-}
+/* .top-image-container {
+    width: 100%;
+    height: 200px;   
+    overflow: hidden;
 
-.top-img {
-    width: auto;   /* Make the image take up the full width */
-    height: 100px;  /* Make the image take up the full height */
+    margin-bottom: 20px;
+} */
+
+.top-image {
+    width: 100%;   /* Make the image take up the full width */
+    height: 200px;  /* Make the image take up the full height */
     object-fit: cover; /* Crop the image without distorting it */
 }
 
-.proj-img {
+/* .proj-image-container {
+    width: 100%;
+    height: 200px;   
+    overflow: hidden;
+
+    margin-bottom: 20px;
+} */
+
+.proj-image {
     width: 64px; 
     height: 64px;
     object-fit: cover; /* Crop the image without distorting it */
