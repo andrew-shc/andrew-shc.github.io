@@ -180,21 +180,21 @@ svg {
     object-fit: cover; /* Crop the image without distorting it */
 }
 
-.proj-container {
-    display: flex;         /* Use Flexbox to lay out the items */
-    justify-content: flex-start; /* Align items at the start */
-    align-items: center;   /* Vertically center the items */
-    gap: 20px;             /* Space between the image and the text */
+/* .proj-container {
+    display: flex;         /* Us
+    justify-content: flex-start;
+    align-items: center;   /* Ve
+    gap: 20px;             /* Sp
 }
 
 .proj-image-container {
-    width: 150px;          /* Set a fixed width for the image */
-    height: auto;          /* Keep aspect ratio */
+    width: 150px;          /* Se
+    height: auto;          /* Ke
 }
 
 .proj-blurb-container {
-    flex-grow: 1;          /* Allow the text to take up remaining space */
-}
+    flex-grow: 1;          /* Al
+} */
 
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
@@ -207,19 +207,19 @@ svg {
         margin-left: 7px;
         margin-right: 7px;
     } */
-    .proj-container {
-        flex-direction: column; /* Stack the image and text vertically */
-        align-items: center;    /* Center items horizontally */
+    /* .proj-container {
+        flex-direction: column;
+        align-items: center;    
     }
 
     .proj-image-container {
-        width: 100%;            /* Make the image take full width */
-        max-width: 300px;       /* Optional: Limit the image width */
+        width: 100%;            
+        max-width: 300px;       
     }
 
     .proj-blurb-container {
-        text-align: center;     /* Center the text on small screens */
-    }
+        text-align: center;     
+    } */
 }
 
 /* For larger screens, retain the max-width as 1200px */
