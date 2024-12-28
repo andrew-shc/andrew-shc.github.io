@@ -32,7 +32,7 @@ h1, h2, h3 {
 }
 
 p, a, ul {
-    font-family: 'Lora', sans-serif;
+    font-family: 'Zed', sans-serif;
     font-size: 16px;
 }
 
@@ -160,13 +160,13 @@ svg {
 
 .top-img {
     width: auto;   /* Make the image take up the full width */
-    height: 200px;  /* Make the image take up the full height */
+    height: 100px;  /* Make the image take up the full height */
     object-fit: cover; /* Crop the image without distorting it */
 }
 
 .proj-img {
-    width: 128px; 
-    height: 128px;
+    width: 64px; 
+    height: 64px;
     object-fit: cover; /* Crop the image without distorting it */
 }
 
