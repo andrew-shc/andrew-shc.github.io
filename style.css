@@ -183,7 +183,7 @@ svg {
     display: flex;         /* Use Flexbox to lay out the items */
     justify-content: flex-start; /* Align items at the start */
     align-items: center;   /* Vertically center the items */
-    gap: 20px;             /* Space between the image and the text */
+    gap: 10px;             /* Space between the image and the text */
 }
 
 .proj-image-container {

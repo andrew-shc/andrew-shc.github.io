@@ -205,6 +205,10 @@
         let width = window.innerWidth;
         let height = window.innerHeight;
 
+        if(width < 1000) {
+            return;
+        }
+
         const scrollTop = window.scrollY; // Vertical scroll position
         const docHeight = document.documentElement.scrollHeight; // Total height of the document
         const winHeight = window.innerHeight; // Height of the visible part of the window
