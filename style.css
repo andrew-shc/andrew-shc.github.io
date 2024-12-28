@@ -158,6 +158,13 @@ svg {
     z-index: -1;    /* Place it behind other elements */
 }
 
+.image-container img {
+    width: 100%;   /* Make the image take up the full width */
+    height: 300px;  /* Make the image take up the full height */
+    object-fit: cover; /* Crop the image without distorting it */
+    overflow: hidden; /* Hide anything that overflows the container */
+}
+
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
     body {
