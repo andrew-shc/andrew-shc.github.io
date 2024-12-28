@@ -158,6 +158,11 @@ svg {
     z-index: -1;    /* Place it behind other elements */
 }
 
+.image-container {
+    height: 200px;         /* Set the height of the container */
+    overflow: hidden;      /* Hide anything that overflows the container */
+}
+
 .top-img {
     width: auto;   /* Make the image take up the full width */
     height: 100px;  /* Make the image take up the full height */
