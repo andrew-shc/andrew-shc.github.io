@@ -17,9 +17,11 @@
 </head>
 <body>
     <nav>
+        <ul></ul>
         <ul>
             <li><span class="name">Andrew Shen</span></li>
         </ul>
+        <ul></ul>
         <ul>
             <li><a href="#about">About Me</a></li>
             <li><a href="#projects">Projects</a></li>
@@ -202,6 +204,8 @@
     // });
 
     function renderScrollAwareLattice() {
+        svg.innerHTML = '';  // clears svg
+
         let width = window.innerWidth;
         let height = window.innerHeight;
 
@@ -219,7 +223,6 @@
         // console.log(scrollP);
         // console.log(window.scrollY);
 
-        svg.innerHTML = '';  // clears svg
         renderLattice(
             /*x_1*/ 50,
             /*p_2*/ [0.70*width, (0.62-0.0001*scrollP)*height],
