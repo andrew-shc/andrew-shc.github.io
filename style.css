@@ -77,7 +77,7 @@ article {
 }
 
 .horizontal-bar {
-    background-color: #286983;
+    border-color: #286983;
 }
 
 /* layout */
@@ -171,6 +171,7 @@ svg {
     height: 200px;  /* Make the image take up the full height */
     object-fit: cover; /* Crop the image without distorting it */
     margin-bottom: 20px;
+    object-position: 50% 30%;
 }
 
 .proj-image {
@@ -241,7 +242,9 @@ svg {
 .horizontal-bar {
     /* position: absolute; */
     /* width: 80%; */
-    height: 1px;       /* Set the height of the bar */
+    height: 0px;       /* Set the height of the bar */
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
     margin-left: -5px;
     margin-top: -15px;
     margin-bottom: 15px;
