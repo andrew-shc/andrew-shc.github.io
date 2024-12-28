@@ -93,7 +93,6 @@ body {
     display: flex;
     flex-direction: column;  /* Align children vertically */
     justify-content: center; /* Center the body vertically */
-    width: 100%;
     margin: 0 auto; /* Horizontally center the body */
 }
 
@@ -200,7 +199,7 @@ svg {
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
     body {
-        max-width: 1000px;   /* Adjust to 90% of the screen width */
+        width: 1000px;   /* Adjust to 90% of the screen width */
         padding-left: 7px;
         padding-right: 7px;
     }
@@ -226,7 +225,7 @@ svg {
 /* For larger screens, retain the max-width as 1200px */
 @media (min-width: 1000px) {
     body {
-        max-width: 1000px;  /* 1200px max-width */
+        width: 1000px;  /* 1200px max-width */
         padding-left: 20px;
         padding-right: 20px;
     }
