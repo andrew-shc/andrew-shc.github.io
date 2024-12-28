@@ -54,7 +54,7 @@ html {
     background-color: #faf4ed;
 }
 
-h1, h2, h3 {
+.name, h2, h3 {
     color: #286983;
 }
 
@@ -174,18 +174,26 @@ svg {
     margin-bottom: 20px;
 }
 
-/* .proj-image-container {
-    width: 100%;
-    height: 200px;   
-    overflow: hidden;
-
-    margin-bottom: 20px;
-} */
-
 .proj-image {
     width: 128px; 
     height: 128px;
     object-fit: cover; /* Crop the image without distorting it */
+}
+
+.proj-container {
+    display: flex;         /* Use Flexbox to lay out the items */
+    justify-content: flex-start; /* Align items at the start */
+    align-items: center;   /* Vertically center the items */
+    gap: 20px;             /* Space between the image and the text */
+}
+
+.proj-image-container {
+    width: 150px;          /* Set a fixed width for the image */
+    height: auto;          /* Keep aspect ratio */
+}
+
+.proj-blurb-container {
+    flex-grow: 1;          /* Allow the text to take up remaining space */
 }
 
 /* For smaller screens (below 600px), reduce the max-width */
@@ -199,6 +207,19 @@ svg {
         margin-left: 7px;
         margin-right: 7px;
     } */
+    .proj-container {
+        flex-direction: column; /* Stack the image and text vertically */
+        align-items: center;    /* Center items horizontally */
+    }
+
+    .proj-image-container {
+        width: 100%;            /* Make the image take full width */
+        max-width: 300px;       /* Optional: Limit the image width */
+    }
+
+    .proj-blurb-container {
+        text-align: center;     /* Center the text on small screens */
+    }
 }
 
 /* For larger screens, retain the max-width as 1200px */
