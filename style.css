@@ -158,9 +158,16 @@ svg {
     z-index: -1;    /* Place it behind other elements */
 }
 
-.image-container img {
+.top-img {
     width: 100%;   /* Make the image take up the full width */
-    height: 300px;  /* Make the image take up the full height */
+    height: 200px;  /* Make the image take up the full height */
+    object-fit: cover; /* Crop the image without distorting it */
+    overflow: hidden; /* Hide anything that overflows the container */
+}
+
+.proj-img {
+    width: 128px; 
+    height: 128px;
     object-fit: cover; /* Crop the image without distorting it */
     overflow: hidden; /* Hide anything that overflows the container */
 }
