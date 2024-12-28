@@ -20,7 +20,7 @@
             <li><a href="#about">About Me</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#teaching">Teaching</a></li>
-            <li><a href="#random">Books</a></li>
+            <li><a href="#random">:)</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
@@ -72,7 +72,7 @@
         </section>
     
         <section id="random">
-            <h2>Book Reviews</h2>
+            <h2>Book Reviews :)</h2>
             <div class="horizontal-bar"></div>
             
             <ul>
@@ -176,7 +176,7 @@
     //     });
     // });
 
-    window.addEventListener('scroll', function() {
+    function renderScrollAwareLattice() {
         const scrollTop = window.scrollY; // Vertical scroll position
         const docHeight = document.documentElement.scrollHeight; // Total height of the document
         const winHeight = window.innerHeight; // Height of the visible part of the window
@@ -194,7 +194,10 @@
             /*p_3*/ [0.90*width, (0.68-0.0002*scrollP)*height],
             /*p_4*/ [0.80*width, (1.10-0.0010*scrollP)*height],
         );
-    });
+    }
+
+    window.addEventListener('scroll', renderScrollAwareLattice);
+    window.addEventListener('resize', renderScrollAwareLattice);
 
     // drawPoint(p_1, "blue");
     // drawPoint(p_2, "orange");
@@ -202,7 +205,7 @@
     // drawPoint(p_4, "blue");
 
     // JavaScript to get the last modified date of the document
-    document.getElementById("last-updated").textContent = document.lastModified;
+    document.getElementById("last-updated").textContent = "BUILD_TIME_PLACEHOLDER";
 </script>
 
 </html>
