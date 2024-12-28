@@ -32,7 +32,7 @@ h1, h2, h3 {
 }
 
 p, a, ul {
-    font-family: 'Zed', sans-serif;
+    font-family: 'Lora', sans-serif;
     font-size: 16px;
 }
 
@@ -159,17 +159,15 @@ svg {
 }
 
 .top-img {
-    width: 100%;   /* Make the image take up the full width */
+    width: auto;   /* Make the image take up the full width */
     height: 200px;  /* Make the image take up the full height */
     object-fit: cover; /* Crop the image without distorting it */
-    overflow: hidden; /* Hide anything that overflows the container */
 }
 
 .proj-img {
     width: 128px; 
     height: 128px;
     object-fit: cover; /* Crop the image without distorting it */
-    overflow: hidden; /* Hide anything that overflows the container */
 }
 
 /* For smaller screens (below 600px), reduce the max-width */
