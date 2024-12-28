@@ -12,7 +12,7 @@ fs.readFile('./index.html', 'utf8', (err, data) => {
 
   const updatedHTML = data.replace('BUILD_TIME_PLACEHOLDER', buildTime);
 
-  fs.writeFile(filePath, updatedHTML, 'utf8', (err) => {
+  fs.writeFile('./index.html', updatedHTML, 'utf8', (err) => {
     if (err) {
       console.error('Error writing updated HTML file:', err);
     } else {
