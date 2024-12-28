@@ -26,9 +26,8 @@
 }
 
 
-h1, h2, h3 {
+.name, h2, h3 {
     font-family: 'Lora', serif;
-    font-weight: normal;
 }
 
 p, a, ul {
@@ -36,15 +35,17 @@ p, a, ul {
     font-size: 16px;
 }
 
-h1 {
+.name {
     font-size: 20px;
     font-weight: bold;
 }
 h2 {
     font-size: 28px;
+    font-weight: normal;
 }
 h3 {
     font-size: 20px;
+    font-weight: normal;
 }
 
 /* colors  https://rosepinetheme.com/palette/ */
@@ -170,6 +171,7 @@ svg {
     width: 100%;   /* Make the image take up the full width */
     height: 200px;  /* Make the image take up the full height */
     object-fit: cover; /* Crop the image without distorting it */
+    margin-bottom: 20px;
 }
 
 /* .proj-image-container {
@@ -181,8 +183,8 @@ svg {
 } */
 
 .proj-image {
-    width: 64px; 
-    height: 64px;
+    width: 128px; 
+    height: 128px;
     object-fit: cover; /* Crop the image without distorting it */
 }
 
