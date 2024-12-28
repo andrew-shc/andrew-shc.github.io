@@ -199,7 +199,7 @@ svg {
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
     body {
-        width: 1000px;   /* Adjust to 90% of the screen width */
+        width: 700px;   /* Adjust to 90% of the screen width */
         padding-left: 7px;
         padding-right: 7px;
     }
