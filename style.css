@@ -206,8 +206,8 @@ svg {
 }
 
 .avatar {
-    width: 48px;          /* set a fixed width */
-    height: 48px;         /* set a fixed height (same as width for a perfect circle) */
+    width: 72px;          /* set a fixed width */
+    height: 72px;         /* set a fixed height (same as width for a perfect circle) */
     object-fit: cover;     /* ensures the image fills the container while maintaining its aspect ratio */
     border-radius: 50%;    /* makes the image circular */
 }

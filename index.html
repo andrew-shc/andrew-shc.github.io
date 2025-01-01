@@ -16,11 +16,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="beginning"></div>
+
     <nav>
         <ul></ul>
         <ul>
-            <li><img src="./img/andrew_shen.jpg" alt="Andrew Shen" class="avatar"></li>
-            <li><span class="name">Andrew Shen</span></li>
+            <li><a href="#beginning" class="name">Andrew Shen </a></li>
         </ul>
         <ul></ul>
         <ul>
@@ -43,9 +44,10 @@
             <h2>About Me</h2>
             <div class="horizontal-bar"></div>
     
+            <li><img src="./img/andrew_shen.jpg" alt="Andrew Shen" class="avatar"></li>
             <p>
                 I'm an undergrad studying computer science and a bit of math at UC Irvine interested in all aspects of
-                computer vision from software to research. At the intersection of vision, graphics, and geometry,
+                computer vision from software to research. Particularly at the intersection of vision, graphics, and geometry,
                 3D understanding has the most interesting, yet challenging, problems (e.g., reconstruction) with
                 many applications ranging from autonomous vehicles to medical imaging.
                 <!-- In combination with
@@ -70,7 +72,7 @@
                 The 2D reconstruction (mapping) of the camera feed from the drone relies on visual odometry (VO)
                 to precisely place the image together using SIFT and only uses GPS pose for initial rough placement.
                 Well, as long it's not in a simulation with smooth textures, or else SIFT or most VO system fails.
-                Checkout the mapping from real images:
+                Checkout a more realistic mapping from real images:
             </p>
             <a href="./img/vslam_real.png" target="_blank">map</a>
         </div>
