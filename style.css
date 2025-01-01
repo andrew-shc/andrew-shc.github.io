@@ -76,12 +76,12 @@ article {
     border-color: #797593;
 }
 
-.horizontal-bar {
-    border-color: #286983;
-}
-
 .avatar {
     border-color: #797593;
+}
+
+.horizontal-bar {
+    border-color: #286983;
 }
 
 /* layout */
@@ -210,8 +210,8 @@ svg {
 }
 
 .avatar {
-    width: 72px;          /* set a fixed width */
-    height: 72px;         /* set a fixed height (same as width for a perfect circle) */
+    width: 128px;          /* set a fixed width */
+    height: 128px;         /* set a fixed height (same as width for a perfect circle) */
     object-fit: cover;     /* ensures the image fills the container while maintaining its aspect ratio */
     border-radius: 50%;    /* makes the image circular */
     border-width: 1px;
