@@ -27,7 +27,7 @@
 
 
 .name, h2, h3 {
-    font-family: 'Lora', serif;
+    font-family: 'Chakra Petch', sans-serif;
 }
 
 p, a, ul {
@@ -91,7 +91,7 @@ article {
 
 .horizontal-bar {
     /* border-color: #286983; */
-    border-color: var(--border);
+    border-color: var(--accent);
 }
 
 /* layout */
