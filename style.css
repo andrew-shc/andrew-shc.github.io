@@ -50,13 +50,17 @@ h3 {
 
 /* colors  https://rosepinetheme.com/palette/ */
 
+:root {
+  --accent: #ea9d34; // #286983
+}
+
 html {
     /* background-color: #faf4ed; */
     background-color: #f2e9e1;
 }
 
 .name, h2, h3 {
-    color: #286983;
+    color: var(--text-color);
 }
 
 p, a, ul {
@@ -66,28 +70,28 @@ p, a, ul {
 .main {
     background-color: #fffaf3;
     /* border-color: #797593; */
-    border-color: #ea9d34;
+    border-color: var(--text-color)
 }
 
 nav {
     background-color: #f4ede8;
     /* border-color: #797593; */
-    border-color: #ea9d34;
+    border-color: var(--text-color);
 }
 
 article {
     /* border-color: #797593; */
-    border-color: #ea9d34;
+    border-color: var(--text-color);
 }
 
 .avatar {
     /* border-color: #797593; */
-    border-color: #ea9d34;
+    border-color: var(--text-color);
 }
 
 .horizontal-bar {
     /* border-color: #286983; */
-    border-color: #ea9d34;
+    border-color: var(--text-color);
 }
 
 /* layout */
