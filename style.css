@@ -60,7 +60,7 @@ html {
 }
 
 .name, h2, h3 {
-    color: var(--text-color);
+    color: var(--accent);
 }
 
 p, a, ul {
@@ -70,28 +70,28 @@ p, a, ul {
 .main {
     background-color: #fffaf3;
     /* border-color: #797593; */
-    border-color: var(--text-color)
+    border-color: var(--accent)
 }
 
 nav {
     background-color: #f4ede8;
     /* border-color: #797593; */
-    border-color: var(--text-color);
+    border-color: var(--accent);
 }
 
 article {
     /* border-color: #797593; */
-    border-color: var(--text-color);
+    border-color: var(--accent);
 }
 
 .avatar {
     /* border-color: #797593; */
-    border-color: var(--text-color);
+    border-color: var(--accent);
 }
 
 .horizontal-bar {
     /* border-color: #286983; */
-    border-color: var(--text-color);
+    border-color: var(--accent);
 }
 
 /* layout */
