@@ -51,7 +51,7 @@ h3 {
 /* colors  https://rosepinetheme.com/palette/ */
 
 :root {
-  --accent: #ea9d34; // #286983
+  --accent: #ea9d34; /* #286983 */
 }
 
 html {
