@@ -52,11 +52,10 @@ h3 {
 
 :root {
   --accent: #286983; /* #286983 */
-  --border: #9893a5;
+  --border: #ea9d34;
 }
 
 html {
-    /* background-color: #faf4ed; */
     background-color: #faf4ed;
 }
 
