@@ -65,24 +65,29 @@ p, a, ul {
 
 .main {
     background-color: #fffaf3;
-    border-color: #797593;
+    /* border-color: #797593; */
+    border-color: #ea9d34;
 }
 
 nav {
-    background-color: #cecacd;
-    border-color: #797593;
+    background-color: #56949f;
+    /* border-color: #797593; */
+    border-color: #ea9d34;
 }
 
 article {
-    border-color: #797593;
+    /* border-color: #797593; */
+    border-color: #ea9d34;
 }
 
 .avatar {
-    border-color: #797593;
+    /* border-color: #797593; */
+    border-color: #ea9d34;
 }
 
 .horizontal-bar {
-    border-color: #286983;
+    /* border-color: #286983; */
+    border-color: #ea9d34;
 }
 
 /* layout */
