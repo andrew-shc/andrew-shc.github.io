@@ -51,7 +51,8 @@ h3 {
 /* colors  https://rosepinetheme.com/palette/ */
 
 html {
-    background-color: #faf4ed;
+    /* background-color: #faf4ed; */
+    background-color: #f2e9e1;
 }
 
 .name, h2, h3 {
@@ -73,7 +74,6 @@ nav {
 }
 
 article {
-    background-color: #f2e9e1;
     border-color: #797593;
 }
 
