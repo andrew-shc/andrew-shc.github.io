@@ -255,37 +255,43 @@
     //     });
     // });
 
-    function renderScrollAwareLattice() {
-        svg.innerHTML = '';  // clears svg
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
-        let width = window.innerWidth;
-        let height = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight; // Total height of the document
+    const winHeight = window.innerHeight; // Height of the visible part of the window
+
+    // Calculate the scroll percentage
+    const scrollPre = (1 / (docHeight - winHeight)) * 100;
+
+    const p_2_a = 0.70*width;
+    const p_3_a = 0.90*width;
+    const p_4_a = 0.80*width;
+
+    function renderScrollAwareLattice() {
 
         if(width < 1000) {
             return;
         }
+        svg.innerHTML = '';  // clears svg
 
         const scrollTop = window.scrollY; // Vertical scroll position
-        const docHeight = document.documentElement.scrollHeight; // Total height of the document
-        const winHeight = window.innerHeight; // Height of the visible part of the window
-
-        // Calculate the scroll percentage
-        const scrollP = (scrollTop / (docHeight - winHeight)) * 100;
+        const scrollP = scrollTop * scrollPre;
         
         // console.log(scrollP);
         // console.log(window.scrollY);
 
         renderLattice(
             /*x_1*/ 50,
-            /*p_2*/ [0.70*width, (0.62-0.0001*scrollP)*height],
-            /*p_3*/ [0.90*width, (0.68-0.0002*scrollP)*height],
-            /*p_4*/ [0.80*width, (1.10-0.0010*scrollP)*height],
+            /*p_2*/ [p_2_a, (0.62-0.0001*scrollP)*height],
+            /*p_3*/ [p_3_a, (0.68-0.0002*scrollP)*height],
+            /*p_4*/ [p_4_a, (1.10-0.0010*scrollP)*height],
         );
     }
-    renderScrollAwareLattice();
+    // renderScrollAwareLattice();
 
-    window.addEventListener('scroll', renderScrollAwareLattice);
-    window.addEventListener('resize', renderScrollAwareLattice);
+    // window.addEventListener('scroll', renderScrollAwareLattice);
+    // window.addEventListener('resize', renderScrollAwareLattice);
 
     // drawPoint(p_1, "blue");
     // drawPoint(p_2, "orange");
