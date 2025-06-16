@@ -52,6 +52,7 @@ h3 {
 
 :root {
   --accent: #286983; /* #286983 */
+  --border: #9893a5;
 }
 
 html {
@@ -70,28 +71,28 @@ p, a, ul {
 .main {
     background-color: #fffaf3;
     /* border-color: #797593; */
-    border-color: var(--accent)
+    border-color: var(--border)
 }
 
 nav {
     background-color: #f4ede8;
     /* border-color: #797593; */
-    border-color: var(--accent);
+    border-color: var(--border);
 }
 
 article {
     /* border-color: #797593; */
-    border-color: var(--accent);
+    border-color: var(--border);
 }
 
 .avatar {
     /* border-color: #797593; */
-    border-color: var(--accent);
+    border-color: var(--border);
 }
 
 .horizontal-bar {
     /* border-color: #286983; */
-    border-color: var(--accent);
+    border-color: var(--border);
 }
 
 /* layout */
