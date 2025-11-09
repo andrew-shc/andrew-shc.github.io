@@ -1,0 +1,30 @@
+/*-- scss:defaults --*/
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap");
+
+/* Apply ONLY inside the listing cards */
+.quarto-listing .card,
+.quarto-listing .card * {
+    font-family: "Chakra Petch", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
+}
+
+
+/* Fonts (load them in step 2) */
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+// $headings-font-weight: 700;
+
+/* Colors */
+$body-bg: #fffaf3; // page background
+$body-color: #575279; // default text
+// $link-color: #6aa9ff; // links
+// $link-hover-color: #99c4ff;
+
+/* Components you likely see on listings */
+$card-bg: #ffffff;
+$card-border-color: #9893a5;
+$card-border-width: 1px;
+$card-title-color: #286983;
+$card-subtitle-color: #575279;
+$card-border-radius: 0;
+$card-inner-border-radius: 0;
+
+// https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss

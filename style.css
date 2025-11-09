@@ -6,18 +6,21 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: 'Zed';
     src: url('zed-sans-bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
+
 @font-face {
     font-family: 'Zed';
     src: url('zed-sans-italic.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
 }
+
 @font-face {
     font-family: 'Zed';
     src: url('zed-sans-bolditalic.ttf') format('truetype');
@@ -26,11 +29,15 @@
 }
 
 
-.name, h2, h3 {
+.name,
+h2,
+h3 {
     font-family: 'Chakra Petch', sans-serif;
 }
 
-p, a, ul {
+p,
+a,
+ul {
     font-family: 'Zed', sans-serif;
     font-size: 16px;
 }
@@ -39,10 +46,12 @@ p, a, ul {
     font-size: 20px;
     font-weight: bold;
 }
+
 h2 {
     font-size: 28px;
     font-weight: normal;
 }
+
 h3 {
     font-size: 20px;
     font-weight: normal;
@@ -51,19 +60,25 @@ h3 {
 /* colors  https://rosepinetheme.com/palette/ */
 
 :root {
-  --accent: #286983; /* #286983 */
-  --border: #9893a5; /* #9893a5 */
+    --accent: #286983;
+    /* #286983 */
+    --border: #9893a5;
+    /* #9893a5 */
 }
 
 html {
     background-color: #faf4ed;
 }
 
-.name, h2, h3 {
+.name,
+h2,
+h3 {
     color: var(--accent);
 }
 
-p, a, ul {
+p,
+a,
+ul {
     color: #575279;
 }
 
@@ -98,16 +113,22 @@ article {
 
 html {
     height: 100%;
-    overflow: auto;  /* Enable scrolling on the html element */
-    margin: 0;       /* Remove any default margin on html */
-    padding: 0;      /* Remove any default padding on html */
+    overflow: auto;
+    /* Enable scrolling on the html element */
+    margin: 0;
+    /* Remove any default margin on html */
+    padding: 0;
+    /* Remove any default padding on html */
 }
 
 body {
     display: flex;
-    flex-direction: column;  /* Align children vertically */
-    justify-content: center; /* Center the body vertically */
-    margin: 0 auto; /* Horizontally center the body */
+    flex-direction: column;
+    /* Align children vertically */
+    justify-content: center;
+    /* Center the body vertically */
+    margin: 0 auto;
+    /* Horizontally center the body */
 }
 
 .main {
@@ -137,8 +158,10 @@ nav {
     border-style: solid;
 }
 
-header, section {
-    width: 100%; /* Make sure each section takes full width */
+header,
+section {
+    width: 100%;
+    /* Make sure each section takes full width */
     scroll-margin-top: 35px;
 }
 
@@ -154,7 +177,8 @@ article {
     margin-left: 7px;
     margin-right: 7px;
 
-    border-radius: 0px;
+    border-radius: 0;
+    /* 0.25rem; */
     border-width: 1px;
     border-style: solid;
 }
@@ -164,12 +188,16 @@ footer {
 }
 
 svg {
-    position: fixed; /* Position the SVG behind all content */
+    position: fixed;
+    /* Position the SVG behind all content */
     top: 0;
     left: 0;
-    width: 100vw;   /* Full width of the viewport */
-    height: 100vh;  /* Full height of the viewport */
-    z-index: -1;    /* Place it behind other elements */
+    width: 100vw;
+    /* Full width of the viewport */
+    height: 100vh;
+    /* Full height of the viewport */
+    z-index: -1;
+    /* Place it behind other elements */
 }
 
 /* .top-image-container {
@@ -181,49 +209,66 @@ svg {
 } */
 
 .top-image {
-    width: 100%;   /* Make the image take up the full width */
-    height: 200px;  /* Make the image take up the full height */
-    object-fit: cover; /* Crop the image without distorting it */
+    width: 100%;
+    /* Make the image take up the full width */
+    height: 200px;
+    /* Make the image take up the full height */
+    object-fit: cover;
+    /* Crop the image without distorting it */
     margin-bottom: 20px;
     object-position: 50% 30%;
 }
 
 .proj-image {
-    width: 128px; 
+    width: 128px;
     height: 128px;
-    object-fit: cover; /* Crop the image without distorting it */
+    object-fit: cover;
+    /* Crop the image without distorting it */
 }
 
 .proj-container {
-    display: flex;         /* Use Flexbox to lay out the items */
-    justify-content: flex-start; /* Align items at the start */
-    align-items: center;   /* Vertically center the items */
-    gap: 8px;             /* Space between the image and the text */
+    display: flex;
+    /* Use Flexbox to lay out the items */
+    justify-content: flex-start;
+    /* Align items at the start */
+    align-items: center;
+    /* Vertically center the items */
+    gap: 8px;
+    /* Space between the image and the text */
 }
 
 .proj-image-container {
-    width: 150px;          /* Set a fixed width for the image */
-    height: auto;          /* Keep aspect ratio */
-    flex-shrink: 0;          /* Prevent image from shrinking */
+    width: 150px;
+    /* Set a fixed width for the image */
+    height: auto;
+    /* Keep aspect ratio */
+    flex-shrink: 0;
+    /* Prevent image from shrinking */
 }
 
 .proj-blurb-container {
-    flex-grow: 1;          /* Allow the text to take up remaining space */
+    flex-grow: 1;
+    /* Allow the text to take up remaining space */
 }
 
 .icon {
-    width: 28px; 
+    width: 28px;
     height: 28px;
-    object-fit: contain; /* Crop the image without distorting it */
+    object-fit: contain;
+    /* Crop the image without distorting it */
 
     margin: 5px;
 }
 
 .avatar {
-    width: 100px;          /* set a fixed width */
-    height: 100px;         /* set a fixed height (same as width for a perfect circle) */
-    object-fit: cover;     /* ensures the image fills the container while maintaining its aspect ratio */
-    border-radius: 50%;    /* makes the image circular */
+    width: 100px;
+    /* set a fixed width */
+    height: 100px;
+    /* set a fixed height (same as width for a perfect circle) */
+    object-fit: cover;
+    /* ensures the image fills the container while maintaining its aspect ratio */
+    border-radius: 50%;
+    /* makes the image circular */
     border-width: 1px;
     border-style: solid;
 }
@@ -231,10 +276,12 @@ svg {
 /* For smaller screens (below 600px), reduce the max-width */
 @media (max-width: 1000px) {
     body {
-        width: 700px;   /* Adjust to 90% of the screen width */
+        width: 700px;
+        /* Adjust to 90% of the screen width */
         padding-left: 7px;
         padding-right: 7px;
     }
+
     /* header, section {
         margin-left: 7px;
         margin-right: 7px;
@@ -257,10 +304,12 @@ svg {
 /* For larger screens, retain the max-width as 1200px */
 @media (min-width: 1000px) {
     body {
-        width: 1000px;  /* 1200px max-width */
+        width: 1000px;
+        /* 1200px max-width */
         padding-left: 20px;
         padding-right: 20px;
     }
+
     /* header, section {
         margin-left: 20px;
         margin-right: 20px;
@@ -273,7 +322,8 @@ svg {
 .horizontal-bar {
     /* position: absolute; */
     /* width: 80%; */
-    height: 0px;       /* Set the height of the bar */
+    height: 0px;
+    /* Set the height of the bar */
     border-style: solid;
     border-width: 0px 0px 1px 0px;
     margin-left: -5px;

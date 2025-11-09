@@ -1,0 +1,17 @@
+---
+title: "Toy VGGT"
+subtitle: "Exploring the Latest in Vision"
+date: 2025-11-08 
+# date-modified: last-modified
+format:
+    r-wasm/live-html: 
+      grid: 
+        margin-width: 350px
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---

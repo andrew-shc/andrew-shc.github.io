@@ -1,0 +1,8 @@
+format:
+  r-wasm/live-html:
+    theme:
+      light: flatly
+      dark: darkly
+    highlight-style: github
+    respect-user-color-scheme: true
+  

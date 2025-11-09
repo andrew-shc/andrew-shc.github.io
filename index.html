@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,10 +17,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
     </style>
+    <!-- <script src="https://unpkg.com/htmx.org@1.9.12"></script> -->
+    <!-- <script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script> -->
+    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js"></script>
 
-    
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="beginning"></div>
 
@@ -31,6 +35,7 @@
         <ul></ul>
         <ul>
             <li><a href="#about">About Me</a></li>
+            <li><a href="#blogs">Blogs</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#teaching">Teaching</a></li>
             <!-- <li><a href="#random">😄</a></li> -->
@@ -41,24 +46,27 @@
     <div class="main">
         <header>
             <div class="top-image-container">
-                <img src="./img/Matrixagon003(1).png" alt="Matrixagon003.png" class="top-image"/>
+                <img src="./img/Matrixagon003(1).png" alt="Matrixagon003.png" class="top-image" />
             </div>
         </header>
-    
+
         <section id="about">
             <h2>About Me</h2>
             <div class="horizontal-bar"></div>
-    
-            
+
+
             <div class="proj-container">
                 <div class="proj-image-container">
                     <img src="./img/andrew_shen.jpg" alt="Andrew Shen" class="avatar">
                 </div>
                 <div class="proj-blurb-container" style="align-items: center;">
                     <p>
-                        I'm an undergrad studying computer science and a bit of math at UC Irvine interested in all aspects of
-                        computer vision from software to research. Particularly, at the intersection of vision, graphics, and geometry,
-                        3D understanding presents some of the most interesting yet challenging problems (e.g., reconstruction), with
+                        I'm an undergrad studying computer science and a bit of math at UC Irvine interested in all
+                        aspects of
+                        computer vision from software to research. Particularly, at the intersection of vision,
+                        graphics, and geometry,
+                        3D understanding presents some of the most interesting yet challenging problems (e.g.,
+                        reconstruction), with
                         many applications ranging from autonomous vehicles to medical imaging.
                         <!-- In combination with
                         reinforcement learning, an autonomous system relying on 3D understanding system that relies less on training data and more on
@@ -67,79 +75,104 @@
                 </div>
             </div>
         </section>
-    
+
+        <section id="blogs">
+            <h2>Blogs</h2>
+            <div class="horizontal-bar"></div>
+
+            <iframe id="q" src="_site/blog_entry.html" width="100%" height="800"
+                style="width:100%; border:0; display:block; overflow:hidden;" scrolling="no"></iframe>
+        </section>
+
         <section id="projects">
             <h2>Projects</h2>
             <div class="horizontal-bar"></div>
-    
-<article class="project">
-    <div class="proj-container">
-        <div class="proj-image-container">
-            <img src="./img/img_stitching.png" alt="img_stitching.png" class="proj-image"/>
-        </div>
-        <div class="proj-blurb-container">
-            <h3>Autonomous vehicle mapping</h3>
-            <p>
-                A real-time visual simultaneous localization and mapping (vSLAM) system for an unmanned drones.
-                The 2D reconstruction (mapping) of the camera feed from the drone relies on visual odometry (VO)
-                to precisely place the image together using SIFT and only uses GPS pose for initial rough placement.
-                Well, as long it's not in a simulation with smooth textures, or else SIFT or most VO system fails.
-                Checkout a more realistic mapping from real images:
-            </p>
-            <a href="./img/vslam_real.png" target="_blank">map</a>
-        </div>
-    </div>
-</article>
-<article class="project">
-    <div class="proj-container">
-        <div class="proj-image-container">
-            <img src="./img/sdf_gt_img.png" alt="Ground truth" style="width: 64px; height: 64px; margin: 0px;" class="proj-image"/><!--
-            --><img src="./img/sdf_illumination_img.png" alt="Learned color" style="width: 64px; height: 64px; margin: 0px;" class="proj-image"/>
-            <img src="./img/sdf_obj.png" alt="Reconstructed object" style="width: 128px; height: 64px; margin: 0px;" class="proj-image"/>
-        </div>
-        <div class="proj-blurb-container">
-            <h3>SDF Inverse Rendering</h3>
-            <p>
-                A simple inverse renderer that uses signed-distance function to reconstruct the object of interest
-                (in this case, a calculator on a newel.) The reflection on the calculator screen was hard to detect,
-                as structure from motion (using COLMAP) failed to generate significant amount of points on there,
-                creating a hole in the object (check out the object file below). Side note, the image is in a blue shade
-                because of OpenCV's reverse RGB coloring scheme.
-            </p>
-            <a href="https://github.com/andrew-shc/Matrixagon3" target="_blank">repo</a> | <a href="./calculator.obj" download>calculator.obj</a>
-        </div>
-    </div>
-</article>
-<article class="project">
-    <div class="proj-container">
-        <div class="proj-image-container">
-            <img src="./img/feature_depth_alpha.png" alt="feature_depth_alpha.png" class="proj-image"/>
-        </div>
-        <div class="proj-blurb-container">
-            <h3>Minecraft-esque voxel renderer & terrain generator</h3>
-            <p>A Vulkan renderer out of fun to emulate Minecraft's blocky terrain through a custom graphics
-                pipeline to learn more about how computers render 3D stuff procedurally. Speaking about procedurally,
-                the terrain is generated by Perlin noise with multiple octaves to make it a bit more realistic.
-            </p>
-            <a href="https://github.com/andrew-shc/Matrixagon2" target="_blank">repo</a>  
-        </div>
-    </div>
-</article>
+
+            <article class="project">
+                <div class="proj-container">
+                    <div class="proj-image-container">
+                        <img src="./img/img_stitching.png" alt="img_stitching.png" class="proj-image" />
+                    </div>
+                    <div class="proj-blurb-container">
+                        <h3>Autonomous vehicle mapping</h3>
+                        <p>
+                            A real-time visual simultaneous localization and mapping (vSLAM) system for an unmanned
+                            drones.
+                            The 2D reconstruction (mapping) of the camera feed from the drone relies on visual odometry
+                            (VO)
+                            to precisely place the image together using SIFT and only uses GPS pose for initial rough
+                            placement.
+                            Well, as long it's not in a simulation with smooth textures, or else SIFT or most VO system
+                            fails.
+                            Checkout a more realistic mapping from real images:
+                        </p>
+                        <a href="./img/vslam_real.png" target="_blank">map</a>
+                    </div>
+                </div>
+            </article>
+            <article class="project">
+                <div class="proj-container">
+                    <div class="proj-image-container">
+                        <img src="./img/sdf_gt_img.png" alt="Ground truth"
+                            style="width: 64px; height: 64px; margin: 0px;" class="proj-image" /><!--
+            --><img src="./img/sdf_illumination_img.png" alt="Learned color"
+                            style="width: 64px; height: 64px; margin: 0px;" class="proj-image" />
+                        <img src="./img/sdf_obj.png" alt="Reconstructed object"
+                            style="width: 128px; height: 64px; margin: 0px;" class="proj-image" />
+                    </div>
+                    <div class="proj-blurb-container">
+                        <h3>SDF Inverse Rendering</h3>
+                        <p>
+                            A simple inverse renderer that uses signed-distance function to reconstruct the object of
+                            interest
+                            (in this case, a calculator on a newel.) The reflection on the calculator screen was hard to
+                            detect,
+                            as structure from motion (using COLMAP) failed to generate significant amount of points on
+                            there,
+                            creating a hole in the object (check out the object file below). Side note, the image is in
+                            a blue shade
+                            because of OpenCV's reverse RGB coloring scheme.
+                        </p>
+                        <a href="https://github.com/andrew-shc/Matrixagon3" target="_blank">repo</a> | <a
+                            href="./calculator.obj" download>calculator.obj</a>
+                    </div>
+                </div>
+            </article>
+            <article class="project">
+                <div class="proj-container">
+                    <div class="proj-image-container">
+                        <img src="./img/feature_depth_alpha.png" alt="feature_depth_alpha.png" class="proj-image" />
+                    </div>
+                    <div class="proj-blurb-container">
+                        <h3>Minecraft-esque voxel renderer & terrain generator</h3>
+                        <p>A Vulkan renderer out of fun to emulate Minecraft's blocky terrain through a custom graphics
+                            pipeline to learn more about how computers render 3D stuff procedurally. Speaking about
+                            procedurally,
+                            the terrain is generated by Perlin noise with multiple octaves to make it a bit more
+                            realistic.
+                        </p>
+                        <a href="https://github.com/andrew-shc/Matrixagon2" target="_blank">repo</a>
+                    </div>
+                </div>
+            </article>
 
         </section>
-    
+
         <section id="teaching">
             <h2>Teaching</h2>
             <div class="horizontal-bar"></div>
-    
+
             <ul>
-                <li>Instructor for <a href="https://codingmind.com" target="_blank" rel="noopener noreferrer">Coding Mind's Academy</a> (Summer 2024 - Fall 2024)</li>
-                <li>Data Science & Machine Learning Instructor for <a href="https://www.berkeleycodingacademy.com" target="_blank" rel="noopener noreferrer">Berkeley Coding Academy</a> (Summer 2024 - Fall 2024)</li>
+                <li>Instructor for <a href="https://codingmind.com" target="_blank" rel="noopener noreferrer">Coding
+                        Mind's Academy</a> (Summer 2024 - Fall 2024)</li>
+                <li>Data Science & Machine Learning Instructor for <a href="https://www.berkeleycodingacademy.com"
+                        target="_blank" rel="noopener noreferrer">Berkeley Coding Academy</a> (Summer 2024 - Fall 2024)
+                </li>
                 <li>Learning Assistant for ICS 33 (Spring 2024)</li>
                 <li>Learning Assistant for ICS 32 (Winter 2024)</li>
             </ul>
         </section>
-    
+
         <!-- <section id="random">
             <h2>Book Reviews 😄</h2>
             <div class="horizontal-bar"></div>
@@ -150,7 +183,7 @@
                 <li>Three Body Problem: ★★★★☆</li>
             </ul>
         </section> -->
-    
+
         <section id="contact">
             <h2>Contact</h2>
             <div class="horizontal-bar"></div>
@@ -193,6 +226,14 @@
 </body>
 
 <script>
+    const $q = $('#q');
+    $q.on('load', () => {
+        const doc = $q[0].contentDocument || $q[0].contentWindow.document;
+        const resize = () => $q.height(Math.max(doc.documentElement.scrollHeight, doc.body.scrollHeight));
+        resize();
+        new ResizeObserver(resize).observe(doc.documentElement);
+    });
+
     // https://www.desmos.com/calculator/zuo8ac32sb
 
     const svg = document.getElementById('lattice');
@@ -223,32 +264,32 @@
     //     svg.appendChild(point);
     // }
 
-    function evalLine(x, [x_a, y_a],[x_b, y_b]) {
-        return ((y_a-y_b)/(x_a-x_b)) * (x-x_a) + y_a;
+    function evalLine(x, [x_a, y_a], [x_b, y_b]) {
+        return ((y_a - y_b) / (x_a - x_b)) * (x - x_a) + y_a;
     }
 
-    function infLine(p_a, p_b, start=0) {
+    function infLine(p_a, p_b, start = 0) {
         let end = window.innerWidth;
         createLine([start, evalLine(start, p_a, p_b)],
-                [end,   evalLine(end,   p_a, p_b)]);
+            [end, evalLine(end, p_a, p_b)]);
     }
 
-    function lerp(t,[x_a, y_a],[x_b, y_b]) {
-        return [(1-t)*x_a + t*x_b, (1-t)*y_a + t*y_b];
+    function lerp(t, [x_a, y_a], [x_b, y_b]) {
+        return [(1 - t) * x_a + t * x_b, (1 - t) * y_a + t * y_b];
     }
 
     function renderLattice(x_1, p_2, p_3, p_4) {
-        const m = (p_3[1]-p_2[1])/(p_3[0]-p_2[0]);
-        const p_1 = [x_1,m*x_1-m*p_4[0]+p_4[1]];
+        const m = (p_3[1] - p_2[1]) / (p_3[0] - p_2[0]);
+        const p_1 = [x_1, m * x_1 - m * p_4[0] + p_4[1]];
 
         const N_x = 30;
         const N_y = 30;
 
-        for(let i=0; i<=N_x; i++) {
-            infLine(lerp(i/N_x,p_1,p_4), lerp(i/N_x,p_2,p_3));
+        for (let i = 0; i <= N_x; i++) {
+            infLine(lerp(i / N_x, p_1, p_4), lerp(i / N_x, p_2, p_3));
         }
-        for(let i=0; i<=N_y; i++) {
-            infLine(lerp((i/N_y)**(1/3),p_1,p_2), lerp((i/N_y)**(1/3),p_4,p_3));
+        for (let i = 0; i <= N_y; i++) {
+            infLine(lerp((i / N_y) ** (1 / 3), p_1, p_2), lerp((i / N_y) ** (1 / 3), p_4, p_3));
         }
     }
 
@@ -269,28 +310,28 @@
     // Calculate the scroll percentage
     const scrollPre = (1 / (docHeight - winHeight)) * 100;
 
-    const p_2_a = 0.70*width;
-    const p_3_a = 0.90*width;
-    const p_4_a = 0.80*width;
+    const p_2_a = 0.70 * width;
+    const p_3_a = 0.90 * width;
+    const p_4_a = 0.80 * width;
 
     function renderScrollAwareLattice() {
 
-        if(width < 1000) {
+        if (width < 1000) {
             return;
         }
         svg.innerHTML = '';  // clears svg
 
         const scrollTop = window.scrollY; // Vertical scroll position
         const scrollP = scrollTop * scrollPre;
-        
+
         // console.log(scrollP);
         // console.log(window.scrollY);
 
         renderLattice(
             /*x_1*/ 50,
-            /*p_2*/ [p_2_a, (0.62-0.0001*scrollP)*height],
-            /*p_3*/ [p_3_a, (0.68-0.0002*scrollP)*height],
-            /*p_4*/ [p_4_a, (1.10-0.0010*scrollP)*height],
+            /*p_2*/[p_2_a, (0.62 - 0.0001 * scrollP) * height],
+            /*p_3*/[p_3_a, (0.68 - 0.0002 * scrollP) * height],
+            /*p_4*/[p_4_a, (1.10 - 0.0010 * scrollP) * height],
         );
     }
     // renderScrollAwareLattice();
