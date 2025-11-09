@@ -226,13 +226,28 @@
 </body>
 
 <script>
-    const $q = $('#q');
-    $q.on('load', () => {
-        const doc = $q[0].contentDocument || $q[0].contentWindow.document;
-        const resize = () => $q.height(Math.max(doc.documentElement.scrollHeight, doc.body.scrollHeight));
-        resize();
-        new ResizeObserver(resize).observe(doc.documentElement);
-    });
+    (() => {
+        const q = document.getElementById('q');
+        // Set exactly once; ignore any subsequent iframe "load" events.
+        q.addEventListener('load', () => {
+            const d = q.contentDocument || q.contentWindow.document;
+            if (!d) return;
+
+            const measure = () =>
+                Math.max(d.body?.scrollHeight || 0, d.documentElement?.scrollHeight || 0);
+
+            // 1) initial set (one-shot)
+            const h0 = measure();
+            if (h0) q.style.height = h0 + 'px';
+
+            // 2) one late pass (images/fonts). Only SHRINK to avoid any growth loop.
+            setTimeout(() => {
+                const h1 = measure();
+                const cur = q.clientHeight || 1;
+                if (h1 && h1 < cur) q.style.height = h1 + 'px';
+            }, 500);
+        }, { once: true });
+    })();
 
     // https://www.desmos.com/calculator/zuo8ac32sb
 
