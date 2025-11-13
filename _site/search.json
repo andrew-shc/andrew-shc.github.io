@@ -4,7 +4,7 @@
     "href": "blog_entry.html",
     "title": "",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\nVGGT Toy Model\n\n\nExploring the Latest in Vision\n\n\n\nNov 8, 2025\n\n\n\n\n\n\n\n\n\n\n\nProbabilities & Convolutions\n\n\nA Review on Computer Vision Fundamentals\n\n\n\nNov 8, 2025\n\n\n\n\n\n\n\n\n\n\n\n(WIP)\n\n\nPath-Space Differentiable Rendering\n\n\n\nNov 8, 2025\n\n\n\n\n\n\n\n\n\n\n\n(WIP)\n\n\nExploring the Latest in Graphics\n\n\n\nNov 8, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n(WIP) Toy VGGT\n\n\nExploring the Latest in Vision\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical Learning\n\n\nA Review on Computer Vision Fundamentals\n\n\n\nNov 13, 2025\n\n\n\n\n\n\n\n\n\n\n\n(WIP)\n\n\nPath-Space Differentiable Rendering\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\n(WIP)\n\n\nExploring the Latest in Graphics\n\n\n\nInvalid Date\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog/10_uavf_perception_wk7.html",
@@ -65,8 +65,64 @@
   {
     "objectID": "blog/20.html",
     "href": "blog/20.html",
-    "title": "Probabilities & Convolutions",
+    "title": "Statistical Learning",
     "section": "",
-    "text": "Introduction\nUnfortunately, there’s going to be a lot of text this time despite the many interactive codes present. So, this blog will be divided into two parts: first, a general, interactive introduction to the concepts we will be reviewing; second, an optional, more in-depth discussion of said topics.\nThis document demonstrates the use of a number of advanced page layout features to produce an attractive and usable document inspired by the Tufte handout style and the use of Tufte’s styles in RMarkdown documents (Sutton 2019). The Tufte handout style is a style that Edward Tufte uses in his books and handouts. Tufte’s style is known for its extensive use of sidenotes, tight integration of graphics with text, and well-set typography. Quarto1 supports most of the layout techniques that are used in the Tufte handout style for both HTML and LaTeX/PDF output.\n\nSutton, Richard S. 2019. “The Bitter Lesson.” http://www.incompleteideas.net/IncIdeas/BitterLesson.html.\n1 To learn more, you can read more about Quarto or visit Quarto’s Github repository.\n\n\n\n\n\n\n\nOverview: MAP & MLE\n\n\nOverview: Convolution\n\n\nIn-depth: MAP & MLE\n\n\nIn-depth: Convolution"
+    "text": "You have probably seen this thing floating around in several machine learning courses: \\(P(y|x,\\theta)\\), \\(P(\\theta|x,y)\\), or even the term MAP and MLE. If you haven’t yet, you will probably start seeing them after. These concepts comes from statistics where they’re called statistical learning, parameter estimation, probabilistic inference, or one of their many synonyms. But what are they? How do they relate to vision? And why is it useful to think about them?\nLet us start with a toy example. We want to design an autonomous system to tell when the car should go or stop, depending on the traffic light. Our dataset are pictures of traffic lights and we want our model \\(M(\\theta)\\) to classify whether an image is \\(\\text{GO}\\) or \\(\\text{STOP}\\) parameterized by \\(\\theta\\). Using one-hot encoding, we let \\(\\mathbf{y}_i:=\\begin{bmatrix} 1 & 0 \\end{bmatrix}^\\top\\) for \\(\\text{GO}\\) and \\(\\mathbf{y}_i:=\\begin{bmatrix} 0 & 1 \\end{bmatrix}^\\top\\) for \\(\\text{STOP}\\). Let red and yellow light be \\(\\text{STOP}\\) and green light be \\(\\text{GO}\\) for our intents and purposes.\n\n\n\n1\n1 Image copied from here\n\nTo simplify our case even more, let us abstract away the high-dimensional input of an image and let \\(\\mathbf{x}_i:=\\begin{bmatrix} x_r & x_y & x_g \\end{bmatrix}^\\top\\), where each component \\(\\in[0,1]\\) corresponds to a snapshot of the illumination intensity of red \\(x_r\\), yellow \\(x_y\\), and the green \\(x_g\\) bulb of a traffic light. So, we can visualize our data as…\n\n\n\n\n\n\n\n\n\n\n\n\nNow that we have introduced our scenario, let us get into the main idea of this blog."
+  },
+  {
+    "objectID": "blog/20.html#maximum-likeilhood-estimation-mle",
+    "href": "blog/20.html#maximum-likeilhood-estimation-mle",
+    "title": "Statistical Learning",
+    "section": "Maximum Likeilhood Estimation (MLE)",
+    "text": "Maximum Likeilhood Estimation (MLE)\n\\(\\hat{\\theta}=\\arg\\max_{\\theta}p(\\mathbf{y}|\\mathbf{x},\\theta)\\)\nRemember, \\(\\mathbf{y}\\) and \\(\\mathbf{x}\\) are our training data and cannot be changed. The only thing we can (and should) change is the model parameter \\(\\theta\\). So, this is basically saying what value of \\(\\theta\\) can maximize the probability of the correct label \\(\\mathbf{y}\\) from its corresponding input \\(\\mathbf{x}\\) for all samples (i.e., data points). The \\(p(\\mathbf{y}|\\mathbf{x},\\theta)\\) is known as the likelihood of \\(\\theta\\). We will define what \\(\\theta\\) is later, but basically it is an abstract representation of model’s parameter, representing choices of hypothesis that best explains data relationship."
+  },
+  {
+    "objectID": "blog/20.html#maximum-a-posteriori-map-estimation",
+    "href": "blog/20.html#maximum-a-posteriori-map-estimation",
+    "title": "Statistical Learning",
+    "section": "Maximum a Posteriori (MAP) Estimation",
+    "text": "Maximum a Posteriori (MAP) Estimation\n\\(\\hat{\\theta}=\\arg\\max_{\\theta}p(\\theta|\\mathbf{x},\\mathbf{y})=\\arg\\max_{\\theta}\\frac{p(\\mathbf{y}|\\mathbf{x},\\theta)p(\\theta)}{p(\\mathbf{x},\\mathbf{y})}\\propto \\arg\\max_{\\theta}p(\\mathbf{y}|\\mathbf{x},\\theta)p(\\theta)\\)\nThis is saying which parameter \\(\\theta\\) for our model (i.e., weights) has the highest probability that explains the data relationship between \\(\\mathbf{x}\\) and \\(\\mathbf{y}\\). In other words, this maximizes the posterior distribution \\(P(\\theta|\\mathbf{x},\\mathbf{y})\\) (i.e., the posterior of \\(\\theta\\)). We then use the Bayes’ theorem 5 to get back our likelihood again with an additional prior \\(p(\\theta)\\) 6 with a constant factor \\(\\frac{1}{p(\\mathbf{x},\\mathbf{y})}\\) which can be ignored 7.\n5 A commonly used special operation in statistics/probabilities. Check here6 There’s many ways to think about prior \\(p(\\theta)\\). You think of it as a weighting factor of the likelihood that says how likely that likelihood is given the selected \\(\\theta\\). Or, as a balance between data-driven likelihood and previously known (i.e., “prior”) knowledge on how \\(\\theta\\) should behave (e.g., \\(\\theta\\) is likely to be 67 for some reason). Or, as a regularizer where we follow Occam’s razor that the weights should be simple.7 This is a probability over the training data \\(\\mathbf{y}\\) and \\(\\mathbf{x}\\). It’s not going to change throughout the maximization process of \\(\\theta\\)."
+  },
+  {
+    "objectID": "blog/20.html#bayesian-inference",
+    "href": "blog/20.html#bayesian-inference",
+    "title": "Statistical Learning",
+    "section": "Bayesian Inference",
+    "text": "Bayesian Inference\n\\(p(y^*|x^*,\\mathbf{x},\\mathbf{y})=\\int p(y^*|x^*,\\theta)p(\\theta|\\mathbf{x},\\mathbf{y})d\\theta\\)\nInstead of estimating a specific parameter \\(\\theta\\) (i.e., point estimate), we interpret the model’s parameters \\(\\theta\\) as probabilistic 8. Notice we are not maximizing anything or even calculating \\(\\theta\\) itself, but directly predicting our unseen data point \\(y^*\\) given \\(x^*\\). In fact, this is a summation of each prediction \\(p(y^*|x^*,\\theta)\\) from all possible parameter \\(\\theta\\) weighted by the posterior for each \\(\\theta\\). The integral can sometimes be computed analytically given a good conjugate prior 9, but most of the time, it is approximated by sampling (i.e., Monte-Carlo).\n8 In statistics, there are two interpretations: frequentist (there’s a single true value and the randomness is strictly from sampling error like MLE/MAP) and Bayesian (there are no true value and the probability is intrinsic).9 A special prior when combined with its corresponding likelihood produces a nice-to-work-with analytical posterior (remember, we are integrating the posterior, which is nasty most of the time). For example, the Gaussian distribution \\(\\mathcal{N}(\\mu,\\sigma^2)\\)’s conjugate prior is Normal-inverse gamma. Check here."
+  },
+  {
+    "objectID": "blog/20.html#others",
+    "href": "blog/20.html#others",
+    "title": "Statistical Learning",
+    "section": "Others",
+    "text": "Others\nFor generative or unsupervised models, we don’t necessarily have a label \\(\\mathbf{y}\\). What we do instead is have the model learn the data distribution of the input \\(\\mathbf{x}\\) itself, resulting in posteriors with \\(p(\\theta|\\mathbf{x})\\) instead of \\(p(\\theta|\\mathbf{x},\\mathbf{y})\\), or likelihood of \\(p(\\mathbf{x}|\\theta)\\) instead of \\(p(\\mathbf{y}|\\mathbf{x},\\theta)\\). Sometimes, they also have the latent distribution \\(\\mathbf{z}\\) as a more efficient, intermediate way to have the model learn the distribution. For example, VAEs Simon J. D. Prince (2023, chap. 17.3) and diffusions Simon J. D. Prince (2023, chap. 18.4) are learned via MLE with \\(p(\\mathbf{x}|\\theta)\\) as the likelihood. In some cases, we do a maximization and a minimization of two different sets of parameters \\(\\theta\\) and \\(\\phi\\) like in GANs Simon J. D. Prince (2023, chap. 15.1.1). Or, in Deep RL, we maximize the policy Simon J. D. Prince (2023, chap. 19.3).\nFor the purpose of learning (i.e., you learning this), we will stick with much more simpler MLE under supervised discriminative learning. Now enough with the theory and see some visuals from our example scenario."
+  },
+  {
+    "objectID": "blog/20.html#analytically-estimate-theta",
+    "href": "blog/20.html#analytically-estimate-theta",
+    "title": "(WIP) Statistical Learning",
+    "section": "Analytically Estimate \\(\\theta\\)",
+    "text": "Analytically Estimate \\(\\theta\\)\nSince GDA/QDA are clean to work with, they have an analytical method to compute the optimal parameter \\(\\theta\\) given the data \\(\\mathbf{x}\\) and \\(\\mathbf{y}\\). We basically compute the derivative of the log-likelihood with respect to each parameters to obtain the following 15.\n15 Check the derivations hereWe find that \\(\\phi_k=\\frac{n_\\mathbf{k}}{n}\\) where \\(n\\) is the total number of samples/data while \\(n_\\mathbf{k}\\) is the number of samples with \\(\\mathbf{y}_i=\\mathbf{k}\\).\n\\[\n\\begin{align}\n\\mathbf{\\mu}_\\mathbf{k} &= \\frac{\\sum_{i \\text{  s.t.  } \\mathbf{y}_i=\\mathbf{k}} \\mathbf{x}_i}{n_\\mathbf{k}} \\\\\n\\Sigma_\\mathbf{k} &= \\frac{\\sum_{i \\text{  s.t.  } \\mathbf{y}_i=\\mathbf{k}} (\\mathbf{x}_i-\\mathbf{\\mu}_\\mathbf{k})(\\mathbf{x}_i-\\mathbf{\\mu}_\\mathbf{k})^\\top}{n_\\mathbf{k}} \\\\\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "blog/20.html#gradient-descent-on-theta",
+    "href": "blog/20.html#gradient-descent-on-theta",
+    "title": "(WIP) Statistical Learning",
+    "section": "Gradient Descent on \\(\\theta\\)",
+    "text": "Gradient Descent on \\(\\theta\\)\nWhile the analytical solution is elegant, most ML problems don’t have closed-form solutions. Let’s see how gradient descent iteratively finds the parameters by maximizing the log-likelihood.\n\n\n\n\n\n\nYou can see how the model distribution gets closer to the true data distribution for each gradient step."
+  },
+  {
+    "objectID": "blog/20.html#analytical-estimation-of-theta",
+    "href": "blog/20.html#analytical-estimation-of-theta",
+    "title": "Statistical Learning",
+    "section": "Analytical Estimation of \\(\\theta\\)",
+    "text": "Analytical Estimation of \\(\\theta\\)\nSince GDA/QDA are clean to work with, they have an analytical method to compute the optimal parameter \\(\\theta\\) given the data \\(\\mathbf{x}\\) and \\(\\mathbf{y}\\). We basically compute the derivative of the log-likelihood with respect to each parameters to obtain the following 15.\n15 Check the derivations hereWe find that \\(\\phi_k=\\frac{n_\\mathbf{k}}{n}\\) where \\(n\\) is the total number of samples/data while \\(n_\\mathbf{k}\\) is the number of samples with \\(\\mathbf{y}_i=\\mathbf{k}\\).\n\\[\n\\begin{align}\n\\mathbf{\\mu}_\\mathbf{k} &= \\frac{\\sum_{i \\text{  s.t.  } \\mathbf{y}_i=\\mathbf{k}} \\mathbf{x}_i}{n_\\mathbf{k}} \\\\\n\\Sigma_\\mathbf{k} &= \\frac{\\sum_{i \\text{  s.t.  } \\mathbf{y}_i=\\mathbf{k}} (\\mathbf{x}_i-\\mathbf{\\mu}_\\mathbf{k})(\\mathbf{x}_i-\\mathbf{\\mu}_\\mathbf{k})^\\top}{n_\\mathbf{k}} \\\\\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "blog/20.html#gradient-descent-estimation-of-theta",
+    "href": "blog/20.html#gradient-descent-estimation-of-theta",
+    "title": "Statistical Learning",
+    "section": "Gradient Descent Estimation of \\(\\theta\\)",
+    "text": "Gradient Descent Estimation of \\(\\theta\\)\nSince we are using QDAs/GDAs, we have analytical solution available us (and we should use it in practice if QDAs/GDAs is what we really want). But most ML models, especially in vision, uses more complicated formulations like neural networks, we have to resort using numerical optimizations like gradient descent (GD), stochastic gradient descent, and Adam. So let us see how we optimize model in the majority of the cases via GD over the negative log-likelihood (NLL), which is just the negation of the log of the likelihood \\(\\frac{1}{n}\\sum^n_{i=1} p(\\mathbf{y}_i=\\mathbf{k}|\\mathbf{x}_i,\\theta)\\), including the NLL of the Gaussian in def neg_log_likelihood_gaussian. Note, we omit \\(\\log\\phi_\\mathbf{k}\\) since we are not optimizing that.\nThis will take about a few minutes. Make sure you run the previous cell.\n\n\n\n\n\n\nYou can see how the model distribution gets closer to the true data distribution for each gradient step. Remember, each point is a data point representing the 3-pixel image of a traffic light. Theoretically speaking, if there exists an analytical solution of a quadratic expression (single minimum), gradient descent should effectively reach to the same optimal point. However, the reason it’s not is likely because we’re missing the class prior \\(\\phi_\\mathbf{k}\\) or the variance (i.e., the spread) is different between the two categories (needing two different learning rate?) Regardless, it still mostly converges."
   }
 ]

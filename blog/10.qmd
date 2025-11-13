@@ -1,7 +1,7 @@
 ---
-title: "Toy VGGT"
+title: "(WIP) Toy VGGT"
 subtitle: "Exploring the Latest in Vision"
-date: 2025-11-08 
+date: ??
 # date-modified: last-modified
 format:
     r-wasm/live-html: 

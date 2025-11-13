@@ -1,7 +1,7 @@
 ---
 title: "(WIP)"
 subtitle: "Exploring the Latest in Graphics"
-date: 2025-11-08 
+date: ??
 # date-modified: last-modified
 format:
     r-wasm/live-html: 

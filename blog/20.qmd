@@ -1,7 +1,8 @@
 ---
-title: "Probabilities & Convolutions"
+title: "Statistical Learning"
 subtitle: "A Review on Computer Vision Fundamentals"
-date: 2025-11-08 
+image: ../img/blog/20_splash.png
+date: 2025-11-13
 # date-modified: last-modified
 format:
     r-wasm/live-html: 
@@ -14,25 +15,479 @@ citation-location: margin
 bibliography: main.bib
 toc: true
 toc-location: left
+toc-title: "{{< meta title >}}"
 ---
 
 # Introduction
 
-Unfortunately, there's going to be a lot of text this time despite the many interactive codes present. So, this blog will be divided into two parts: first, a general, interactive introduction to the concepts we will be reviewing; second, an optional, more in-depth discussion of said topics.
+You have probably seen this thing floating around in several machine learning courses: $P(y|x,\theta)$, $P(\theta|x,y)$, or even the term MAP and MLE. If you haven't yet, you will probably start seeing them after. These concepts comes from statistics where they're called statistical learning, parameter estimation, probabilistic inference, or one of their many synonyms. But what are they? How do they relate to vision? And why is it useful to think about them?
 
-This document demonstrates the use of a number of advanced page layout features to produce an attractive and usable document inspired by the Tufte handout style and the use of Tufte's styles in RMarkdown documents [@sutton2019bitter]. The Tufte handout style is a style that Edward Tufte uses in his books and handouts. Tufte's style is known for its extensive use of sidenotes, tight integration of graphics with text, and well-set typography. Quarto[^1] supports most of the layout techniques that are used in the Tufte handout style for both HTML and LaTeX/PDF output.
+Let us start with a toy example. We want to design an autonomous system to tell when the car should go or stop, depending on the traffic light. Our dataset are pictures of traffic lights and we want our model $M(\theta)$ to classify whether an image is $\text{GO}$ or $\text{STOP}$ parameterized by $\theta$. Using one-hot encoding, we let $\mathbf{y}_i:=\begin{bmatrix} 1 & 0 \end{bmatrix}^\top$ for $\text{GO}$ and $\mathbf{y}_i:=\begin{bmatrix} 0 & 1 \end{bmatrix}^\top$ for $\text{STOP}$. Let red and yellow light be $\text{STOP}$ and green light be $\text{GO}$ for our intents and purposes.
 
-[^1]: To learn more, you can read more about [Quarto](https://www.quarto.org) or visit [Quarto's Github repository](https://www.github.com/quarto-dev/quarto-cli).
+![[^0]](../img/blog/20_trafficlight.png){width=500}
+
+To simplify our case even more, let us abstract away the high-dimensional input of an image and let $\mathbf{x}_i:=\begin{bmatrix} x_r & x_y & x_g \end{bmatrix}^\top$, where each component $\in[0,1]$ corresponds to a snapshot of the illumination intensity of red $x_r$, yellow $x_y$, and the green $x_g$ bulb of a traffic light. So, we can visualize our data as...
 
 ```{pyodide}
-print("ah")
+#| echo: false
+
+import numpy as np
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+
+def _symmetrize(M):
+    return 0.5 * (M + M.T)
+
+def _make_spd(M, eps=1e-5):
+    M = _symmetrize(M)
+    w, V = np.linalg.eigh(M)  # OK to use numpy here; we don't backprop through this projection
+    w = np.maximum(w, eps)
+    return (V * w) @ V.T
+
+
+def plot_3d_traffic_data(x_data, y_data, samples_go=None, samples_stop=None,
+            title=None, figsize=(10,8), ax=None):
+  if ax is None:
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111, projection='3d')
+  else:
+    fig = ax.figure
+  stop_mask = y_data[:, 1] == 1
+  go_mask = y_data[:, 0] == 1
+  ax.scatter(x_data[stop_mask,0], x_data[stop_mask,1], x_data[stop_mask,2], c='red', marker='o', s=50, alpha=1.0, label='p(y=STOP|x)')
+  ax.scatter(x_data[go_mask,0], x_data[go_mask,1], x_data[go_mask,2], c='green', marker='^', s=50, alpha=1.0, label='p(y=GO|x)')
+  if samples_stop is not None:
+    ax.scatter(samples_stop[:,0], samples_stop[:,1], samples_stop[:,2], c='blue', marker='o', s=30, alpha=1.0, label='p(y=STOP|x,θ)')
+  if samples_go is not None:
+    ax.scatter(samples_go[:,0], samples_go[:,1], samples_go[:,2], c='purple', marker='^', s=30, alpha=1.0, label='p(y=GO|x,θ)')
+  ax.set(xlabel='Red Intensity', ylabel='Yellow Intensity', zlabel='Green Intensity', title=title,
+       xlim=[-0.5,1.5], ylim=[-0.5,1.5], zlim=[-0.5,1.5])
+
+  ax.view_init(elev=20, azim=45)
+  ax.legend(fontsize=9, loc='upper left', framealpha=0.9)
+  plt.tight_layout()
+
+  return fig, ax
+
+N_red = 100
+N_yellow = 30
+N_green = 150
+
+mean = 1
+std_dev = 0.2  # adjust spread as needed
+cov_matrix = np.eye(3) * (std_dev ** 2)
+
+x_red = np.random.multivariate_normal(np.array([1, 0, 0]), cov_matrix, N_red)
+x_yellow = np.random.multivariate_normal(np.array([0, 1, 0]), cov_matrix, N_yellow)
+x_green = np.random.multivariate_normal(np.array([0, 0, 1]), cov_matrix, N_green)
+y_red = np.concat(
+  [
+    np.zeros((N_red, 1)),
+    np.ones((N_red, 1)),
+  ],
+  axis=1
+)
+y_yellow = np.concat(
+  [
+    np.zeros((N_yellow, 1)),
+    np.ones((N_yellow, 1)),
+  ],
+  axis=1
+)
+y_green = np.concat(
+  [
+    np.ones((N_green, 1)),
+    np.zeros((N_green, 1)),
+  ],
+  axis=1
+)
+
+x = np.concat([x_red, x_yellow, x_green], axis=0)
+x = np.clip(x, 0, 1)
+y = np.concat([y_red, y_yellow, y_green], axis=0)
+
+# N x 3 (illum. intensity) ==>
+# N x 1 x 3 (the three bulbs of a traffic light) x 3 (RGB)
+transforms = np.array([
+    [1, 0, 0],
+    [1, 1, 0],
+    [0, 1, 0]
+])
+x_render = np.repeat(x[:, None, :, None], 3, axis=3)  * transforms[np.newaxis, np.newaxis, :, :]
+x_render = np.swapaxes(x_render, 1, 2)
 ```
 
+```{pyodide}
+from matplotlib import pyplot as plt
 
-# Overview: MAP & MLE
+fig, axes = plt.subplots(1, 3, figsize=(7, 4), sharey=True)
 
-# Overview: Convolution
+print(x_render.shape)  # for rendering this plot (N x 3 x 1 x 3)
+print(x.shape)  # for data (N x 3)
+axes[0].imshow(x_render[0], interpolation="nearest")
+axes[1].imshow(x_render[200], interpolation="nearest")
+axes[2].imshow(x_render[100], interpolation="nearest")
+axes[0].set_title('STOP', fontsize=24)
+axes[1].set_title('GO', fontsize=24)
+axes[2].set_title('STOP', fontsize=24)
+axes[0].axis('off')
+axes[1].axis('off')
+axes[2].axis('off')
+plt.tight_layout()
+plt.show()
+```
 
-# In-depth: MAP & MLE
+Now that we have introduced our scenario, let us get into the main idea of this blog.
 
-# In-depth: Convolution
+[^0]: Image copied from [here](https://github.com/Alyxion/Udacity_SelfDrivingCarEngineerNd)
+
+# Learners
+
+For any ML-based vision models (really any vision models you come across now,) we have a learner and a model, as explained in @foundationsCVbook[Chapter 9]. A model can be neural networks, transformers, etc... but we will do something simpler. But first, what kind of learner are we trying to model here? Is it supervised, self-supervised, unsupervised, or reinforcement learning? Is it a generative or discriminative learning? [^2]
+
+Since we already have a pretty clear $\mathbf{x}$ and $\mathbf{y}$, it probably means we are working under a supervised learning regime. We want our model to predict $\mathbf{y}$, so it would also be under supervised discriminative learning regime. Since our labels for $\mathbf{y}$ are categorical, we will specifically be working with multi-class (single-label) classifiers [^1].
+
+Before continuiting, please refer to @mlprobabilistic[Chapter 3.2] to know more about Bayes' theorem and how likelihoods, posteriors, priors, and evidence all have special meaning and nuances despite them denoted as $p$ for probabilities.
+
+According to @princeCVMLI2012[Chapter 4], there are three classical approaches for supervised discriminative learning[^10]:
+
+## Maximum Likeilhood Estimation (MLE)
+
+$\hat{\theta}=\arg\max_{\theta}p(\mathbf{y}|\mathbf{x},\theta)$
+
+Remember, $\mathbf{y}$ and $\mathbf{x}$ are our training data and cannot be changed. The only thing we can (and should) change is the model parameter $\theta$. So, this is basically saying what value of $\theta$ can maximize the probability of the correct label $\mathbf{y}$ from its corresponding input $\mathbf{x}$ for all samples (i.e., data points). The $p(\mathbf{y}|\mathbf{x},\theta)$ is known as the likelihood of $\theta$. We will define what $\theta$ is later, but basically it is an abstract representation of model's parameter, representing choices of hypothesis that best explains data relationship.
+
+## Maximum a Posteriori (MAP) Estimation
+
+$\hat{\theta}=\arg\max_{\theta}p(\theta|\mathbf{x},\mathbf{y})=\arg\max_{\theta}\frac{p(\mathbf{y}|\mathbf{x},\theta)p(\theta)}{p(\mathbf{x},\mathbf{y})}\propto \arg\max_{\theta}p(\mathbf{y}|\mathbf{x},\theta)p(\theta)$
+
+This is saying which parameter $\theta$ for our model (i.e., weights) has the highest probability that explains the data relationship between $\mathbf{x}$ and $\mathbf{y}$. In other words, this maximizes the posterior distribution $P(\theta|\mathbf{x},\mathbf{y})$ (i.e., the posterior of $\theta$). We then use the Bayes' theorem [^3] to get back our likelihood again with an additional prior $p(\theta)$ [^4] with a constant factor $\frac{1}{p(\mathbf{x},\mathbf{y})}$ which can be ignored [^5].
+
+## Bayesian Inference
+
+$p(y^*|x^*,\mathbf{x},\mathbf{y})=\int p(y^*|x^*,\theta)p(\theta|\mathbf{x},\mathbf{y})d\theta$
+
+Instead of estimating a specific parameter $\theta$ (i.e., point estimate), we interpret the model's parameters $\theta$ as probabilistic [^6]. Notice we are not maximizing anything or even calculating $\theta$ itself, but directly predicting our unseen data point $y^*$ given $x^*$. In fact, this is a summation of each prediction $p(y^*|x^*,\theta)$ from all possible parameter $\theta$ weighted by the posterior for each $\theta$. The integral can sometimes be computed analytically given a good conjugate prior [^7], but most of the time, it is approximated by sampling (i.e., Monte-Carlo).
+
+[^1]: Since there are only two categories, we can simplify it to a binary classification; however, multi-class classification generalizes to any $K$ categories, it will be more easier to visualize how it works. Single-label just means the categories are mutually exclusive, and the model should expect to output a single category per input sample (i.e., image).
+
+[^2]: After the generative model boom, this distinction has become more important. Generative model has long existed in statistics, and has only been recently (within 5 years) exposed to the vision community at a scale.
+
+[^3]: A commonly used special operation in statistics/probabilities. Check [here](https://en.wikipedia.org/wiki/Bayes%27_theorem)
+
+[^4]: There's many ways to think about prior $p(\theta)$. You think of it as a weighting factor of the likelihood that says how likely that *likeli*hood is given the selected $\theta$. Or, as a balance between data-driven likelihood and previously known (i.e., "prior") knowledge on how $\theta$ should behave (e.g., $\theta$ is likely to be 67 for some reason). Or, as a regularizer where we follow Occam's razor that the weights should be simple.
+
+[^5]: This is a probability over the training data $\mathbf{y}$ and $\mathbf{x}$. It's not going to change throughout the maximization process of $\theta$.
+
+[^6]: In statistics, there are two interpretations: [frequentist](https://en.wikipedia.org/wiki/Frequentist_probability) (there's a single true value and the randomness is strictly from sampling error like MLE/MAP) and [Bayesian](https://en.wikipedia.org/wiki/Bayesian_probability) (there are no true value and the probability is intrinsic).
+
+[^7]: A special prior when combined with its corresponding likelihood produces a nice-to-work-with analytical posterior (remember, we are integrating the posterior, which is nasty most of the time). For example, the Gaussian distribution $\mathcal{N}(\mu,\sigma^2)$'s conjugate prior is Normal-inverse gamma. Check [here](https://en.wikipedia.org/wiki/Conjugate_prior).
+
+[^10]: If you known gradient descent and the notion of "loss" in ML/vision, the following three approaches are a generalization to them. These general form allows us to see learning at a bigger picture, though we won't be discussing this here.
+
+## Others
+
+For generative or unsupervised models, we don't necessarily have a label $\mathbf{y}$. What we do instead is have the model learn the data distribution of the input $\mathbf{x}$ itself, resulting in posteriors with $p(\theta|\mathbf{x})$ instead of $p(\theta|\mathbf{x},\mathbf{y})$, or likelihood of $p(\mathbf{x}|\theta)$ instead of $p(\mathbf{y}|\mathbf{x},\theta)$. Sometimes, they also have the latent distribution $\mathbf{z}$ as a more efficient, intermediate way to have the model learn the distribution. For example, VAEs @prince2023understanding[Chapter 17.3] and diffusions @prince2023understanding[Chapter 18.4] are learned via MLE with $p(\mathbf{x}|\theta)$ as the likelihood. In some cases, we do a maximization and a minimization of two different sets of parameters $\theta$ and $\phi$ like in GANs @prince2023understanding[Chapter 15.1.1]. Or, in Deep RL, we maximize the policy @prince2023understanding[Chapter 19.3].
+
+For the purpose of learning (i.e., you learning this), we will stick with much more simpler MLE under supervised discriminative learning. Now enough with the theory and see some visuals from our example scenario.
+
+
+# Example: MLE for multi-label classification
+
+Let us first visualize our data.
+
+
+```{pyodide}
+#| echo: false
+
+print("x dimension:", x.shape)  # N x 3
+print("y dimension:", y.shape)  # N x 2
+
+# Create masks for GO/STOP classes (reused throughout)
+stop_mask = y[:, 1] == 1
+go_mask = y[:, 0] == 1
+
+# Use modular plotting function
+fig, ax = plot_3d_traffic_data(x, y)
+plt.show()
+```
+
+Our likelihood $p(\mathbf{y}|\mathbf{x},\theta)$ will follow a categorical distribution where $p(\mathbf{y}_i=\mathbf{k}|\mathbf{x}_i,\theta)$ denotes the likelihood for each data sample $i$ and $\mathbf{k}\in K=\{\text{STOP},\text{GO}\}$, where $K$ can be thought of as a set of all one-hot-encoded categories. [^c1]
+
+[^c1]: Think of it like a vector-valued likelihood where $p(\mathbf{y}_i|\mathbf{x}_i,\theta)=\begin{bmatrix} p(\mathbf{y}_i= & \text{GO} & |\mathbf{x}_i,\theta) \\ p(\mathbf{y}_i= & \text{STOP} & |\mathbf{x}_i,\theta) \end{bmatrix}$
+
+Now, to choose a model, we will use multivariate Gaussian distribution to represent each categories. Remember, the model we choose are arbitrary and mostly follows what we think is the best for the given situation. We might choose logistic regression for a binary classification (which is still slightly different from two-label classification) to decide whether an image of a light is $\text{GO}$ or $\text{STOP}$. Or, we can follow one of the more later trends and use neural networks on everything. But overall, it doesn't change the overall theory of learning and the underlying optimization and criterion/loss, so we pick the simpler option: multivariate Gaussian distribution.
+
+Recall, a univariate Gaussian $\mathcal{N}(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}=\frac{1}{\sqrt{(2\pi)^1\sigma^2}}e^{-\frac{1}{2}(x-\mu)(\sigma^2)^{-1}(x-\mu)}$. However, our input is 3D, so we have to use 3D multivariate Gaussian $\mathcal{N}_3(\mathbf{x}|\mathbf{\mu}, \Sigma)=\frac{1}{\sqrt{(2\pi)^3|\Sigma|}}e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})}$[^c2]. In other words, we let $p(\mathbf{x}_i|\mathbf{y}_i=\mathbf{k},\theta):=\mathcal{N}_3(\mathbf{x}_i|\mathbf{\mu}_\mathbf{k}, \Sigma_\mathbf{k})$.
+
+Now let's go check what's the initial default distribution the model has started with.
+
+```{pyodide}
+# parameters
+theta = [
+  np.array([0.0, 0.0, 0.0]),                                # mu_GO
+  np.eye(3),                                                # sigma_GO
+  np.array([N_green / (N_green+N_red+N_yellow)]),           # phi_GO
+  np.array([0.0, 0.0, 0.0]),                                # mu_STOP
+  np.eye(3),                                                # sigma_STOP
+  np.array([(N_red+N_yellow) / (N_green+N_red+N_yellow)]),  # phi_STOP
+]
+
+samples_go = np.random.multivariate_normal(theta[0], theta[1], N_green)
+samples_stop = np.random.multivariate_normal(theta[3], theta[4], N_red+N_yellow)
+
+fig, ax = plot_3d_traffic_data(
+  x, y, 
+  samples_go=samples_go,
+  samples_stop=samples_stop
+)
+plt.show()
+```
+
+Basically, we want these distributions to match (so the model is able to classify correctly), which currently it is not.
+
+Given $\theta=\{\mu_\text{GO}, \Sigma_\text{GO}, \phi_\text{GO}, \mu_\text{STOP}, \Sigma_\text{STOP}, \phi_\text{STOP}\}$[^c4], we can finally define our MLE exactly as 
+$$
+\begin{align}
+\arg\max_\theta \frac{1}{n}\sum^n_{i=1} p(\mathbf{y}_i=\mathbf{k}|\mathbf{x}_i,\theta) &= \arg\max_\theta  \frac{1}{n}\sum^n_{i=1} \frac{p(\mathbf{y}_i=\mathbf{k},\mathbf{x}_i|\theta)}{p(\mathbf{x}_i|\theta)} \\
+     &= \arg\max_\theta  \frac{1}{n}\sum^n_{i=1} \frac{p(\mathbf{x}_i|\mathbf{y}_i=\mathbf{k},\theta)p(\mathbf{y}_i=\mathbf{k}|\theta)}{\sum_{\mathbf{j}\in K} p(\mathbf{x}_i|\mathbf{y}_i=\mathbf{j},\theta)p(\mathbf{y}_i=\mathbf{j}|\theta)} \\
+     &= \arg\max_\theta  \frac{1}{n}\sum^n_{i=1} \frac{\mathcal{N}_3(\mathbf{x}_i|\mathbf{\mu}_\mathbf{k}, \Sigma_\mathbf{k}) p(\mathbf{y}_i=\mathbf{k}|\theta)}{\sum_{\mathbf{j}\in K} \mathcal{N}_3(\mathbf{x}_i|\mathbf{\mu}_\mathbf{j}, \Sigma_\mathbf{j})p(\mathbf{y}_i=\mathbf{j}|\theta)}
+\end{align}
+$$
+[^c5]
+
+[^c5]: $$
+\begin{align}
+p(a,b|c) &= \frac{p(a,b,c)}{p(c)} \\
+  &= \frac{p(a,b,c)p(b,c)}{p(c)p(b,c)} = \frac{p(a,b,c)}{p(b,c)}\frac{p(b,c)}{p(c)} \\
+  &= p(a|b,c)p(b|c)
+\end{align}$$
+
+[^c4]: For each one-hot-encoded category $\mathbf{k}\in K$, $\mu_\mathbf{k}$ and $\Sigma_\mathbf{k}$ represents the model's parameter for each of the categories' Normal distribution (mean and variance, respectively). $\phi_\mathbf{k}$ represents the ratio/weighting of each category $\mathbf{k}$. So, $p(\mathbf{y}_i=\mathbf{k}|\theta)=\phi_\mathbf{k}$
+
+In fact, learning a model where we assume the $\mathbf{x}$'s in each category of the categorical distribution $\mathbf{y}$ as a Gaussian is known as Gaussian Discriminative Analysis (GDA) or Quadratic Discriminative Analysis (QDA) which can you read more [here](https://kuleshov-group.github.io/aml-book/contents/lecture7-gaussian-discriminant-analysis.html#gaussian-discriminant-analysis). Additionally, this is very close to the most well-known model/learner out there: Naïve Bayes. Naïve Bayes assumes each input data point $\mathbf{x}_i$ are independent of each other, but GDA/QDA assumes each input data point $\mathbf{x}_i$ follow a Gaussian distribution as mentioned before. [^c3]
+
+[^c2]: For more info on multivariate Gaussian and the covariance matrix $\Sigma$, check @prince2023understanding[Appendix C.3.2]
+
+[^c3]: The GDA/QDA, despite its name, actually has to go through a generative hoop for the derivation, since we are actually modelling our input $\mathbf{x}_i$ as some distribution which we can technically *re-sample from again* to *generate* a new sample of the similiar distribution to $\mathbf{x}_i$.
+
+## Analytical Estimation of $\theta$
+
+Since GDA/QDA are clean to work with, they have an analytical method to compute the optimal parameter $\theta$ given the data $\mathbf{x}$ and $\mathbf{y}$. We basically compute the derivative of the log-likelihood with respect to each parameters to obtain the following [^d1].
+
+[^d1]: Check the derivations [here](https://kuleshov-group.github.io/aml-book/contents/lecture7-gaussian-discriminant-analysis.html#optimizing-the-log-likelihood)
+
+We find that $\phi_k=\frac{n_\mathbf{k}}{n}$ where $n$ is the total number of samples/data while $n_\mathbf{k}$ is the number of samples with $\mathbf{y}_i=\mathbf{k}$.
+
+$$
+\begin{align}
+\mathbf{\mu}_\mathbf{k} &= \frac{\sum_{i \text{  s.t.  } \mathbf{y}_i=\mathbf{k}} \mathbf{x}_i}{n_\mathbf{k}} \\
+\Sigma_\mathbf{k} &= \frac{\sum_{i \text{  s.t.  } \mathbf{y}_i=\mathbf{k}} (\mathbf{x}_i-\mathbf{\mu}_\mathbf{k})(\mathbf{x}_i-\mathbf{\mu}_\mathbf{k})^\top}{n_\mathbf{k}} \\
+\end{align}
+$$
+
+```{pyodide}
+go_mask_idx = y[:, 0] == 1
+stop_mask_idx = y[:, 1] == 1
+
+x_go = x[go_mask_idx]
+x_stop = x[stop_mask_idx]
+n_go = x_go.shape[0]
+n_stop = x_stop.shape[0]
+
+mu_go = np.sum(x_go, axis=0) / n_go
+mu_stop = np.sum(x_stop, axis=0) / n_stop
+
+diff_go = x_go - mu_go
+diff_stop = x_stop - mu_stop
+# the transpose are flipped since we are using row vectors
+# here (common in code) instead of col. vectors
+# (common in text form)
+sigma_go = (diff_go.T @ diff_go) / n_go
+sigma_stop = (diff_stop.T @ diff_stop) / n_stop
+
+# used only when computing the prediction
+# (i.e., the final classification probability of the images)
+phi_go = n_go / (n_go + n_stop)
+phi_stop = n_stop / (n_go + n_stop)
+
+theta = [mu_go, sigma_go, phi_go, mu_stop, sigma_stop, phi_stop]
+
+samples_go = np.random.multivariate_normal(
+  theta[0], theta[1], N_green
+)
+samples_stop = np.random.multivariate_normal(
+  theta[3], theta[4], N_red+N_yellow
+)
+
+fig, ax = plot_3d_traffic_data(
+  x, y,
+  samples_go=samples_go,
+  samples_stop=samples_stop,
+)
+plt.show()
+```
+
+## Gradient Descent Estimation of $\theta$
+
+Since we are using QDAs/GDAs, we have analytical solution available us (and we should use it in practice if QDAs/GDAs is what we really want). But most ML models, especially in vision, uses more complicated formulations like neural networks, we have to resort using numerical optimizations like gradient descent (GD), stochastic gradient descent, and Adam. So let us see how we optimize model in the majority of the cases via GD over the negative log-likelihood (NLL), which is just the negation of the log of the likelihood $\frac{1}{n}\sum^n_{i=1} p(\mathbf{y}_i=\mathbf{k}|\mathbf{x}_i,\theta)$, including the NLL of the Gaussian in `def neg_log_likelihood_gaussian`. Note, we omit $\log\phi_\mathbf{k}$ since we are not optimizing that.
+
+This will take about a few minutes. Make sure you run the previous cell.
+
+```{pyodide}
+#| fig-align: center
+
+import autograd.numpy as anp
+from autograd import grad
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+from IPython.display import HTML
+
+# per-class negative log-likelihood for a full Gaussian
+def neg_log_likelihood_gaussian(mu, sigma, x_class):
+    n, d = x_class.shape
+
+    # optional regularizer for stability (but that makes MLE into a MAP)
+    sigma_reg = sigma # + 1e-4 * anp.eye(d)
+    sign, logdet = anp.linalg.slogdet(sigma_reg)    # should be +1 for SPD
+    inv_sigma = anp.linalg.inv(sigma_reg)
+
+    diff = x_class - mu
+    # quadratic term per sample: (x-μ)^T Σ^{-1} (x-μ)
+    quad = anp.sum(diff * (diff @ inv_sigma), axis=1)
+
+    # average NLL
+    return 0.5 * (d * anp.log(2*anp.pi) + logdet) + 0.5 * anp.mean(quad)
+
+x_go_data   = x[go_mask]
+x_stop_data = x[stop_mask]
+
+# initialize with zero mean and identity covariances matrix (variance=1)
+np.random.seed(42)
+mu_go_gd   = np.zeros(x.shape[1])
+mu_stop_gd = np.zeros(x.shape[1])
+sigma_go_gd   = np.eye(x.shape[1])
+sigma_stop_gd = np.eye(x.shape[1])
+
+# compute the gradient of the function w.r.t. parameter index
+grad_mu    = grad(neg_log_likelihood_gaussian, 0)
+grad_sigma = grad(neg_log_likelihood_gaussian, 1)
+
+# optimization
+animation_snapshots = []
+lr_mu = 0.1
+lr_sigma = 0.05
+num_iterations = 100
+clip = 10.0
+
+for it in range(num_iterations + 1):
+    # covariance matrix very sensitive (need to employ scheduler)
+    if it == 25:
+      lr_sigma = 0.05
+    elif it == 50:
+      lr_sigma = 0.01
+      lr_mu = 0.01
+    elif it == 75:
+      lr_sigma = 0.001
+  
+    if it % 5 == 0:
+        # compute loss as is
+        loss_go   = neg_log_likelihood_gaussian(mu_go_gd,   sigma_go_gd,   x_go_data)
+        loss_stop = neg_log_likelihood_gaussian(mu_stop_gd, sigma_stop_gd, x_stop_data)
+        total = float(loss_go + loss_stop)
+
+        animation_snapshots.append({
+            'iter': it,
+            'mu_go':   mu_go_gd.copy(),
+            'mu_stop': mu_stop_gd.copy(),
+            'sigma_go':   sigma_go_gd.copy(),
+            'sigma_stop': sigma_stop_gd.copy(),
+            'loss': total
+        })
+        if it % 20 == 0:
+            print(f"Iter {it:3d}: Loss={total:.4f} | μ_GO={mu_go_gd.round(3)} | μ_STOP={mu_stop_gd.round(3)}")
+
+    if it == num_iterations:
+        break
+
+    # use the computed gradient function
+    g_mu_go    = grad_mu(mu_go_gd, sigma_go_gd, x_go_data)
+    g_sigma_go = grad_sigma(mu_go_gd, sigma_go_gd, x_go_data)
+    g_mu_stop    = grad_mu(mu_stop_gd, sigma_stop_gd, x_stop_data)
+    g_sigma_stop = grad_sigma(mu_stop_gd, sigma_stop_gd, x_stop_data)
+
+    # gradient clipping for stability
+    for g in (g_mu_go, g_sigma_go, g_mu_stop, g_sigma_stop):
+        gn = np.linalg.norm(np.ravel(np.array(g)))
+        if np.isfinite(gn) and gn > clip:
+            g *= (clip / gn)
+
+    # gradient update
+    mu_go_gd   = mu_go_gd   - lr_mu*g_mu_go
+    mu_stop_gd = mu_stop_gd - lr_mu*g_mu_stop
+    sigma_go_gd   = sigma_go_gd   - lr_sigma*g_sigma_go
+    sigma_stop_gd = sigma_stop_gd - lr_sigma*g_sigma_stop
+
+    # keep Σ symmetric + positive definite
+    sigma_go_gd   = _make_spd(sigma_go_gd)
+    sigma_stop_gd = _make_spd(sigma_stop_gd)
+
+print("\nFinal Results:")
+print("\tGradient Descent:")
+print(f"\t\tμ_GO:                   {mu_go_gd.round(3)}")
+print(f"\t\tμ_STOP:                 {mu_stop_gd.round(3)}")
+print(f"\t\tΣ_GO diag (i.e., σ²):   {np.diag(sigma_go_gd).round(3)}")
+print(f"\t\tΣ_STOP diag (i.e., σ²): {np.diag(sigma_stop_gd).round(3)}")
+print("\tAnalytical:")
+print(f"\t\tμ_GO:                   {mu_go.round(3)}")
+print(f"\t\tμ_STOP:                 {mu_stop.round(3)}")
+print(f"\t\tΣ_GO diag (i.e., σ²):   {np.diag(sigma_go).round(3)}")
+print(f"\t\tΣ_STOP diag (i.e., σ²): {np.diag(sigma_stop).round(3)}")
+
+fig = plt.figure(figsize=(8, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+def update(frame):
+    ax.clear()
+    snap = animation_snapshots[frame]
+
+    # Generate consistent samples for this frame
+    rng = np.random.default_rng(frame)
+    n_samples = 50
+    go_s   = rng.multivariate_normal(snap['mu_go'],   snap['sigma_go'],   n_samples)
+    stop_s = rng.multivariate_normal(snap['mu_stop'], snap['sigma_stop'], n_samples)
+
+    # Use modular plotting function with existing axis
+    plot_3d_traffic_data(
+      x, y, samples_go=go_s, samples_stop=stop_s, ax=ax,
+      title=f'Iteration {snap["iter"]} | Loss: {snap["loss"]:.4f}'
+    )
+
+anim = FuncAnimation(fig, update, frames=len(animation_snapshots), interval=300, repeat=True)
+plt.close()
+HTML(anim.to_jshtml())
+```
+
+You can see how the model distribution gets closer to the true data distribution for each gradient step. Remember, each point is a data point representing the 3-pixel image of a traffic light. Theoretically speaking, if there exists an analytical solution of a quadratic expression (single minimum), gradient descent should effectively reach to the same optimal point. However, the reason it's not is likely because we're missing the class prior $\phi_\mathbf{k}$ or the variance (i.e., the spread) is different between the two categories (needing two different learning rate?) Regardless, it still mostly converges.
+
+# Summary
+
+Overall, you saw a simple GDA model to classify a 3-pixel image input of a traffic light as either $\text{GO}$ or $\text{STOP}$, which would be used to tell the car to move or not. But if you recall, this is a simple abstraction. In a more realistic setting, we would have our models read from real images (i.e., an actual image of a traffic light), so you can expect the distribution would not just be over 3D (i.e., the three pixels), but one million dimensions! We also get to see how the model themselves is actually just a small part of the greater learning system. Instead of a normal distribution $\mathcal{N}$, we can replace it with a multi-layered neural networks, or even augment it with convolutional layers, and the main idea still doesn't change.
+
+So, going back to the original three questions:
+
+* What are they?
+
+MAPs and MLEs are particular learning schemes we can use on our models to estimate an optimal $\theta$ given $\mathbf{x}$ and $\mathbf{y}$. It also has a more general version where $\theta$ is modelled in a Bayesian/probabilistic way (i.e., Bayesian prediction).
+
+* How do they relate to vision?
+
+Because probabilistic learners are not just restricted to tabular data, allowing other forms of data to train on the model (i.e., images). From a classical vision standpoint, assuming the model and the learning process as probabilistic allows the use of various powerful, abstract tools from statistics to model arbitrary distributions of visual data (i.e., quadratic discriminative analysis), whereas one needs to design different models for different domains. Refer @sutton2019bitter.
+
+* Why are they useful to think about them?
+
+Nature is too complicated. Probability is ~~likely~~ the best way to effectively model complex processes into something simpler *to work with*, allowing effective training of the model for seemingly intelligent prediction. Refer @sutton2019bitter.
+
+More practically, all deep learning-based vision models employs these statistical tools, and even moreso on modern generative models. So, to learn and apply these latest models, one likely needs to have strong foundation in these aspects.
