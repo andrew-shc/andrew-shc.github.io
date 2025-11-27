@@ -1,6 +1,6 @@
 ---
-title: "(WIP)"
-subtitle: "Exploring the Latest in Graphics"
+title: "Interesting Topics For November"
+subtitle: "General"  # "Exploring the Latest in Graphics"
 date: ??
 # date-modified: last-modified
 format:
@@ -15,3 +15,266 @@ bibliography: main.bib
 toc: true
 toc-location: left
 ---
+
+# Introduction
+
+It's always good to occasionally take a step back among the hustle and bustle, recalibrate your sense of direction, find new interesting questions to answer, and reflect the progress made from the past year. This blog aims to fossilize my interests at this time for me to potentially start a project from several of these and look back on, and maybe of interest for you too for whatever reason it may be. Note: this is more of an unorganized thought dump.
+
+
+More computer graphics than 3D vision:
+
+* Path-space differentiable rendering
+* Geometric rendering: black holes
+* Rendering exotic light sources: cold-cathode displays
+* Stochastic Geometry
+* Re-formulating problems as light-transport problems: Inverse rendering, walk-on-stars
+
+More 3D vision than computer graphics:
+
+* Neural 3D Reconstruction/Generation: VGGT, 3DGS, Diffusion
+* Diffusion models & stochastic differential equations (SDEs)
+* Bundle Adjustment & Lie Algebra
+* Fast fourier transform (FFT)
+* Applications of 3D Vision + graphics: Robotics, Perception, Reinforcement Learning
+
+
+# Computer Graphics
+
+## Path-space differentiable rendering (PSDR)
+
+![Image from a course on physics-based differentiable rendering](../img/blog/40_pbdr_teaser.png)
+
+In rendering, we take a description of a virtual 3D scene and have the renderer produce a 2D image of it given a camera location and orientation. More specifically, a scene has geometry (e.g., meshes, radiance fields) and light sources (or else the image would just be dark) where the renderer merely records the incoming radiance onto an image. So, an image is merely a record of the more complete virtual 3D scene that is easily transferred and displayed without needing to know the complicated underlying scene (e.g., *.ply files) and executing resource-intensive rendering process (e.g., GPUs). In fact, an image is not limited to recording virtual scenes, but it can also record real-life scenes where we usually don't know the underlying complex environment (e.g., given a photo of a mountain, what is the geometry of the mountain?)[^1]. This is where it gets interesting and how PSDR comes into play. Check [the other section](#re-formulating-problems-as-light-transport) to see how PSDR is used in this context.
+
+[^1]: But remember, a visual record needs light to mediate the underlying complex scene information. (Think exposure time: darker scenes needs longer time to capture the same amount of light to produce a sufficient visual record of a scene, whereas brighter scenes just needs shorter time. If a scene is completely dark, you can think of it needing infinite amount of time to produce an equal quality of a photo.)
+
+In forward rendering, there are mostly two common methods: rasterization and path tracing (and a mix of both). If we formalize these rendering process as a function, we get $I=f(\theta)$, where $I$ is the final image, $\theta$ is the scene parameters (e.g., geometry, cameras), and $f$ is the rendering process. What if we can differentiate it? Like $I=\frac{d}{d\theta}f(\theta)$? Actually, this question is not too far-fetched in that machine learning has revolutionized in how we model intelligent-like behaviors and optimization, and *differentiability* is the core idea that enables such learning to take place.
+
+We will be focusing on the more physically-plausible path tracing (via path-integral formulation). In this form, differentiating the rendering process produces two terms: interior term and boundary term. You can read more about them on @Zhang:2020:PSDR, but basically interior term is what we are mainly differentiating against and the boundary term is an important term that accounts for visibility changes, which commonly appears when we differentiate against geometry.
+
+This is why differentiation with respect to the geometry are messy and complicated. For geometric reconstruction, the shapes can change, inducing a visibility changes on a rendered image. For estimating camera pose, same thing: potential visibility changes. For moving geometries, same visibility changes. And what do we mean by visibilty changes anyways? When some geometry goes in front of another, we have an occlusion of the geometry in the back. These changes happen on *discontinuities*, making the differentiation hard. Hence, there's a lot of current actively-explored topics on computing the derivatives in these fundamental areas.
+
+Another important categories of parameter that we differentiate against are colors. More precisely, emission strength of light sources and the modulation by BSDF. No geometry means easier interior term and no boundary term, but that doesn't mean it is easier.. overall. Sometimes, the light sources have small areas or the BSDF is highly-specular. In these cases, sampling becomes important and there are many active topics in this regards (e.g., variance reduction).
+
+Original paper on PSDR: @Zhang:2020:PSDR
+
+There are other interesting questions on generalizing PSDR to different rendering processes and geometries:
+
+* Participating Media: @Zhang:2021:PSDR
+* Volume Rendering: @Yu:2023:PSDR-Vol2
+* *other cool stuff...*
+
+Survey paper: @zeng2025surveyphysicsbaseddifferentiablerendering
+
+Topics I need to focus more on 😄:
+
+* Reparamaterizations
+* Sampling theory
+* Implementing those scary differentiated version of those algorithms, especially when re-formulating it in terms of OptiX.
+
+## Geometric rendering: black holes
+
+![*Interstellar* (2014)](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHF1dm9ocWQyN2lvdnJtYXZtc25wbnc0eHB0MjA5ejR2dzFlYXk1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SVCSsoKU5v6ZJLk07n/giphy.gif)
+
+When I mean geometric rendering, I specifically mean geometrically interesting light transport. Usually, rendering has always just been straight line, which serves majority of the purposes. And when we generalize the theory of light transport, we usually talk about wave [^2] and quantum optics, according to @veachthesis, which is still just straight lines. Yes, mirrors, caustics, and diffraction does make it more interesting, but they still bend at a single point, not continuously. One thing pops up in my mind whenever I think of a light ray that continuously bends: black holes. Their force is so strong that it warps the light rays continuously, not just bend it at a single point.
+
+<!-- ![[image link](https://rantonels.github.io/starless)](https://rantonels.github.io/starless/pics/bhscattersmall.png) -->
+
+[^2]: The dissertation mentioned how diffraction can occur even around an object. A good example of this is half-plane diffraction, where the lightened side is just bright, but the shadow side still exhibits extra radiance from the bending of the light or even wave-like oscillation under certain conditions. This is different from umbras and penumbras. Took a while to find an example of this effect since most diffraction examples are about apertures and slits, which I feel like is better termed as "through an object."
+
+So, I guess a quick teaser (for me and you) with a demo, I will first create a point of singularity and a light path unaffected by it. What would a light path affected by gravitational force be like? We first need to know the theory behind gravity, and currently there are practically only two out there: Newton's law (for most use cases) and general relativity [^3] (for exotic cases). You can probably guess which theory contains the black hole.
+
+I started with [§6: Black Holes](https://www.damtp.cam.ac.uk/user/tong/gr.html), which says there are multiple kind of black holes with the Schwarzschild black hole being the simplest of all. However, this section mostly discuss about proving and understanding the various properties of many kinds of black holes, which will only be useful later on (beyond the scope). [§1.3.5: Light Bending](https://www.damtp.cam.ac.uk/user/tong/gr.html) is what we care right now, discussing how light bends under Schwarzschild metric (i.e., the foundation for Schwarzschild black hole). By equation 1.54, we get the trajectory of our light ray affected by the gravitational force to be $\frac{d^2u}{d\phi^2}+u=\frac{3GM}{c^2}{u^2}$, where $u(\phi)=\frac{1}{r(\phi)}$ is the inverse polar radius, $G$ is Newton's gravitational constant (it appears again!), and $M$ is the mass of our object *warping* the light path [^4]. I will quickly demo this by evaluating the ODE numerically via Euler's method.
+
+I first need to rewrite the second-order ODE $\ddot{u}+u=\frac{3GM}{c^2}{u^2}$ (with $\phi$ as our independent variable) into a systems of first-order ODE for Euler's method.
+$$
+\begin{cases}
+\dot{u}=v \\
+\dot{v}=\frac{3GM}{c^2}{u^2}-u \\
+\end{cases}
+$$
+
+[^3]: There also exists a similarly theory called special relativity, which is a specific case of general relativity. You can read more about here on [§7](https://www.damtp.cam.ac.uk/user/tong/relativity.html) of the lecture notes. But basically we assume no gravity (hence, no force, no curvatures, and constant velocities) and focus on the spacetime nature of extreme cases in classical physics (e.g., perceived time at light speed).
+
+[^4]: Recall that light has no mass (i.e., null geodesic), so technically it is not orbiting around the black hole, but just following the spacetime frame itself that's getting curved by the black hole.
+
+```{pyodide}
+from matplotlib import pyplot as plt
+from scipy.constants import G, c
+import numpy as np
+
+# change these values (sometimes the points gets so large it sort of overflows and go back)
+
+# M in kg
+def render(M=2.5E26, Δφ = 1E-2, iter=580):
+  r = lambda x,y: (x**2+y**2)**0.5
+  u_to_x = lambda u,φ: (1/u*np.cos(φ), 1/u*np.sin(φ))
+
+  # if we assume the position x=[x y] depends on φ
+  x0 = (-5,-1)
+  dx0 = (r(x0[0], x0[1])**2/-x0[1],0)  # horizontal velocity only
+
+  # under null geodesic: (r**2/-y, r**2/x).
+  # notice it doesnt depend on speed
+
+  # initial conditions
+  u0 = 1/r(x0[0],x0[1])
+  du0 = -(x0[0]*dx0[0] + x0[1]*dx0[1])/r(x0[0],x0[1])**3  # w.r.t. φ
+  φ0 = np.arctan2(x0[1],x0[0])
+
+  u = u0
+  v = du0
+  φ = φ0
+  x = [u_to_x(u,φ)]
+  for _ in range(iter):
+    # make sure to use the u and v from the same previous iteration
+    uu = u + Δφ*v
+    vv = v + Δφ*(3*G*M/(c**2)*(u**2) - u)
+    
+    u = uu
+    v = vv
+    φ += Δφ
+    x.append(u_to_x(u,φ))
+
+
+  # List of points for the line plot
+  points = [(x,-1) for x in range(-5,5)]
+  epoints = x
+
+  # Unpack x and y coordinates
+  x, y = zip(*points)
+  ex, ey = zip(*epoints)
+
+  plt.figure(figsize=(5, 5))
+
+  # Scatter plot: point at the origin
+  plt.scatter([0], [0], color='red', label='Singularity')
+
+  # Line plot: connect the list of points
+  plt.plot(x, y, marker='o', label='Unaffected ray', alpha=0.5)
+  plt.plot(ex, ey, marker='o', label='Affected ray', alpha=0.5)
+
+  plt.xlim([-6, 6])
+  plt.ylim([-6, 6])
+  plt.xlabel('X')
+  plt.ylabel('Y')
+  plt.legend()
+  plt.grid(True)
+  plt.show()
+
+render()
+
+```
+
+Additional ideas:
+
+* Gravitational lensing (general case of black holes)
+* Wormholes
+* Collision of two black holes
+* Red shift
+* Relativistic distortion (i.e., camera near the black holes)
+* Accretion disk
+* Spinning black holes
+* Can we use differentiable rendering on an image of a black hole to estimate various parameter of it (e.g., mass)?
+    * Just out of curiosity (there's definitely a better way)
+
+Topics to review:
+
+* Differential Geometry
+* General Relativity
+* Non-euclidean geometry
+* Numerical "solution" to ODE
+
+Personal opinion: this is very different from the stuff I have done before and feels refreshing, but the math behind it is daunting at the same time.
+
+Where graphics and astrophysics meet: [paper link](https://arxiv.org/pdf/1502.03808)
+
+## Rendering exotic light sources: cold-cathode fluorescent displays (CCFDs)
+
+
+![Nixie Tubes](../img/blog/40_ccfds.jpg)
+
+I am a big fan of retro technologies, especially the warm neon lights of the bygone days. A year ago, I bought this (it's a bit pricey) just out of fascination of what it looks like in real life. Unfortunately, it has this distinctive blue overtone which is missing when taking a photo with a consumer device (which makes it all of more interesting). Now, I'm curious if it's possible to replicate this warm fuzzy feeling of a Nixie tube into computer rendering. There are three approaches to this with increasing level of complexity: emissive solid (i.e., a mesh with an emissive material), emissive participating media, or physically accurate simulation of CCFDs. I'll mostly be approaching it from the emissive participating media and a bit of physically-accurate modelling (i.e., physically-plausible CCFDs).
+
+So how does one go about rendering the warm tone of CCFDs? Are they even always in an orange tone? How do they work? I've came across this [Google Group](https://groups.google.com/g/neonixie-l/c/Z116Cv9AGpY) discussing about a book "Cold Cathode Glow Discharge Tubes", by GF Weston from 1968, available in [PDF](https://drive.google.com/drive/folders/1-i1uv20HFjT5RMy1ePGIwAyMcbMA-6sv) which has a wealth of information in how CCFDs work and their physical properties. Unfortunately, there were not a lot of discussion in optical properties (of this book and elsewhere I can find) that are important in rendering CCFDs. It is most likely because these electrical discharges (hence, light) from excited gasses produce all sorts of colors that are very sensitive to various parameters such as gas pressure, cathode-anode distance, voltage, amperage, gas composition, material used in for cathodes/anodes, etc. Since I'm not here to physically simulate what CCFDs would look like from these various parameters, I'll be focusing on Nixie tubes (which has more information usually) and maybe a limited range of parameters (it's still interesting to see how CCFDs would evolve over certain parameters).
+
+![Fig 3.2 of "Cold Cathode Glow Discharge Tubes"](../img/blog/40_diagram.png)
+
+CCFDs can just be an emissive participating media with an assigned color of orange, but that's no fun, since there are also various color overtones it produces depending on the gas composition that would be missing. Hence, I am having the input to just be the gas composition and some basic geometric model of the energy field (i.e., the emission surrounding the shape of the cathode or the cathode sheathed in a layer of emission[^a1]). Unfortunately, it seems like most Nixie Tube discussion lack the information on their visual properties. So, we turn to the physics of light in hopes of simulating the same physically correct emission of gas composition like shown in the picture. To get there, we need to know some radiative transfer theory, which is readily talked about in @pharr2023physically[Chapter 11] for volumetric scattering process and more completely in @pharr2023physically[Chapter 14] with the introduction of the radiative transfer equation.
+
+[^a1]: Sometimes, the negative glow is shown sticking onto the cathode. In other times, we have two dark spaces with three regions of emission from the cathode side (before the Faraday dark space). The geometries of emission can be quite sensitive, so we will assume the "negative glow" is sticked/sheathed onto the cathode.
+
+In computer graphics, rendering volumetric effects requires us to at least model three main [^a2] physical process: absorption, emission, and scattering (further broken down as in-scattering and out-scattering). By assumption, we model these effects as differential equations (ordered as emission, absorption, out-scattering, and in -scattering):
+
+[^a2]: As I look into this & the Nixie Tubes more, there are many more physical abstraction you can uncover (e.g., electrical glow discharge, fluorescent bulbs, anisotropic absorption/out-scattering, etc.), which at a certain point, you're just modelling electromagnetic waves themselves. In my opinion, we model the most physically-grounded renderer as much as possible while also keeping it fast, so given some known discrete scene parameters, we can render a realistic image in a computationally-sensible way. I hope this is what graphics is all about.
+
+$$
+\begin{align}
+dL_o(\mathbf{x},\mathbf{\omega}) &= \sigma_a(\mathbf{x},\mathbf{\omega}) L_e(\mathbf{x},\mathbf{\omega})dt \\
+dL_o(\mathbf{x},\mathbf{\omega}) &= -\sigma_a(\mathbf{x},\mathbf{\omega}) L_i(\mathbf{x},-\mathbf{\omega})dt \\
+dL_o(\mathbf{x},\mathbf{\omega}) &= -\sigma_s(\mathbf{x},\mathbf{\omega}) L_i(\mathbf{x},-\mathbf{\omega})dt \\
+dL_o(\mathbf{x},\mathbf{\omega}) &= \sigma_s(\mathbf{x},\mathbf{\omega})\int_{S^2} p(\mathbf{x},\mathbf{\omega},\mathbf{\omega}_i)L_i(\mathbf{x},\omega_i)d\omega_i dt \\
+\end{align}
+$$
+
+where $dL_o(\mathbf{x},\mathbf{\omega}):=L_o(\mathbf{x}+\mathbf{\omega}dt, \mathbf{\omega})$ and $L_o(\mathbf{x},\mathbf{\omega}):=L_i(\mathbf{x},-\mathbf{\omega})$ (remember that we are only traversing the volumetric media in a straight line to simplify our model).
+
+$\sigma_a$ is the absorption coefficient and $\sigma_s$ is the extinction coefficient, and $p$ is the phase function---the BSDF reciprocal of volumetric scattering.
+
+So, if we rewrite the formulas, the combined differential change in radiance at a point $\mathbf{p}'=\mathbf{p}+t\mathbf{\omega}$ in a volumetric media is $\frac{d}{dt}L_o(\mathbf{p}',\mathbf{\omega})=-\sigma_t(\mathbf{p}',\mathbf{\omega})L_i(\mathbf{p}',-\mathbf{\omega})+\sigma_t(\mathbf{p}',\mathbf{\omega})L_s(\mathbf{p}',\mathbf{\omega})$. The $\sigma_t=\sigma_a+\sigma_s$ is the extinction/attenuation coefficient, and in this case it can be interpreted as the medium's density, where larger value means more effect from the medium while lower value means less effect (i.e., transparent air). Notably, the first term includes the transmittance, which can be analytically [^a4] solved into $e^{-\sigma_t d}$ where $d$ is the distance [^a3]. Additionally, in @pharr2023physically[Equation 11.10], they mysteriously used the indirect $T_r(\mathbf{p}+t\omega\to\mathbf{p}')$ instead of the more direct $T_r(\mathbf{p}\to\mathbf{p}+t\omega)$, but are equivalent with a change of variable. This can be thought of finding the optical depth/thickness from $0\to t$ or remainder of the optical thickness from $t \to d$ (the inner transmission integral).
+
+
+[^a3]: This is better known as the *exponential* volumetric transport, which is commonly seen in NeRF and NeuS. A natural question to ask is whether *non-*exponential volumetric transport exist? In fact, it does. The volumetric transport we, and the book, implicitly assume is the Beer-Lambert law., whereas non-exponential version opens a whole can of worms. Both all are governed by the generalized radiative transfer equation (RTE).
+[^a4]: Assuming homogenous media (i.e., constant density).
+
+To actually render volumetric effect, we need a volumetric integrator that generalizes the volumetric scattering effect as a path -integral formulation. The general idea is simple: we just generalize the formulation where the domain include medium locations instead of just surface locations and the measure extended to measure positions of volumetric effect. The contribution function is extended to support phase functions (i.e., in-scattering effects), transmittance (i.e., absorption and out-scattering), and emission [^a5].
+
+[^a5]: As usual, we assume each $N$-length path has a single emission source at the end, but $N$ can vary from various sampled paths. Just makes the math cleaner without restricting anything.
+
+![](../img/blog/40_clouds.jpg)
+
+As I'm writing this out, I also realized clouds is another form volumetric media I want to see it work. Not just a static cloud, but like maybe some procedural noise or even a simple fluid simulation going to see the clouds grow and shrink over time.
+
+Additional ideas:
+
+* Fluid simulation of clouds?
+* Accurately render the emission spectrum described from a molecular composition?
+
+Topics to review:
+
+* Radiative transfer equation (RTE)
+* Beer's Lambert Law
+* Fluid dynamics
+* Sampling volumetric light transports
+
+Personal opinion: I think this follows more on traditional computer graphics for good reason, volumetric media is common and knowing it is useful (and it's also fun).
+
+Originally wanted to model some exotic light sources, but realized they are quite a complex physical process. This section (i.e., the topic) is probably more aptly named as volumetric light transport. Good thing I did this so I have a better idea what the project could look like.
+
+## Stochastic geometry
+
+As if probability (or this notion of probabilistic stuff) wasn't enough, stochasticity (or stochastic stuff) is this new kid down the street I have been hearing quite frequently (apart from stochastic gradient descent). Let us answer first on what is stochasticity, and how is it different from "probabilistic"?
+
+According to Merriam-Webster, for something to be stochastic, it means the something involves a random variable, chance, or probability, which actually is just ever more slightly specific then the term "probabilistic." In other words, they're quite same. However, from my initial understanding, people *generally* associate probabilistic model as something that emphasizes more on learning and inference, whereas stochastic model emphasizes more on modelling the randomness (to a certain degree) of what otherwise would be a mostly deterministic *evolutionary* process (i.e., stochastic process) over time, space, or any other indexable object.
+
+Now the phrase "stochastic geometry" should be a bit clearer now, let's just dive in the two papers:
+
+
+## Re-formulating problems as light-transport
+
+# 3D Vision
+
+## Neural 3D Reconstruction/Generation
+
+## Diffusion Models & Stochastic Differential Equations (SDEs)
+
+## Bundle Adjustment (BA) & Lie Algebra
+
+## Fast Fourier Transform (FFT)
+
+## Applications of 3D Vision + Graphics
+
+geometrically-interesting light-transports): Black holes (differential geometry + what is homeomorphisms
+
+
+(i.e., efficient simulation of PDEs via WoS, inverse rendering, visual pose estimation)
