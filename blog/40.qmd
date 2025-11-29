@@ -1,7 +1,8 @@
 ---
 title: "Interesting Topics For November"
 subtitle: "General"  # "Exploring the Latest in Graphics"
-date: ??
+image: ../img/blog/40_splash.png
+date: 11/29/2025
 # date-modified: last-modified
 format:
     r-wasm/live-html: 
@@ -255,26 +256,136 @@ Originally wanted to model some exotic light sources, but realized they are quit
 
 As if probability (or this notion of probabilistic stuff) wasn't enough, stochasticity (or stochastic stuff) is this new kid down the street I have been hearing quite frequently (apart from stochastic gradient descent). Let us answer first on what is stochasticity, and how is it different from "probabilistic"?
 
-According to Merriam-Webster, for something to be stochastic, it means the something involves a random variable, chance, or probability, which actually is just ever more slightly specific then the term "probabilistic." In other words, they're quite same. However, from my initial understanding, people *generally* associate probabilistic model as something that emphasizes more on learning and inference, whereas stochastic model emphasizes more on modelling the randomness (to a certain degree) of what otherwise would be a mostly deterministic *evolutionary* process (i.e., stochastic process) over time, space, or any other indexable object.
+According to Merriam-Webster, for something to be stochastic, it means the something involves a random variable, chance, or probability, which actually is just ever more slightly specific then the term "probabilistic." In other words, they're quite same. However, from my initial understanding, people *generally* associate probabilistic model as something that emphasizes more on learning and inference, whereas stochastic model emphasizes more on modelling the randomness (to a certain degree) of what otherwise would be a mostly deterministic *evolutionary* process over time, space, or any other indexable/ordered objects (i.e., stochastic process).
 
-Now the phrase "stochastic geometry" should be a bit clearer now, let's just dive in the two papers:
+Now the phrase "stochastic geometry" should be a bit clearer now, let's just dive what's all the buzz with this in these two papers: @Miller:VOS:2024 and @seyb24from. [^b2] Remember, we should always be asking ourselves whether this "stochastic geometry" is bringing us benefits in one or both aspects while maintaining at least one other aspect: computationally practicality (on current or near future processors) and physically-correct appearances [^b1].
 
+[^b1]: If we only want physically-correct appearances, we might as well have all the supercomputers in the world to handle all the complex physical phenomenon (which actually uses a ton of statistics for a long time already). If we only want computational practicality, we have rasterization (e.g., vanilla Minecraft, Roblox, Terraria, etc.).
+[^b2]: Actually, the more I'm reading this two papers, the more I am grateful that I have covered volumetric light transport first😅. (Hinting on whats coming up.)
+
+![Fig 1. from @Miller:VOS:2024](../img/blog/40_stoch_geom_0.png)
+
+@Miller:VOS:2024 focused on generalizing the exponential volumetric transport to solid media to explain how recent works in signed distanced fields [^b3] have been successful in modelling opaque, solid geometries as stochastic participating media.
+
+[^b3]: SDFs requires some sort of volumetric transport to be rendered directly. There are also marching cubes to convert SDFs into meshes.
+
+![From @seyb24from](../img/blog/40_stoch_geom_1.png)
+
+Their novelty is mainly in developing an efficient rendering algorithm for a new type of scene representations. While this efficient algorithm is lathered with technical details, the background of their work is interesting: bringing stochasticity into scene geometry to unify all representations into one, which traditionally has a collection of specialized models to render certain geometries (usually surfaces and participating media). This new generalization naturally gives us geometries that are in between the participating media and surfaces known as "mesoscale" geometries. I hope this allows us to additionally model certain appearances in the physical world that would otherwise be difficult (i.e., larger parameter space that fits closer to physically-correct models).
+
+While both papers uses the same particular interpretation of stochastic geometry, known as stochastic implicit surfaces (SIS) via signed distance functions (SDF), @Miller:VOS:2024 emphasizes on one particular case where opaque solids are represented as stochastic participating media due to the rise of NeuS (and indirectly via NeRF), whereas @seyb24from attempts to further generalize all classes of geometries onto a continuum that allows exploration of new materials (that could potentially be useful for physically-correct geometric modelling).
+
+Topics to review:
+
+* Volumetric light transports
+* Stochastic process
+
+Personal opinion: This seems interesting to me where we incorporate randomness into opaque solid geometries. In reality, this idea has sort of been implicitly used in a lot of places already (e.g., NeuS) and mostly serves as a theoretical interest. But if we see stochastic geometry as a way to generalize material models, I think this is something cool to see it work on a toy example.
 
 ## Re-formulating problems as light-transport
+
+It is always interesting to see how other problem domains can be reduced to a light transport problem (or to any problem in general), since you get to explore and understand what are the fundamental properties of light transports that would be useful to find the solution. Additionally, you would probably have to figure out what are the underlying assumption needed to enables these structure for finding potential solutions. Currently, there are two notable domains of problems that fits well into light-transport: inverse rendering (via differentiable rendering) and PDE solvers.
+
+#### Inverse Rendering
+
+Rendering $f$ is all about capturing lights from known scene description $\theta$ into images $I$ right [^c1]? $I=f(\theta)$
+
+Camera $C$ is all about capturing lights via *real* physical process from *un*known scene description $\phi$ into images $I'$ right? $I'=C(\phi)$
+
+What if we want to find the *unknown* $\phi$?
+
+[^c1]: As mentioned in the [first section](#path-space-differentiable-rendering-(psdr))
+
+If $f\approx C$ [^c2], we can minimize the difference between the two images via optimization to find the optimal scene description $\theta$ that best estimates $\phi$, where ${\arg\min}_\theta I-I'={\arg\min}_\theta f(\theta)-C(\phi)$. This requires differentiating the *rendering process* with respect to $\theta$, allowing us to piggy-back on years of development on tools developed from forward physically-plausible rendering into inverse rendering.
+
+[^c2]: In other words, we assume that our synthetic rendering process $f$ is able to model most light phenomenon accurately, almost like $C$.
+
+#### PDE solvers
+
+Whenever I think of solving anything about differential equations, I just think of the common examples given from classes: Newton's law of cooling or the logistic growth models (maybe for good reason??). But in PDEs, solutions are much more interesting to think about and visualize since a large part of is solving them numerically[^c3]. Common methods includes finite element method (FEM) and boundary element method (BEM), but they all have tradeoffs, especially when we want to query a value in the interior. However, we can use Walk on Spheres to find the value more efficiently from the principles of light transport and computer graphics.
+
+[^c3]: Actually, there's some interesting analytical solutions and analysis in ODEs/PDEs such as Laplace and Fourier transformation.
+
+There's an online course that talks about this more in-depth: @Sawhney:2024:MCGP.
+
+#### Any others?
+
+It is likely that I will have to play around other orthogonal subjects that interests me and see if there are any problems in there that can be reduced to a light transport.
 
 # 3D Vision
 
 ## Neural 3D Reconstruction/Generation
 
+3DGS sounded very cool at first, but you would realize soon enough that they are more for novel-view synthesis, because at the end of the day, they are still a point cloud. Though this is changing fast also. From their pipeline, I guess one thing that still intrigues me is how they do the adaptive density control. A lot of them are heuristics, but two main ones are under-reconstruction and over-reconstruction, both derived from view-space positional gradients (i.e., what direction should the original gaussian move to minimize the error). If the gaussian is small and in under-reconstructed region, they just make a clone and move it along the original gaussian splat's view-position gradient. If the gaussian has a high-variance and is in over-reconstructed region, then just use the original gaussian as PDF for sampling the next two gaussian's position with smaller size.
+
+The problem of Structure from Motion is how can we estimate camera poses and world geometry (usually point clouds) just from *images*? Remember, a lot models relies on this for their training, such as NeRFs and 3DGS. Hence, it is of great interest.
+
+* Traditional (old): COLMAP
+* Mixed (new): Dust3r, Mast3r, VGGSfM
+* Full ML (latest): VGGT
+
+With the recent release of VGGT, it is awesome to see 3D reconstruction working purely from a feed-forward network with minimal pre-processing and post-processing.
+
+Another intriguing problem are generative models that generate 3D data, especially from a single view and via diffusion. I will have to look more papers about 3D estimation from a single-view.
+
 ## Diffusion Models & Stochastic Differential Equations (SDEs)
+
+The general idea is that this is a generative model that is able to spatially generate realistic 2D images unconditionally or conditionally (e.g., text prompt, image prompt, etc.). It does this clever trick where it repeatedly adds noise to the training images until it becomes *indistinguishable* to fully random images, but the model is trained on these noises to denoise them later. So on the next time (i.e., inference-time), you feed it a random image and it will denoise it to look realistic learnt from the training dataset. There are many great resources to learn diffusion models now. In particular, if I do get the time, I plan to read @prince2023understanding[Chapter 17-18] and the original [DDPM paper](https://proceedings.neurips.cc/paper_files/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf).
+
+In the most recent survey paper on diffusion models [here](https://arxiv.org/pdf/2502.06805), there's an interesting connection between the diffusion process and SDEs. ODEs/PDEs are useful when modeling from a set of rules (i.e., equations) of a dynamic system, which we solve the true underlying function analytically or numerically via simulations. Sometimes, these dynamic systems can have some random process (e.g., diffusion noise) term incorporated, resulting in stochastic differential equations.
+
+Additional ideas:
+
+* Diffusion models on 3D geometries
+* Code or video animation of SDEs (since they're inherently an evolutionary process of a dynamic system, this is probably the best way for visualization)
+
+Topics to review:
+
+* Stochastic process
+* Stochastic differential equations
+* Stochastic calculus
 
 ## Bundle Adjustment (BA) & Lie Algebra
 
+I have always thought Bundle Adjustment was small, simple thing in SfM[^d1], until I started coming across in the original ORB-SLAM paper and mentions some foreign concepts such as Lie Algebra. Lie (pronounced Lee) Algebra is interesting in that it has a geometric intuition from differential geometry, but also has an associated Lie Group (from group theory). However, Lie Algebra is commonly talked in relation to robotics state estimation in the [book](http://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf) and the [paper](https://arxiv.org/pdf/1812.01537). Regardless, these are some pointers that seems to be a good resource to get started.
+
+For bundle adjustment, the key idea is that we already have a rough estimation from previous estimates (or just randomly initialize it a super bad state). Then, BA attempts to *globally* adjust and refine both the camera pose and point locations to produce a higher quality reconstruction. This [classical survey](https://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Triggs00.pdf) talks how one implements BA in-depth, while this [modern survey](https://arxiv.org/pdf/1912.03858) attempts to optimize BA in a distributed manner.
+
+[^d1]: It's the last process that goes by pretty fast usually. And this idea of "adjustment" didn't really do some justice since it just evokes a small algorithm that nudges parameter to achieve something that's a tad bit more optimal to make the estimations more polished and nice (which it does, but much more complex).
+
+Additional ideas:
+
+* Code or video animation of the optimization process
+
+Topics to review/prepare:
+
+* Non-linear optimization
+  * Levenberg–Marquardt
+* Lots of linear algebra tricks
+* Lie algebra + groups (why not)
+
 ## Fast Fourier Transform (FFT)
+
+![@foundationsCVbook[Figure 16.8]](https://visionbook.mit.edu/figures/Image_processing_fourier/dft_b.png)
+
+First of all, what is fourier transform? It converts raw signals (i.e., time domain) into an amplitude function of frequency (i.e., frequency domain). In the @foundationsCVbook[Chapter 15-16], they talk more rigorously on how it works, specifically discrete fourier transform in the context of spatial 2D image signals.
+
+Fast fourier transform is an algorithm to automatically find the transformed signals automatically. It will be interesting if I just implement my own FFT and see the various frequency that automatically pops out and an attempt to reconstruct it signal by signal.
+
+This also reminds of spherical harmonics. Since they also use complex exponentials, maybe there's some connection there?
+
+Topics to review/prepare:
+
+* Discrete fourier transform
+* FFT algorithm
 
 ## Applications of 3D Vision + Graphics
 
-geometrically-interesting light-transports): Black holes (differential geometry + what is homeomorphisms
+![World model. Sourced from [here](worldmodels.github.io)](https://worldmodels.github.io/assets/world_model_comic.jpeg)
 
+One particular applications of 3D vision and graphics that is interesting right now is visuomotor and generative world models, combining all three disciplines from robotics (specifically autonomous agents) and perception (i.e., vision with sensor fusion) to reinforcement learning. The applications for both of them definitely leans more on the frontier/novel side of things, but it would be interesting to see it used in more classical settings (because *why not*).
 
-(i.e., efficient simulation of PDEs via WoS, inverse rendering, visual pose estimation)
+# Summary
+
+Honestly, I definitely rushed some on some of the later topics, but it's good enough to better understand what undertaking each of these project would be like. Some of them could easily be treated like an entire course. Regardless, I should keep each exploration of the subjects as many small blogs rather than this one giant blog of many subjects.
+
