@@ -4,6 +4,7 @@ subtitle: "General"  # "Exploring the Latest in Graphics"
 image: ../img/blog/40_splash.png
 date: 11/29/2025
 # date-modified: last-modified
+csl: ieee.csl
 format:
     r-wasm/live-html: 
       grid: 
