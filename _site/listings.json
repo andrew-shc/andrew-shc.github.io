@@ -3,9 +3,9 @@
     "listing": "/blog_entry.html",
     "items": [
       "/blog/10.html",
-      "/blog/20.html",
       "/blog/30.html",
-      "/blog/40.html"
+      "/blog/40.html",
+      "/blog/20.html"
     ]
   }
 ]
