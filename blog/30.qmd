@@ -21,9 +21,9 @@ I intend this new format of Micro Blogs to be a more sustainable, consistent way
 [^0]: thought about devising a way to use 4th-rank tensors for the linear transformation between 2D input and 2D output without using the separability of the basis or flattening the dimensions
 [^1]: lowkey I made the scope a bit too large with theoretical generalization of its domain (e.g., Locally-compact Abelian Groups), Laplace and z-transform, and Spherical Harmonics
 
-As for writing this, I just want a place to clarify what Micro Blogs intends to do and how it differs to full blogs, which I will write one if I ever notice a consistent topics I have been interested and writing about as Micro Blogs. Also, it's a way for me at least to write something because bailing the full blog for FFT is very unsatisfying (not like the alternatives are any better.)
+As for writing this, I just want a place to clarify what Micro Blogs intends to do and how it differs to full blogs, which I will write one if I ever notice a consistent topics I have been interested and written about it as Micro Blogs. Also, it's a way for me at least to write something after bailing the full blog for FFT, which was very unsatisfying (not like the alternatives are any better.)
 
-Here's a fun debug rendering of some stuff I have been working on. I might create an art gallery of debug renders since they have minimal value scientifically but fun to interpret and guess where these errors in the rendering could have arise and why it rendered in that way.
+Here's a fun debug rendering of some stuff I have been working on. I might create an art gallery of debug renders since they have minimal value scientifically but fun to interpret and guess where these errors in the rendering could have arisen and why it had rendered in that way.
 
 
 ![Rendering of an unvalidated (likely erroneous) Jacobian at an attempt on differentiable rendering; scaled to a certain factor](../img/blog/30_I_init_ad_better_J.png)
