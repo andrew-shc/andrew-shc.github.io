@@ -1,6 +1,6 @@
 ---
-title: "(WIP) Toy VGGT"
-subtitle: "Exploring the Latest in Vision"
+title: "Foggy Cornell Box"
+subtitle: "Micro Blog: Volumetric Path Tracer"
 date: ??
 # date-modified: last-modified
 format:

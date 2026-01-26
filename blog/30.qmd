@@ -1,7 +1,7 @@
 ---
-title: "(WIP)"
-subtitle: "Path-Space Differentiable Rendering"
-date: ??
+title: "Micro Blogs"
+subtitle: "Meta: Micro Blog"
+date: 01/26/26
 # date-modified: last-modified
 format:
     r-wasm/live-html: 
