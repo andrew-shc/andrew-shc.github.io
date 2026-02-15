@@ -1,6 +1,7 @@
 /* Horizontal scrolling for long math equations */
 
-.katex-display, .math.display {
+.katex-display,
+.math.display {
     overflow-x: auto;
     white-space: nowrap;
     width: 100%;
