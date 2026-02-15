@@ -3,4 +3,8 @@
     "jupyter.kernels.excludePythonEnvironments": [
         "~/.pyenv/**"
     ],
+    "github.copilot.enable": {
+        "quarto": false, // Disable for Quarto files
+        "qmd": false // Ensure qmd extension is also covered
+    }
 }

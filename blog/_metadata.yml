@@ -5,4 +5,5 @@ format:
       dark: darkly
     highlight-style: github
     respect-user-color-scheme: true
+    css: ../math-styling.css
   
