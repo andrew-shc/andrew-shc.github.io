@@ -4,7 +4,7 @@
     "href": "blog_entry.html",
     "title": "",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\nMicro Blogs\n\n\nMeta: Micro Blog\n\n\n\nJan 26, 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\nInteresting Topics For November\n\n\nGeneral\n\n\n\nNov 29, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical Learning\n\n\nA Review on Computer Vision Fundamentals\n\n\n\nNov 13, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nFoggy Cornell Box\n\n\nMicro Blog: Volumetric Path Tracer\n\n\n\nFeb 15, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nFoggy Cornell Box\n\n\nMicro Blog: Volumetric Path Tracer\n\n\n\nFeb 15, 2026\n\n\n\n\n\n\n\n\n\n\n\nMicro Blogs\n\n\nMeta: Micro Blog\n\n\n\nJan 26, 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\nInteresting Topics For November\n\n\nGeneral\n\n\n\nNov 29, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical Learning\n\n\nA Review on Computer Vision Fundamentals\n\n\n\nNov 13, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog/20.html",
@@ -242,6 +242,6 @@
     "href": "blog/10.html#visual-results",
     "title": "Foggy Cornell Box",
     "section": "Visual Results!",
-    "text": "Visual Results!\n\n\n\nA slant view with a green single-scattering phase albedo and a lower absorption coefficient.\n\n\nNote: When I originally render the medium, it was pitch black. Due to how everything is “far apart” in my scene (i.e., on a order of 100s), the range of coefficients is much different. In fact, it has to be on a level of thousandths or ten-thousandths, and somewhat sensitive to changes in the coefficient. Just something to be aware.\n\n\n\nSpooky Cornell box (higher absorption)."
+    "text": "Visual Results!\n\n\n\nA slant view with a green single-scattering phase albedo and a lower absorption coefficient.\n\n\nNote: When I originally render the medium, it was pitch black. Due to how everything is “far apart” in my scene (i.e., on a order of 100s), the range of coefficients is much different. In fact, it has to be on a level of thousandths or ten-thousandths, and somewhat sensitive to changes in the coefficient. Just something to be aware.\n\n\n\nSpooky Cornell box (higher absorption).\n\n\n\nSource code: https://github.com/andrew-shc/vpt."
   }
 ]

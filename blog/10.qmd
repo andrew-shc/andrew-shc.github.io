@@ -462,3 +462,4 @@ Note: When I originally render the medium, it was pitch black. Due to how everyt
 [^xy2]: The sensor importance that corresponds to the physical process of vignetting. There's an additional factor of $\frac{1}{z^2}$ where $z$ is the normal distance between the pinhole aperature and the sensor surface/window (i.e., depth). Since majority of the cases $z=1$, we can ignore it and leave just the $\cos$ term.
 [^xy3]: Despite us wanting to emulate foggy, it's not like a hazy day or a foggy day where there's a sun behind a thick layer of scattering, but think of it as foggy in the nighttime without moonlight or stars (i.e., it's just goign to be pitch black).
 
+Source code: [https://github.com/andrew-shc/vpt](https://github.com/andrew-shc/vpt).
