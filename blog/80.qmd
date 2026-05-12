@@ -1,0 +1,25 @@
+---
+title: "Interesting Topic in RL"
+subtitle: "Micro Blog: RL"
+# image: ???
+# date: ???
+# date-modified: last-modified
+csl: ieee.csl
+format:
+    r-wasm/live-html: 
+      grid: 
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+TBD
