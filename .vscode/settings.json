@@ -6,5 +6,7 @@
     "github.copilot.enable": {
         "quarto": false, // Disable for Quarto files
         "qmd": false // Ensure qmd extension is also covered
-    }
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
 }

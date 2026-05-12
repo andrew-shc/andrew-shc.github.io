@@ -1,0 +1,69 @@
+---
+title: "Probability & the inelegance of math"
+subtitle: "Micro Blog: Math"
+date: ???
+# date-modified: last-modified
+csl: ieee.csl
+format:
+    r-wasm/live-html: 
+      grid: 
+        margin-width: 350px
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---
+
+Probability.
+
+What the heck is probability?
+
+When did probability became *everywhere*?
+
+From counting one, two, three to Dijkstra's, C++'s introsort, and ordered dithering in GIFs, everything is exact, deterministic, orderly, and reproducible. In math and algorithm, you get what you see; you get what you put, regardless what happens from the outside *or the inside*.
+
+# Elementary Math (literally)
+
+I love closure. Who doesn't? Given two positive natural numbers, the sum is always some positive natural numbers. Perfectly intuitive---as nature intended. Heck, tally marks were even discovered in pre-historic artifacts. We were born to think in one, two, three. We have a total of 5 apples received from Steve and Alex, and we got 3 apples from Steve. How many apples did Alex give us? Of course, 2! If all 5 apples were to be received from Steve, how many apples did Alex give us? *None*!
+
+But, wait! If math was to be perfect and elegant, then what is *none*? Hopefully you get the point. While the concepts of zeros, negatives, and decimals seems trivial, it was historically controversial and groundbreaking, and, if you still remember the moments, it was *probably* portrayed just another new concepts learned on a mundane day in your elementary school. [^1]
+
+But fraction became annoying. Why should a number be represented
+
+<!-- Now, I never really believed our world is stochastic, because probability is unintuitive and I think there's a better, more interpretable, way. I believed the world is govern on a deterministic process (i.e., the force carriers) on a deterministic state (i.e., the matters). If we are given enough computation, we can re-formulate any probabilistic models (e.g., AI, computer graphics) in a deterministic way that matches how nature (i.e., physics) work, allowing us to exactly model every single parts of a task for finding the exact solution--as physics intended. Therefore, probability and statistics is just an illusion, an annoying, confusing, and  **inexact**[^1] abstraction, that unfortunately is mostly the best way to solve tasks at hand given our current availability of compute. And I also just hate how probability and statistics are taught and some guy I know who is obsessed in connecting whatever we do in life with probability 🙄.3
+
+However, I had an enlightenment 💡💡😏😏! [^2] There's a Youtube video released ages ago that said something how the fundamental laws of nature prevents us to simultaneously measure velocity *and* the position of any particle precisely (breaking the determinism of matter?). As I'm writing this, I also recall how electromagnetic wave exhibits wave-like properties that are somehow intrinsically random (breaking the determinism of force carriers?). Regardless, somehow probability is having a vendetta against me, personally attacking my aforementioned beliefs of the world. Maybe I need a bayesian update on my beliefs of the world 😭 [^3].
+
+For the purpose of this micro blog, we really just need to find whether the fundamental physics itself is stochastic or not to answer the question since practically everything else is built upon it philosophically, computationally[^4], or in other means. In other words, we need to find the answer to whether matters and force carriers are deterministic or not.
+
+
+[^1]: When I mean exactly, I mean algorithm-level exactly. No variances. Everything is always reproducible, accurate, and correct. The ease in knowing an output will not change when the input has not change (no side-effects, especially unexplainable black-box random noise). 
+
+[^2]: Let us just ignore all the logical fallacies in my first paragraph, notably the subjective description of the "unintuitive" and the lack of acknowledgement on how useful the probabilistic *abstraction* has been for many tasks regardless whether the world is deterministic or not. This is a micro blog on physics, not on philosophy `:)`.
+[^3]: Is logic itself probabilistic??
+[^4]: In digital systems, the discrete representation of binary is still a convenient abstraction of the complex physics underneath governed by the thresholds of the transistors. Even the traditional HDDs (that are not based on transistors) are clearly still based on physics.
+
+*Let us begin.* (I'll keep personal comments as side notes.)
+
+# Matter
+
+What constitutes a matter? [^a1] Dark matter? Unproven kinds of matter? Let us start with this cool chart:
+
+![The Standard Model of Physics [link](https://quantum.lassp.cornell.edu/lecture/elementary_particle_physics).](../img/blog/50_standard.png)
+
+This chart includes both the matter (i.e., fermions) and force carriers (i.e., bosons). In this section, we will just focus on the fermions: quarks and leptons. According to Claude, the model best summarizes the current state of matter where each element have been rigorously, empirically proven. So, we will just go with this.
+
+Rough notes:
+
+Theoretically speaking, these particles are derived from the framework of quantum mechanics. To understand whether these particles are stochastic or not, we have to interpret the underlying framework of quantum mechanics (which is abstracted).
+
+[^a1]: I swear the more I do this kind of stuff, the more I realized how vague some questions can be. In other words, how chaotic and extremely nuanced our world really is.
+
+# Force
+
+
+# Conclusion
+ -->

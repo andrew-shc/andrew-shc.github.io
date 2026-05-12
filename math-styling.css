@@ -1,6 +1,24 @@
+/* TL;ND badge — drop anywhere inline with [TL;ND]{.tlnd} */
+.tlnd {
+    display: inline-block;
+    background: #c0392b33;
+    color: #c0392b;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.5em 0.1em;
+    border: 2px solid #c0392b66;
+    /* border-radius: 999px; */
+    vertical-align: middle;
+    white-space: nowrap;
+    font-style: normal;
+    line-height: 0.1;
+}
+
 /* Horizontal scrolling for long math equations */
 
-.katex-display, .math.display {
+.katex-display,
+.math.display {
     overflow-x: auto;
     white-space: nowrap;
     width: 100%;

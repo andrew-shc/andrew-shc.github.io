@@ -6,4 +6,18 @@ format:
     highlight-style: github
     respect-user-color-scheme: true
     css: ../math-styling.css
+
+comments:
+  giscus:
+    repo: andrew-shc/andrew-shc.github.io
+    repo-id: R_kgDOMDq5Jg
+    category: Announcements
+    category-id: DIC_kwDOMDq5Js4C2fss
+    mapping: pathname
+    reactions-enabled: true
+    loading: lazy
+    input-position: bottom
+    theme:
+      light: light
+      dark: dark_dimmed
   

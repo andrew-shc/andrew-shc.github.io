@@ -1,0 +1,1086 @@
+---
+title: "The Many Ways of Sampling"
+subtitle: "Micro Blog: Importance Sampling"
+image: ../img/blog/60_splash.png
+date: 5/11/2026
+# date-modified: last-modified
+csl: ieee.csl
+format:
+    r-wasm/live-html: 
+      grid: 
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---
+
+You will see this dotted around the blog: [TL;ND: (Taking) too long; not doing (it).]{.tlnd}.
+
+<!-- [TL;ND]{.tlnd} -->
+
+<!-- *There was suppose to be another micro blog between the last one and this one---discussing the weird nature of continuous probabilities and the lack of hard, intuitive visualization on concepts like independence and Bayesian theorem. Didn't pan out well. Regardless, I'll subtly reveal the enigmatic nature of probabilities and how I get comfortable with it---especially when talking to many people, and reading many articles online, who just gloss over the intuitive, visual details of the inner mechanism of probabilities. [^1]*
+
+[^1]: Also, I'm realizing sometimes the blogs gets over-pedagogical because I like the idea of completeness. Maybe that's theoretically the best way to re-present stuff you have learned, but it always leaves a bad taste in the blog-writing experience. I'm going to be a bit selfish from now on and just jump into the fun details. >:D (I'll leave the completeness to a full blog, if I ever feel like writing one.) -->
+
+Feel free to read @OwenZhou2000[Section 1-2.1] to quickly get up to speed on what importance sampling is and why we do it (i.e., variance reduction). Here's a quick teaser:
+
+We have a standard diffuse Lambertian model.
+
+$$
+L_o=\int_{H^+}L_i\frac{\rho}{\pi}\cos\theta d\omega
+$$
+
+Most of the time, these models are part of a greater complex model that is intractable. So, we use Monte Carlo sampling [^zzfg1] with $N$ samples.
+
+[^zzfg1]: Note: $\frac{1}{N}$ is not averaging over the integration. Think of it like Riemann sum (i.e., standard rectangular quadrature rule) but extended probabilistically, which is better known as *stochastic* quadrature rule. In other words, in terms of 1D interval, think of it like each samples represents *random* points of evaluation with all having the same average width depending on sample count. The more sample there is, the smaller each samples are weighted, but they're randomly placed (unlike the aligned rectangular sample grids of Riemann sum).
+
+$$
+\langle L_o \rangle = \frac{1}{N}\sum_{k=1}^N\bigg(\frac{L_i\frac{\rho}{\pi}\mathbf{n}\cdot\mathbf{\omega_k}}{\text{pdf}_{H^+}}\bigg) \text{ s.t. } \mathbf{\omega_k}\sim H^+
+$$
+
+The notation $\langle \cdot \rangle$ is confusing and sometimes seems to be inconsistent, but to the best of my knowledge, the notation seems to be borrowed from physics to denote expectation. In computer graphics literature, it is more specifically denoted as the expectation over the partitions of the stochastic quadrature with the sampling technique used by the Monte-Carlo estimation (which is just the Monte-Carlo estimation) with samples limited to $N$. As you increase the $N$, the M.C. estimation should *converge to* (not be) the correct value as if it were analytically integrable. We are still basically summing $N$ random variables which means the M.C. estimate itself is still a random variable. If we were given $100$ samples split into $10$ groups with each having $10$ samples for a total of $10$ M.C. evaluations of the same integral, we still have $10$ R.V. from each of the M.C. evaluations but each of the estimations is a singular value of a valid estimation of the integral that is usable in its own way. So why not just have all $100$ samples be evaluated into a single M.C. estimation? Well, this now depends on the preference of the application. In graphics, we want each M.C. evaluations have a limited samples so that it can run with high FPS. But since the M.C. evaluates only an *estimate* (and it's a R.V.), we want to ensure it is unbiased (accurate) and low variance (precise) by running additional statistical analysis over it separately. And this is where it gets confusing again with finding biasness in the M.C. evaluations $\mathbb{E}[\langle \cdot \rangle]$ which is mostly hand-waved in @veachthesis[Section 2.4].
+
+
+
+::: {.callout-note collapse="true"}
+### Tangent: "Better" proof on $\mathbb{E}[\langle Y \rangle] = Y$
+
+**Disclaimer: I over-complicated and Veach's proof remains sensical as is.
+**
+
+<!-- Now, the real confusing part is when people write $\mathbb{E}[\langle \cdot \rangle]$ to find the bias in the M.C. estimation over the same density. Remember, by linearity, it is equivalent to $\langle\mathbb{E}[\cdot]\rangle$. If the PDF in denominator of the Monte-Carlo is evaluated from a set of input samples while the *same* PDF in the numerator of the expectation is evaluated at every point in the domain of the expectation, the numerator and denominator gets cancelled since the set of input samples in Monte-Carlo is replaced with -->
+
+Suppose $Y=\int f(x)dx$ is M.C. estimated with:
+
+$$
+\langle Y \rangle = \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)}
+$$
+
+where $X_i \sim p_X$[^barf1] ($X_i$ is a R.V.).
+
+Suppose $\mathbb{E}[g(z)] = \int g(z)p_X(z)dz$. We get the following:
+
+$$
+\mathbb{E}[\langle Y \rangle] = \mathbb{E}\bigg[ \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)} \bigg] = \frac{1}{N}\sum_{i=1}^N \mathbb{E}\bigg[ \frac{f(X_i)}{p_X(X_i)} \bigg] = \frac{1}{N}\sum_{i=1}^N \int \frac{f(X_i)}{p_X(X_i)} p_X(z)dz
+$$
+
+If we simplify the expression, we get $\mathbb{E}_{z\sim p_X}\bigg[ \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)} \bigg]$. Do you see the problem? I over-complicated the interpretation of Veach's proof. Of course an expectation over a function (parameterized by $X_i$) that does not even take the parameter $z$ that's being expected over is just the function itself again. It's a totally non-sensical statement that's only made sense if the expectation is modified into $\mathbb{E}_{X_i\sim p_X}\bigg[ \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)} \bigg]$. Rest of the proof should follow trivially.
+
+The key idea was Monte-Carlo estimator was sampled "externally" and the expectation brought the external sampling into itself, turning the sampling process into an integration over all possible samples.
+<!-- [^zyxzyx1] -->
+
+<!-- There's a problem, $X_i$ (R.V.) is already pre-sampled from Monte-Carlo different from integrating over every possible sample $z$. -->
+
+:::
+
+[^barf1]: There does seem to be a general ambiguity on how to denote the process of sampling variates or generating random variables from distributions, densities, probability measures, etc. Per §1.2 in [@Durrett10.5555/1869916, p. 10], we can say in our case the random variable $X_i$ is generated from another random variable $X$ that induces a push-forward measure $\mu$ with a density $p_X(x)$ for every realization/variates of $x$ from $X$.
+
+
+<!-- In this case, we're just constructing a random variable $X_i$ that *has* a density of $p_X$ defined by some (cumulative) distribution function $F(X)$.  -->
+
+<!-- [^zyxzyx1]: Personally, I got carried away into the idea that the sampling process must be specified in the mathematical expression, which is possible if we re-define the notation to allow it. Nevertheless, math is useless without the language context, and one should not create a fixed barrier between the math and the language that's integral to it. -->
+ 
+<!-- [^4a]: Remember, by linearity, it is equivalent to $\langle\mathbb{E}[\cdot]\rangle$. -->
+
+<!-- Think of the $\langle L_o \rangle$ as the Monte-Carlo estimated evaluation of the integration. -->
+
+<!-- What used to be a deterministic value $L_o$ is now probabilistic $\langle L_o \rangle$. If we look at each samples of $\langle L_o \rangle$, they are individually deterministic evaluations that is part of a larger group conveying the influence of probability densities of each sample, the sampling process that distributes according to the density, and the overall statistics. However, all these samples are summed into a single estimation of the integral given $N$ samples. Hence, each samples within $\langle L_o \rangle$ has extra dimensions we can analyze it such as median, mean (i.e., average, bias), and the variance. a *redefine* its value as the mean/average/uniform expectation. While the averaging from the Monte Carlo produces a single usable value for a given run, it is an average that comes from an aggregate of many evaluations at many random samples, where each sample is evaluated on an integral at random points in its domain (e.g., time, space, region, point in the world). If we narrow our view to each individual samples of the input and assume each individual samples are deterministic, each evaluations would then be deterministic (assuming the evaluation process itself is deterministic.) However, because Monte Carlo expects a *random* input (i.e., random samples/variables), the single value of that Monte Carlo evaluation of that integral would *vary* over *multiple* input samples. Notionally, this is what $\langle \cdot \rangle$ intends to capture and abstract[^3]: The inherent probabilistic/indeterministic value of an integral evaluation. This allows us to focus more on the overall quantity and makes it more workable with the rest of the math with just an extra properties we just have to think about: variance[^4]. -->
+
+[^3]: Abstract as in we treat the individual probabilistic evaluations as a single, deterministic object. Just like in real life: At an atomical level, each atoms has a probabilistic electron field (whether the physics itself is probabilistic is another can of worm to get into). However, a wooden desk that is made up of many many of these little atoms seems to remain stationary right? Stationary as in positionally deterministic.
+
+<!-- [^4]: There's another important property: expectation. Recall, the Monte Carlo estimation of the value itself $\langle L_o \rangle$ is really just a redefinition to the expectation of many evaluations with respect to the M.C. sampling technique. It is different from the originally deterministic, analytical evaluation $L_o$. -->
+
+In our case, we are interested in reducing the variance, one of the main workable properties of this enigmatic, dynamic/changing evaluations of $\langle L_o \rangle$. And a common, simple way to reduce variance is by applying importance sampling. In this case, if we swap out our sampling from a uniform hemispherical sampling $\mathbf{\omega_k}\sim H^+$ with a PDF of $\frac{1}{2\pi}$ to a cosine-weighted hemispherical sampling $\mathbf{\omega_k}\sim \cos_\mathbf{n}$ with a PDF of $\frac{\mathbf{n}\cdot\omega_k}{\pi}$, we can actually get the following.
+
+$$
+\langle L_o \rangle = \frac{1}{N}\sum_k^N\bigg(\frac{L_i(\mathbf{\omega_k})\frac{\rho}{\pi}\mathbf{n}\cdot\mathbf{\omega_k}}{\frac{\mathbf{n}\cdot\omega_k}{\pi}}\bigg) = \frac{1}{N}\sum_k^N\bigg(L_i(\mathbf{\omega_k})\rho\bigg) \text{ s.t. } \mathbf{\omega_k}\sim \cos_\mathbf{n}
+$$
+
+**Isn't that just satisfying?** Just simply replace *how you sample* and you get a much more neater expression (that also lowers variance). Now, the interesting part is not the simplification algebra, but rather how are we even able to craft a seemingly arbitrary sampling distribution such as cosine-weighted hemispherical distribution over here? It's also the idea of the existence of the ability to transport uniform samples to a desired probability "density"[^6] itself and *how* it is done that seems so captivating. This blog will be a focus on how one can craft these seemingly arbitrary *samplers* from just uniform distributions (a common, sensible, intuitive utility widely available in libraries from Python standard library, PyTorch, cuRAND, etc.), and show where it is commonly applied in (if it has any.)
+
+<!-- [^5] -->
+
+<!-- [^5]: There is a common technique called rejection sampling that is able to handle many kinds of PDFs, especially when we just want to mask a di. , but it is slower and less interesting compared to the analytically-derived custom samplers (assuming the derivation exists). -->
+[^6]: I'm telling you, probability is just... enigmatic. You either can explain it in words and not visually, or you can show it visually and impossible to explain it in words like here.
+
+<!-- n example derivation of the -->
+
+Here's a teaser, from barebones uniform sampler $U[0,1)$ (shortened to $U$) to hemisphere sampler $p_\text{hemisphere}$ to cosine-weighted hemisphere sampling $p_\text{cos}$. I won't show the the derivation for this one because if you are just getting started in graphics you probably have incidentally just memorize the formulas from the constant mentioning of cosine-weighted sampling during implementation (i.e., beating a dead horse.)
+
+<!-- Since a *surface* of a hemisphere is inherently 2D, we start with a simple 2D uniform sampler $[ U_1, U_2, 0 ]$, which is just samples a unit square. Getting a hemisphere requires us to first get a disc $x^2+y^2 < 1$, or $r < 1$ in polar coordinate[^a1]. We can naively let $r \sim U_1$ and $\theta \sim 2\pi U_2$, but the points $(r,\theta)$ gets sampled more frequently near the center than on the edges.
+
+[^a1]: Polar coordinates or else the math gets very messy. -->
+
+
+```{pyodide}
+#| echo: false
+#| autorun: true
+import plotly.graph_objects as go
+from IPython.display import HTML
+import json, uuid
+import numpy as np
+
+_STAGE_COLORS = [
+    "#999999", "#7b68ee", "#4682b4", "#ff8c00", "#e74c3c",
+    "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c", "#e67e22",
+]
+
+
+def _build_one(sample_fn, T, HOLD, width, height, x_range, y_range, z_range):
+    items = sample_fn()
+    stages, labels, trans = map(list, zip(*items))
+    palette = _STAGE_COLORS[:len(stages)]
+    trans = trans[:-1]  # last entry is None sentinel; transitions are N-1 between N stages
+
+    def ss(t): return t*t*(3 - 2*t)
+
+    seq = []
+    for i in range(len(stages)):
+        seq += [(stages[i], labels[i], palette[i])] * HOLD
+        if i < len(stages) - 1:
+            fn = trans[i]
+            for f in range(T):
+                t   = ss(f / T)
+                lbl = "{} → {}".format(labels[i], labels[i+1])
+                col = palette[i] if t < 0.5 else palette[i+1]
+                pos = fn(t, stages[i], stages[i+1])
+                seq.append((pos, lbl, col))
+
+    p0 = stages[0]
+    # Slider steps use method="update" (restyle+relayout) — never calls Plotly.redraw,
+    # so the WebGL camera is never reset during animation or scrubbing.
+    steps = [dict(
+        method="update",
+        args=[
+            {"x": [pos[:,0].tolist()], "y": [pos[:,1].tolist()], "z": [pos[:,2].tolist()],
+             "marker.color": [col]},
+            {"title.text": lbl}
+        ],
+        label=""
+    ) for pos, lbl, col in seq]
+
+    return go.Figure(
+        data=[go.Scatter3d(x=p0[:,0], y=p0[:,1], z=p0[:,2], mode="markers",
+                           marker=dict(size=2, color=palette[0], opacity=0.5), showlegend=False)],
+        layout=go.Layout(
+            title=dict(text=labels[0]), width=width, height=height,
+            scene=dict(xaxis=dict(range=list(x_range), title="x"),
+                       yaxis=dict(range=list(y_range), title="y"),
+                       zaxis=dict(range=list(z_range), title="z"),
+                       aspectmode="manual",
+                       aspectratio=dict(x=x_range[1]-x_range[0],
+                                        y=y_range[1]-y_range[0],
+                                        z=z_range[1]-z_range[0])),
+            sliders=[dict(steps=steps,
+                         transition=dict(duration=0), x=0, y=0, len=1.0,
+                         currentvalue=dict(visible=False),
+                         ticklen=0, tickcolor='rgba(0,0,0,0)', minorticklen=0)]
+        )
+    ).to_dict()
+
+def show_sampling_animation(sample_fn, N_SETS=3, T=20, HOLD=12,
+                            width=700, height=520,
+                            x_range=(-1,1), y_range=(-1,1), z_range=(-1,1)):
+    _data = json.dumps([_build_one(sample_fn, T, HOLD, width, height, x_range, y_range, z_range) for _ in range(N_SETS)])
+    _DIV  = "samp_" + uuid.uuid4().hex[:8]
+    _BTN  = _DIV + "_btn"
+    _PLAY = _DIV + "_play"
+    return HTML("""
+<div id="SAMP_DIV" style="width:700px;height:520px"></div>
+<div style="margin-top:6px;display:flex;gap:6px">
+  <button id="SAMP_PLAY" style="padding:4px 12px;font-size:13px">&#9654; Play</button>
+  <button id="SAMP_BTN"  style="padding:4px 12px;font-size:13px">&#127922; Resample</button>
+</div>
+<script>
+(function() {
+  var D="SAMP_DIV", B="SAMP_BTN", P="SAMP_PLAY", sets=SAMP_DATA, idx=0;
+  var curFig=sets[0], frameIdx=0, playTimer=null, direction=1;
+  var currentCam=null, wasPlaying=false;
+
+  function ensurePlotly(cb) {
+    if (typeof Plotly !== 'undefined') { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdn.plot.ly/plotly-2.35.2.min.js';
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
+
+  function getCamera() {
+    if (currentCam) return currentCam;
+    try { return JSON.parse(JSON.stringify(document.getElementById(D)._fullLayout.scene.camera)); }
+    catch(e) { return null; }
+  }
+
+  function attachListeners() {
+    var el = document.getElementById(D);
+    el.on('plotly_relayout', function(ed) {
+      if (ed['scene.camera']) currentCam = JSON.parse(JSON.stringify(ed['scene.camera']));
+    });
+    el.on('plotly_sliderchange', function(ed) {
+      frameIdx = ed.slider.active;
+    });
+    // Pause on mousedown so the user can rotate freely; resume on mouseup
+    el.addEventListener('mousedown', function() {
+      wasPlaying = !!playTimer;
+      if (wasPlaying) stopPlay();
+    });
+    document.addEventListener('mouseup', function() {
+      if (wasPlaying) { wasPlaying = false; startPlay(); }
+    });
+  }
+
+  function applyFrame(k) {
+    var step = curFig.layout.sliders[0].steps[k];
+    var relayout = Object.assign({}, step.args[1]);
+    if (currentCam) relayout['scene.camera'] = currentCam;
+    Plotly.update(D, step.args[0], relayout, [0]);
+    Plotly.relayout(D, {'sliders[0].active': k});
+  }
+
+  function stopPlay() {
+    if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    document.getElementById(P).innerHTML = '&#9654; Play';
+  }
+
+  function startPlay() {
+    if (playTimer) return;
+    document.getElementById(P).innerHTML = '&#9646;&#9646; Pause';
+    var nf = curFig.layout.sliders[0].steps.length;
+    playTimer = setInterval(function() {
+      frameIdx += direction;
+      if (frameIdx >= nf - 1) { frameIdx = nf - 1; direction = -1; }
+      else if (frameIdx <= 0) { frameIdx = 0; direction = 1; }
+      applyFrame(frameIdx);
+    }, 40);
+  }
+
+  function render(fig, frame, cam) {
+    stopPlay();
+    curFig = fig; frameIdx = frame || 0; currentCam = cam || null; direction = 1;
+    var layout = JSON.parse(JSON.stringify(fig.layout));
+    if (cam) { layout.scene = layout.scene || {}; layout.scene.camera = cam; }
+    layout.sliders[0].active = frameIdx;
+    Plotly.purge(D);
+    Plotly.newPlot(D, fig.data, layout, {responsive: false})
+      .then(function() {
+        attachListeners();
+        if (frameIdx > 0) applyFrame(frameIdx);
+      });
+  }
+
+  ensurePlotly(function() { render(sets[0], 0, null); });
+
+  document.getElementById(P).addEventListener('click', function() {
+    if (playTimer) stopPlay(); else startPlay();
+  });
+  document.getElementById(B).addEventListener('click', function() {
+    idx = (idx + 1) % sets.length;
+    render(sets[idx], frameIdx, getCamera());
+  });
+})();
+</script>
+""".replace("SAMP_DIV", _DIV).replace("SAMP_BTN", _BTN).replace("SAMP_PLAY", _PLAY).replace("SAMP_DATA", _data))
+```
+
+```{pyodide}
+def lerp(t,a,b):
+    return (1-t)*a + t*b
+
+def slerp(t, a, b):
+    th  = (1-t)*np.arccos(a[:,2]) + t*np.arccos(b[:,2])  # interpolate θ from z = cos θ
+    phi = np.arctan2(a[:,1], a[:,0])                       # φ from x, y
+    return np.column_stack([np.sin(th)*np.cos(phi), np.sin(th)*np.sin(phi), np.cos(th)])
+
+def slerp2d(t, a, b):
+    ra = np.sqrt(a[:, 0]**2 + a[:, 1]**2)
+    rb = np.sqrt(b[:, 0]**2 + b[:, 1]**2)
+    ta = np.arctan2(a[:, 1], a[:, 0])
+    tb = np.arctan2(b[:, 1], b[:, 0])
+    r = (1 - t) * ra + t * rb
+    angle = (1 - t) * ta + t * tb
+    return np.column_stack([r * np.cos(angle), r * np.sin(angle), np.zeros(len(a))])
+
+def make_stages(N=200):
+    u1, u2 = np.random.rand(N), np.random.rand(N)
+
+    # 2D uniform square
+    p0 = np.column_stack([2*u1 - 1, 2*u2 - 1, np.zeros(N)])
+
+    # Uniform hemisphere — inverse CDF: cos θ = u1, φ = 2π u2
+    cos_u = u1  # arccos, but since we're outputting cos anyways, we'll just directly use it
+    sin_u = np.sqrt(1 - cos_u**2)
+    phi = 2*np.pi*u2
+    p1 = np.column_stack([sin_u*np.cos(phi), sin_u*np.sin(phi), np.zeros(N)])  # flat disk
+    p2 = np.column_stack([sin_u*np.cos(phi), sin_u*np.sin(phi), cos_u])
+
+    # Cosine-weighted hemisphere — inverse CDF of p(θ) ∝ cos θ: cos θ = √u1
+    cos_c = np.sqrt(cos_u)  # per inverse CDF, it would be 1-cos_u, but for better animation, I used cos_u (mathematically same)
+    sin_c = np.sqrt(1 - cos_u)
+    p3 = np.column_stack([sin_c*np.cos(phi), sin_c*np.sin(phi), cos_c])
+
+    return [
+      (p0, "2D Uniform", lerp),
+      (p1, "Flat Disk", lerp),
+      (p2, "Uniform Hemisphere", slerp),
+      (p3, "Cosine-weighted Hemisphere (*)", None),
+    ]
+
+show_sampling_animation(make_stages, z_range=(0,1))
+```
+
+The purpose of this visualization shows the *deterministic* transformation of the samples. This can be thought of as assuming each samples are deterministic to clearly visualize the transformation process of the *density* and treats the input randomness as something independent. We are given $U_1, U_2, U_3$.
+
+# Introduction
+
+These are some distributions I have come across a lot and seems to have derivation to transform uniform samples into it. I hope this also lets you start seeing the world of transforming uniform samples.
+
+## 3D Gaussian
+
+We will specifically use 3D version of the standard Gaussian. Suppose a Monte Carlo has Normal distribution factor (parameterized by $\mathbf{x}=[x,y,z]$) that we want to remove via $\mathbf{pdf}_\text{gaussian}=\frac{\exp{(-\frac{1}{2}\mathbf{x}^\top\mathbf{x})}}{\sqrt{(2\pi)^3}}$. How would we design the sampler such that the sampled points $\mathbf{x}$ naturally follows the Gaussian distribution so that its manufactured density cancels out in the Monte-Carlo expression? Suppose $U_1, U_2, U_3$.
+
+### 1st attempt: Inverse CDF
+
+Recall that a CDF $F$ is an integral of PDF $f$ that describes the percentile for a given random variate $x$ with density $f$. A nice property of CDF is that $0\leq F(x) \leq 1$ since $f$ is *normalized*, allowing us to generate uniform samples that will be transformed by $F^{-1}$ to get the original density without the cost of evaluating additional terms. Per Theorem 3.1 of @devroye:1986[Section 11-3.2], we can let each of our target random variables $Y_1, Y_2, Y_3$ be assigned as $Y_i = F^{-1}_i(U_i)$, and it will still maintain the original density of the 3D gaussian. Additionally, Gaussian distribution is independent with respect to each of its dimension, so we can split them into a product of three marginal Gaussian distribution $\mathbf{pdf}_\text{gaussian}=\mathcal{N}_1(0,1)\mathcal{N}_2(0,1)\mathcal{N}_3(0,1)$ [^zz1] which can be applied to the theorem. However, to obtain $F$ in the first place, we have to find a closed form solution of $F(x)=\int_{-\infty}^x \mathcal{N} dx=\int_{-\infty}^x \frac{e^{-\frac{x^2}{2}}}{\sqrt{2\pi}} dx$. This is a well-known problem and has no closed-form solution (strictly speaking). Hence, we go with the Box-Muller technique.
+
+[^zz1]: Where we do denote $\mathcal{N}$ as the standard marginal Gaussian distribution.
+
+### 2nd attempt: (Extended) Box-Muller [^ebm1]
+
+[^ebm1]: Forgot Box-Muller dimensionally works only in 2. The exercises in @devroye:1986[Section 5-4] are interesting and adjacently concerns the issue we're having with 3D sampling of Gaussian. There is likely an elegant method out there, but due to limited time, we'll just implement 4D Box-Muller and extract the first 3 dimensions.
+
+Since we want to avoid rejection sampling out of elegancy, we are limited to Box-Muller technique that works in 2 dimensions. In other words, we will have to use $U_1,U_2,U_3,U_4$ (2x Box-Muller) to generate a 4D Gaussian which we will just extract the first three components (since each axes are independent of each other). You might argue this is even less elegant, but I'm to deep into Box-Muller such that we'll just go with it.
+
+We will focus on $d=2$ case for now. In @devroye:1986[Section 5-4.4], we can generate $d=2$ i.i.d. normal random variates by $RX$, where $R$ is the scalar random variable[^yy3] of radius and $X$ is the 2-dimensional random variable on the surface of the unit 2D hyper-sphere ($C_2$). Per Theorem 4.4 of @devroye:1986[Section 5-4.3], statement 5 states $X\sim(\cos(2\pi U_1), \sin(2\pi U_1))$ is uniformly distributed on $C_2$ [^yy1], which summarizes the Box-Muller method. Then, $r\sim R$ is realized on a density of $d\cdot V_d\cdot r^{d-1}\cdot e^{-\frac{r^2}{2}}$ where $d$ is the dimension and $V_d$ is the volume of $d$-dimension hypersphere[^yy2]. However, this is different from Devroye's originally intended density which is $d \cdot V_d \cdot r^{d-1} \cdot g(r) = d \cdot V_d \cdot r^{d-1} \cdot \frac{e^{-\frac{r^2}{2}}}{(2\pi)^{\frac{d}{2}}}$ from Theorem 4.3 (1st statement) and Theorem 4.2. This is the normalized (hence, correct) version, but Devroye did subtly mention $R \sim \sqrt{2G}$[^yy4] where $G \sim \text{Gamma}(\frac{d}{2},1)$. In fact, the following note (collapsed by default) will show that $\sqrt{2G}$ is the correct, normalized version [^yy5].
+
+[^yy1]: $\tan{\pi U}=\frac{\sin X_1}{\cos X_2}$ where $X_1,X_2$ are on $C_2$. This is also the main reason why Box-Muller works in 2 dimensions.
+[^yy2]: Check @devroye:1986[Section 5-4.1] for more info.
+[^yy3]: Random variate $x$ is a particular *realized* value/outcome from a random variable $X$. Random variate $x$ can be exactly treated like traditional variable while random variable $X$ is intrinsically described by a distribution (e.g., CDF, PDF) that *could* behave differently than a traditional variable within expressions.
+[^yy4]: If $R=\sqrt{2G}$, that means every realized values of $\sqrt{2G}$ is $R$ at a concrete, realized level. $R\sim \sqrt{2G}$ just means the underlying realized, concrete values might differ but the distribution (i.e., the *density*) of these realized values will follow from $R$ to $\sqrt{2G}$ (and vice versa).
+[^yy5]: Conceptually, density *loosely* does not have to be normalized. It makes sense as long the order is kept (higher density will be scaled to be denser in the same amount as the space with lesser density.) However, by definition, we strictly want it to be normalized out of consistency, and I was confused for a long long time on this specific description.
+
+::: {.callout-note collapse="true"}
+### Ensuring normalization is present in $R$
+
+Given the following:
+
+- $G \sim \text{Gamma}(\frac{d}{2},1) = \frac{1}{\Gamma(\frac{d}{2})}x^{(\frac{d}{2}-1)}e^{-x}$ [^f1]
+- $V_d=\frac{\pi^\frac{d}{2}}{\Gamma(\frac{d}{2}+1)}$ (the volume of a $d$-dimensional hypersphere)
+- $f_G(g) = \frac{1}{\Gamma(\frac{d}{2})}g^{(\frac{d}{2}-1)}e^{-g}$ (the density of the source distribution)
+- $\Gamma(z+1)=z\Gamma(z)$ where $z\in \mathbb{C}, \mathfrak{R}(z)>0$
+<!-- - $R = \sqrt{2G}$ -->
+
+We want to find the density of $R$: 
+
+- $y_R(r) ={}?$
+
+We can start with the transformation of random variable. Per Theorem 4.2 in @devroye:1986[Section 1-4.1], suppose we have a transformation $R=\sqrt{2G}$. Since $r>0$, then $G>0$. Hence, an inverse transformation must also exist where $G=\frac{R^2}{2}$. Finding the Jacobian in 1D is just the absolute diffentiation of $R$ w.r.t. $G$.
+
+$$
+y_R(r) = f_G\bigg(\frac{r^2}{2}\bigg)\bigg|J\bigg| = f_G\bigg(\frac{r^2}{2}\bigg)\bigg|\frac{d\frac{r^2}{2}}{dr}\bigg| = f_G\bigg(\frac{r^2}{2}\bigg)\bigg|r\bigg|
+$$
+
+Since $r\ge 0$, we can simplify further.
+
+$$
+\begin{align*}
+y_R(r) &= f_G\bigg(\frac{r^2}{2}\bigg)r \\
+&= \frac{1}{\Gamma(\frac{d}{2})}\bigg(\frac{r^2}{2}\bigg)^{(\frac{d}{2}-1)}e^{-\frac{r^2}{2}}r \\
+&= \frac{1}{\frac{2}{d}\Gamma(\frac{d}{2}+1)}\frac{\pi^\frac{d}{2}}{\pi^\frac{d}{2}}\bigg(\frac{r^{d-2}}{2^{(\frac{d}{2}-1)}}\bigg)e^{-\frac{r^2}{2}}r \\
+&= d \cdot V_d \cdot r^{d-1} \cdot \frac{e^{-\frac{r^2}{2}}}{(2\pi)^\frac{d}{2}}
+\end{align*}
+$$
+
+Despite the first equation shown as un-normalized, the implied sampling distribution $\sqrt{2G}$ from Devroye is actually normalized and we can safely assume it is correct with the full context.
+
+:::
+
+[^f1]: per wikipedia
+
+Now with everything satisfied, we can comfortable know that with $X\sim(\cos(2\pi U_1), \sin(2\pi U_1))$ and $R\sim \sqrt{2G}$ we can produce $RX$ that gives us 2 i.i.d. normal samples. Recall the independence assumption, we can get a 3D gaussian by letting $(Y_1,Y_2) = RX$ and $Y_3 = RX_1$. In fact, we can let each $Y_i$ sample be the $\sin$ component of each of the 3 Box-Muller $X$ pairs and theoretically it will still work, but that's a total waste of computation.
+
+We're not done yet, while we can clearly see how to sample $X$, what about sampling $\sqrt{2G}$?[^o1] This should be easier since we're now working 1D. Recall $G\sim \frac{1}{\Gamma(\frac{d}{2})}r^{(\frac{d}{2}-1)}e^{-r}$. The gamma function $\Gamma$ (not to be confused with the Gamma distribution) does get wonky with the possiblity of no closed-form solution (i.e., impossible to find a sampling method) on non-integer input, so we'll assume $d=2$ from now on (another reason we are restricted in terms of 2, dimensionally speaking). We get a convenient distribution $G\sim e^{-r}$. Easy win: $G \sim -\ln{(1-U)}$. (Check the notes below for derivation.)
+
+::: {.callout-note collapse="true"}
+### Yet another derivation on how to sample exponential distribution
+
+Via inverse CDF.
+
+We have the density (PDF) $f(r)=e^{-r}$ for $r\geq 0$. We can get its CDF as follows:
+
+$$
+\begin{align*}
+F(r) &= \int_{0}^{r} e^{-t}dt \\
+&= -e^{-t} \big|_{0}^{r} \\
+&= -e^{-r}+e^{0} = 1-e^{-r} \\
+\end{align*}
+$$
+
+The inverse CDF is $-\ln{(1-F(r))}=r=F^{-1}(u)$. Since exponential distribution has infinite support (in one direction), the CDF will never reach to 1. This means the $\ln$ is always defined since $F(r)<1 \implies 1-F(r)>0$. Because we defined our uniform as $U[0,1)$, $1-U$ yields an interval of $(0,1]$, ensuring validity.
+
+Hence, we can sample the distribution as $-\ln{(1-U)}$.
+
+:::
+
+[^o1]: When we want to sample, we want to work the other way. Previously, we tried to find the density of that. Now, we want to find the sampling method that takes a uniform and transform it into the density.
+
+Now we have $X\sim(\cos(2\pi U_1), \sin(2\pi U_1))$ and $R \sim \sqrt{-2\ln{(1-U_2)}}$ all in terms of $U$, we can finally put it altogether.
+
+
+```{pyodide}
+def make_stages(N=200):
+    u1, u2, u3, u4 = np.random.rand(N), np.random.rand(N), np.random.rand(N), np.random.rand(N)
+    uz = np.zeros(N)
+
+    # 1D uniform
+    p0 = np.column_stack([u1, uz, uz])
+
+    # X on C2
+    x1 = np.cos(2*np.pi*u1)
+    x2 = np.sin(2*np.pi*u1)
+    p1 = np.column_stack([x1, x2, uz])
+
+    # R on sqrt(2G)
+    r1 = np.sqrt(-2*np.log(1-u2))
+    p2 = np.column_stack([r1, uz, uz])
+
+    # RX
+    p3 = np.column_stack([r1*x1, r1*x2, uz])
+
+    # extend to 3D
+    x3 = np.cos(2*np.pi*u3)
+    x4 = np.sin(2*np.pi*u3)
+    r2 = np.sqrt(-2*np.log(1-u4))
+    p4 = np.column_stack([r1*x1, r1*x2, r2*x3])
+
+    return [
+      (p0, "1D Uniform", lerp),
+      (p1, "X", lerp),
+      (p3, "RX (2D Gaussian)", lerp),
+      (p4, "3D Gaussian (*)", None),
+    ]
+
+    # animate R first
+    # return [
+    #   (p0, "1D Uniform", lerp),
+    #   (p2, "R", slerp2d),
+    #   (p3, "RX (2D Gaussian)", lerp),
+    #   (p4, "3D Gaussian (*)", None),
+    # ]
+
+show_sampling_animation(make_stages, x_range=(-4,4), y_range=(-4,4), z_range=(-4,4))
+```
+
+The steps required to sample a 3D gaussian is more involved with more steps. Feel free to change the code (i.e., permute the transitions) to your liking or visualize the individual parts like sampling the exponential distribution. In later sections, we will show a better animation of the *change in density* of 3D gaussian by ensuring point-to-point correspondence. Currently, there does seem to be a tradeoff between closed-form sampling methods versus point-corresponding density transformation, which the later sections will relax upon.
+
+
+::: {.callout-note collapse="true"}
+### Remark: Re-defining what "elementary" functions are
+
+Closed-form solutions and methods can be thought of as them strictly solved/derived within a self-contained set of functions. Traditionally, perhaps from a pedagogical view, this has been the arbitrarily-defined "elementary" functions. Since we are more focused on the computational, programmatic aspect of probabilities, and math in general (for my blogs), let us redefine the elementary functions that are elementary in the sense that many computational libraries for CPU & GPU provides the function atomically. Usually for good reasons that includes minimal constant-bounded clock cycles if the entire math is viewed from a restricted Turing machine instead of elementary functions or even ZFC. Because at the end of the day, $\sin$ and $\cos$ are numerically approximated and $U$ is provided practically everywhere via computational libraries as aforementioned.
+
+:::
+
+<!-- [^asdf1]: Closed-form solutions and methods can be thought of as them strictly solved/derived within a self-contained set of functions. Traditionally, perhaps from a pedagogical view, this has been the arbitrarily-defined "elementary" functions. Since we are more focused on the computational, programmatic aspect of probabilities, and math in general (for my blogs), let us redefine the elementary functions that are elementary in the sense that many computational libraries for CPU & GPU provides the function atomically. Usually for good reasons that includes minimal constant-bounded clock cycles if the entire math is viewed from a restricted Turing machine instead of elementary functions or even ZFC. Because at the end of the day, $\sin$ and $\cos$ are numerically approximated and $U$ is provided practically everywhere via computational libraries as aforementioned. -->
+
+::: {.callout-note collapse="true"}
+### Tangent: Proving single-variable inverse CDF technique from transformation of R.V.
+
+Devorye's @devroye:1986 definition of R.V. is quite different from the standard defintion of R.V. Suppose a random variable $X$, Devroye assumes random variable are random variates generated by an algorithm that always halt and produces a real number $X$, while Kolmogorov's definition of R.V. per Durrett @Durrett10.5555/1869916 is a *function* where $X:\Omega \to \mathbb{R}$. Random variable in this sense can be thought of as a variable, but technically we are passing the function object itself (i.e., lambdas in Python) and the inequalities that commonly operate on the R.V. are like the domain restriction on that R.V. Similiarly, $\sim$ describes how the R.V., as a function, is distributed, in relation to other distribution or R.V. Regardless, we'll continue Devorye's assumption of R.V. [^zfc1] [^zfc2]
+
+Suppose we have a distribution function (CDF) $F(x)$, which always has an inverse $F^{-1}(y)=\inf\{x:F(x)=y, 0<y<1\}$[^gg1] by Devorye's infinum definition[^gg2] of inverse CDF, from the target distribution $X$. Given a known source distribution $Y\sim U[0,1)$, how can we obtain the target via transformation of R.V.?
+
+We will assume the CDF is 1D[^gg3].
+
+Since $Y$ has a density $f_Y(y)=1$ that is continuous *a.e.* over its support and our transformation, the quantile function $x=F^{-1}(y)$, is one-to-one and onto (again, because of its *quantile* definition). Following Theorem 4.2 [@devroye:1986, p. 14], the inverse (of the inverse CDF) must exist as the CDF itself $y=F(x)$. Since $\frac{dy}{dx}$ exists due to CDF's continuity and the codomain of $F^{-1}(y)$ is also continuous, by the theorem, $X$ has a density of $f_Y(F(x))|\frac{dy}{dx}|$. Since $f_Y(y)=1$ and $|\frac{d}{dx}F(x)|=|f_X(x)|$ with the fact that all density must be positively defined, $X$ has the density $f_X(x)$ *as expected*.
+
+$\Box$
+
+
+<!-- Since $f_Y(y)=1$ and the derivative of CDF is the PDF, $f_X=f_Y$, which is a tautology.
+
+This is actually an -->
+
+
+<!-- Suppose a uniform distribution (or R.V.) -->
+
+<!-- Suppose transformation of R.V. where we have a source R.V. $X$ -->
+
+:::
+
+
+[^zfc1]: Devorye's definition of probability is a subsidiary of Kolmogorov's / Measure-theoretic definition of probability just like Peano's axiom to ZFC. Additionally, Kolomogorov probability itself can somehow be further verified by ZFC. Regardless, we'll only focus on Kolmogorov's since that's the most widely used. However, there does exist some fringe definitions of probability such as quantum probability that could be useful later on (though I highly doubt quantum computers is even theoretically useful for anything other than cryptography).
+[^zfc2]: Bayesian and frequentist are different *views/interpretations* of Kolmogorov probability and statistics, which is orthogonal to different definitions of probability that was discussed before.
+[^gg1]: The reason it is not $0\le y\le 1$ is we got to find a good definition of inverse CDF that supports various distributions (including those that have infinite support), but also $y=0,1$ are 0-measure that contributes nothing when removed. Hence, it is safe to exclude them. Devorye does this implicitly, but this is more commonly known as *almost everywhere* (a.e.) and *almost surely* (a.s.). A fancy way to say we ignore degenerate cases precisely and hand-wavily (usually to keep the definition consistent).
+[^gg2]: a.k.a. quantile function
+[^gg3]: It was at this point one realizes that the simple inverse CDF only works 1D. Multivariable inverse CDF requires special handling.
+
+
+::: {.callout-note collapse="true"}
+### Tangent: Proving variance reduction of importance sampling (single R.V.; scalar)
+
+Suppose we have the following base Monte-Carlo estimation ($X_i \sim p_X$) of the integral $A = \int_\mathcal{D} f(x)g(x)dx$. **Assume $g(x)$ is non-negative for almost all $x$[^zzz3].**
+
+$$
+A = \frac{|\mathcal{D}|}{N}\sum_{i=1}^{N}\frac{f(X_i)g(X_i)}{p_X(X_i)}
+$$
+
+Let us suppose the domain of integration is simple ($|\mathcal{D}|=1$) and we naively sample the estimation uniformly $p_\text{naive}(Y_i)=1$.
+
+
+$$
+\langle A \rangle_\text{naive} = \frac{1}{N}\sum_{i=1}^{N}f(Y_i)g(Y_i)
+$$
+
+Let us suppose we employ importance sampling ("i.s.") technique where $p_\text{i.s.}(Z_i)\propto g(Z_i)$, we get the following. $c=1/\int_{\mathcal{D}}g(x)dx=1/\mathbb{E}_{X_1\sim p_{\text{naive}}}[g(X_1)]$ [^zzz2] is the normalization factor for $g$ to ensure its conversion into a sampling process is normalized to $1$.
+
+$$
+\langle A \rangle_\text{i.s.} = \frac{1}{N}\sum_{i=1}^{N}\frac{f(Z_i)g(Z_i)}{cg(Z_i)} = \frac{1}{cN}\sum_{i=1}^{N}f(Z_i)
+$$
+
+Now that we have both $\langle A \rangle_\text{naive}$ and $\langle A \rangle_\text{i.s.}$, we can show if importance sampling truely reduces the variance $\mathbb{V}$. Remember, the output estimate of the Monte-Carlo is a random variable itself.
+
+$$
+\begin{align*}
+\mathbb{V}[\langle A \rangle_\text{naive}]
+&= \mathbb{V}_{Y_1,\cdots,Y_N\sim p_\text{naive}}\bigg[ \frac{1}{N}\sum_{i=1}^N f(Y_i)g(Y_i) \bigg] \\
+&= \frac{1}{N^2}\sum_{i=1}^N \mathbb{V}_{Y_i\sim p_\text{naive}}[ f(Y_i)g(Y_i)] \\
+&= \frac{1}{N} \mathbb{V}_{Y_1\sim p_\text{naive}}[ f(Y_1)g(Y_1)]
+\end{align*}
+$$
+
+Since $Y_1,\cdots,Y_N$ are usually i.i.d. in the context of M.C. estimation, we can use Theorem 2.2.1 from [@Durrett10.5555/1869916, p. 56] to get sum of variance from a variance of sum, since the covariance would theoretically be $0$ because of the independence (stronger assumption than uncorrelated). And since the interior term are *identical* in distribution, their variance, a property of theirs, would match regardless how many times it is sampled. Hence, we can reduce the sum of variance into a single variance times $N$.
+
+We can do the same with $\langle A \rangle_\text{i.s.}$ and get the following, although with a caveat of different sampling method.
+$$
+\frac{1}{c^2N} \mathbb{V}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)]
+$$
+
+Now, since we want variance reduction, we can do the following. We hope it is a tautology (i.e., verifies it always reduces variance) but it could just be reduced to a conditional also, which would help with the analysis regardless.
+
+$$
+\begin{align*}
+\frac{1}{c^2N} \mathbb{V}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)] < \frac{1}{N} \mathbb{V}_{Y_1\sim p_\text{naive}}[ f(Y_1)g(Y_1)] \\
+\implies \frac{1}{c^2} \mathbb{E}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)^2]- \frac{1}{c^2}\mathbb{E}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)]^2 < \mathbb{E}_{Y_1\sim p_\text{naive}}[ (f(Y_1)g(Y_1))^2] - \mathbb{E}_{Y_1\sim p_\text{naive}}[ f(Y_1)g(Y_1)]^2 \\
+\implies \frac{1}{c} \mathbb{E}_{Z_1\sim p_\text{naive}}[ f(Z_1)^2 g(Z_1)]-A^2 < \mathbb{E}_{Y_1\sim p_\text{naive}}[ (f(Y_1)g(Y_1))^2] - A^2 \\
+\implies 0 < \mathbb{E}_{Y_1\sim p_\text{naive}}[ (f(Y_1)g(Y_1))^2] - \mathbb{E}_{X_1\sim p_{\text{naive}}a}[g(X_1)] \mathbb{E}_{Z_1\sim p_\text{naive}}[ f(Z_1)^2 g(Z_1)] \\
+\end{align*}
+$$
+
+<!-- \implies \mathbb{E}_{X_1\sim p_\text{naive}}[ f(X_1)^2 g(X_1) (1 - cg(X_1))] < 0 \\ -->
+
+Although this looks like covariance, there are still some technical differences especially on finite samples. The first term in the final reduced expression needs to have a sampling from a joint distribution between $f^2g$ vs. $g$ while having the same individual marginal samples from the joint for the second term after the subtraction. [TL;ND]{.tlnd}, I will leave the justification here without an alternative proof.
+
+$\Box$
+
+(The previous iteration of the proof is lowkey bad in hindsight.)
+
+<!-- <del>
+For notational clarity, we rewrite it as $0 < \mathbb{E}_Y[(f^2g)\cdot g]-\mathbb{E}_X[g]\cdot \mathbb{E}_Z[f^2g] \overset{?}{=} \mathrm{Cov}(f^2g, g)$ for $X,Y,Z \sim p_\text{naive}$. Additional notes:
+
+- Analytically, the expectation is an integration that equals to the *definition* of covariance
+  - Numerically, it is asymptotically equal ($N \to \infty$) if $N$ is the number of samples to estimate the expectation (if the sample space is infinitely large)
+  - In other words, when we compute the expectation for *all possible samples* numerically or analytically
+- However, if the $X,Y,Z$ sampling does not cover all the samples of the sample space, it is technically not covariance *by definition*
+  - We need either $X$ or $Z$ to be equal to $Y$ (i.e., one of the expectation after the subtraction must be sampled the same way as the first term before the subtraction)
+  - Recall $\mathbb{E}_X[g]$ is just a normalization constant for $g$ (without any sampling assupmtions or restrictions). Hence, we can have $X=Y$, to satisfy the definition of covariance so we can make the condition more interpretable while also maintaining its purpose as a normalization.
+  - This means as we sample the first expectation, we must reuse the sample to compute the normalization of $g$ for the second expectation.
+
+In other words, $0 < \mathbb{E}_Y[(f^2g)\cdot g]-\mathbb{E}_Y[g]\cdot \mathbb{E}_Z[f^2g] = \mathrm{Cov}(f^2g, g)$. -->
+
+
+<!-- - Even though all the terms might come from the same source R.V., each function (if non-trivial) $f$,$g$ would make the R.V. different and dependent of each other (preventing the product of integral becoming integral of the product).
+- This does mean if the function $f$,$g$ are trivial enough, the covariance might stick to $0$.
+- The reason the R.V. between the expectation terms are dependent, one-to-one, is due to linearity with the same distribution and also expectation is done over integral (i.e., over all possible samples), which technically means we can re-order the samples such that they are one-to-one dependent when we re-split the expectation. -->
+
+<!-- So what does $0<\text{Cov}(f^2g, g)$ tell us?  -->
+
+<!-- Since the conditional expression is not immediately interpretable (and we tried to make it more interpretable), we will try to slowly explore what the condition is intuitively telling us. -->
+
+<!-- 1. If $f\propto 1$, variance reduction is maximized (i.e., correlation $\rho=1$)
+1. If $g\propto 1$, there are no variance reduction (i.e., $\rho=0$)
+2. If $f\propto g$, variance reduction is largely maximized
+3. If $f\propto \frac{1}{g}$, variance *enlargement* is largely maximized (bad)
+4. If $f=\sqrt{\frac{a}{g}-b}$ with $g<\frac{a}{b}$ (i.e., misaligned), variance enlargement is maximized (i.e., $\rho=-1$)
+   1. variance "reduction" doesn't get any worse than this
+5. There can be an obscure configuration of $f$ and $g$ where $\rho=1,-1$ non-trivially
+6. At the end, a case-by-case analysis is still needed to determine variance reduction. Hopefully, this at least simplifies whether a certain combination of $f,g$ truely reduces the variance and shed some intuition on variance reduction.
+   1. $g$ remains limited to be always positive almost everywhere for now -->
+
+<!-- 1. Higher covariance between $f^2g$ and $g$ means more variance reduction since we formulated the expression as a difference of two variance
+   1. Covariance can be thought of as correlation but *up to scale*
+2. Variance reduction does not always happen: Consider cases when the covariance is negative
+   1. 
+3. If $f$ is trivial (e.g., $f=1$, $f=c$, $f=g$), then it has correlation of $1$ or close to $1$ (for $f=g$)---cases where variance reduction is maximized
+4. If $f=-1$, $f=-c$, or $f=-g$, then it also maximizes variance reduction (because of the square)
+   1. Increasing samples on regions that are *more* negative reduces variance
+   2. Intuitively, this means we do not care about the sign, we only care about sampling areas that has more magnitude (regardless what direction the value is).
+5. If $g=1,c$ and $f\neq c$, then there's no variance reduction
+6. If $g=f$ (where $f$ is also positively a.e.), then there's some variance reduction
+7. At the end, a case-by-case analysis is still needed to determine variance reduction. Hopefully, this at least simplifies whether a certain combination of $f,g$ truely reduces the variance and shed some intuition on variance reduction.
+   1. $g$ remains limited to be always positive almost everywhere for now -->
+
+<!-- By the linearity of the expectation, -->
+
+
+<!-- Let's make the expression more intuitive---more interpretable.
+
+
+\begin{align*}
+\mathbb{E}[(f^2g)\cdot g]-\mathbb{E}[g]\cdot \mathbb{E}[f^2g] &= 0\\
+\end{align*}
+ -->
+
+<!-- $\Box$ -->
+
+<!-- </del> -->
+
+Similiarly, §9.1 of @mcbook talks about the effectiviness of importance sampling in variance reduction and proves the optimal density to sample from is $p\propto |fg|$ while we only talk about importance sampling over *some* of the term (grouped as $g$) and finding how much variance is reduced given a combination of $f$ and $g$.
+
+ <!-- If $f$ represents all the other term and $g$ represents the term of interest for importance sampling, the term of interest $g$ is always linearly (one-to-one) correlated to itself (regardless how it is distributed itself). Yet, one of the $g$ is weighted with respect to $f^2$, which means -->
+
+<!-- $0 < \mathbb{E}[f^2g(cg - 1)]$[^zzz1] -->
+
+<!-- [^zzz1]: Note the implicit negation on both sides. -->
+[^zzz2]: If $|\mathcal{D}|\neq1$, this expectation will take care of it.
+[^zzz3]: Negative density (i.e., negative probabilities) creates a lot of problems.
+
+<!--
+
+&= \mathbb{E}[\langle A \rangle_\text{naive}^2] + \mathbb{E}[\langle A \rangle_\text{naive}]^2 \\
+&= \mathbb{E}_{Y_1,\cdots,Y_N \sim p_\text{naive}}\bigg[\big(\frac{1}{N}\sum_{i=1}^N f(Y_i)g(Y_i)\big)^2\bigg] + A^2 \\
+\end{align*}
+
+-->
+
+:::
+
+
+::: {.callout-note collapse="true"}
+### Tangent: Unbiased estimation after differentiation
+
+We are given the following expression that is deceptively simple.
+
+$$
+f(\langle I(\theta) \rangle)
+$$
+
+We have a deterministic *quadratic* function $f$ (e.g., objective function) that takes an M.C. estimation of an integral $I(\theta)=\int h_\theta(x)dx$ (e.g., the rendering equation, expectation, etc.) parameterized by some variable $\theta$. Remember, M.C. estimation is still an R.V. itself. This is recurring theme from a lot of places from differentiable rendering and reinforcement learning to finance---especially when we want to optimize the parameter $\theta$.
+
+Currently, optimization is done through differentiation. So, let's try to differentiate it. Despite the MC estimate is considered a RV, it is linearly composed of $N$ i.i.d. RV's evaluated on the integrand $N$ times. Since differentiation is linear, it goes right pass through (assuming the domain of the integral does not depend on $\theta$).
+
+$$
+\begin{align*}
+\frac{d}{d\theta}f(\langle I(\theta) \rangle)
+&= f'(\langle I(\theta) \rangle) \frac{d}{d\theta}\langle I(\theta) \rangle \\
+&= f'(\langle I(\theta) \rangle) \langle I'(\theta) \rangle \\
+\end{align*}
+$$
+
+The chain rule of differentiation created two MC estimate (symbolically) which are basically two RVs joined by arithmetic. In some domain (*cough* differentiable rendering), it is deceptively intuitive to compute the derivative $I'$ alongside the original $I$ (i.e., reusing path samples or just samples). But, is reusing samples allowed?
+
+Key insight: MC estimate is still a RV; hence, the entire expression is a big RV. Let's call that RV $L$.
+
+$$
+L = f'(\langle I(\theta) \rangle) \langle I'(\theta) \rangle
+$$
+
+If you think about, many RV has expectation and variance including this. Why not compare the following two equations to check if they're unbiased? **Let us assume $f'$ is linear ($f$ is quadratic).**
+
+Uncorrelated sampling with $Y,Z \sim X$ where $Y$ and $Z$ are i.i.d.:
+$$
+f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Z
+$$
+
+Correlated sampling with $Y\sim X$:
+$$
+f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Y
+$$
+
+Let us start with uncorrelated sampling:
+
+$$
+\begin{align*}
+\mathbb{E}_{Y,Z\sim X}[f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Z]
+&= \mathbb{E}_{Y_i,Z_i\sim X}\bigg[f'\bigg(\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)}\bigg) \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Z_i)}{p(Z_i)} \bigg] \\
+&= f'\bigg( \mathbb{E}_{Y_i\sim X}\bigg[\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)} \bigg] \bigg) \mathbb{E}_{Z_i\sim X}\bigg[ \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Z_i)}{p(Z_i)} \bigg] \\
+&= f'( I(\theta)) I'(\theta) \\
+\end{align*}
+$$
+
+Uncorrelated sampling is an unbiased estimator of the gradient.
+
+What about correlated sampling? (Assuming $N=M$.)
+
+$$
+\begin{align*}
+\mathbb{E}_{Y\sim X}[f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Y]
+&= \mathbb{E}_{Y_i \sim X}\bigg[f'\bigg(\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)}\bigg) \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Y_i)}{p(Y_i)} \bigg] \\
+&= f'\bigg( \mathbb{E}_{Y_i\sim X}\bigg[\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)} \bigg] \bigg) \mathbb{E}_{Y_i\sim X}\bigg[ \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Y_i)}{p(Y_i)} \bigg] + \text{Cov}_{(Y_i, Y_i)\sim X}\bigg(\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)}, \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Y_i)}{p(Y_i)}\bigg) \\
+&= f'( I(\theta)) I'(\theta) + \text{Cov}(\langle I(\theta) \rangle_Y, \langle I'(\theta) \rangle_Y ) \\
+\end{align*}
+$$
+
+As you can clearly see, correlated sampling has an additional covariance term $\text{Cov}(\langle I(\theta) \rangle_Y, \langle I'(\theta) \rangle_Y )$ which can potentially make correlated sampling *biased*. But I said *can potentially*, not *must*. Making covariance $0$ is a rather lax requirment (compared to independence). We just need to find $I(\theta)$ such that $I(\theta)$ and $I'(\theta)$ are non-linear. While this seems achievable (?), in differentiable rendering these expressions can be complicated really quickly. While it is reasonable to think a more complicated an expression is the more likely it's derivative will be non-linear w.r.t. to itself, it is still biased nonetheless in the strictest sense. Disclaimer: no proof has been done nor will be done on how much bias exists. Will leave that as an excercise for the reader /j.
+
+<!-- Since the left samples are being multiplied with the right samples in some ways, they must be independent of each other for expectation to be split (i.e., the integration split over independence). However, both samples rely on $Y_i$ (with the implicit constraint of $N=M$), which are clearly correlated and dependent. Hence, we are stuck with this form and cannot show 
+
+By  -->
+
+
+<!-- But, what does it mean to differentiate a Monte-Carlo estimate (i.e., random variable)?
+
+Given the following:
+
+
+NOTE: FIND A WAY TO FORMALIZE THE NOTION OF CORRELATION WHEN YOU (ACCIDENTALLY) USE THE SAME UNIFORM SAMPLE (WHEN IT SHOULD BE DIFFERENT) -->
+
+:::
+
+
+
+## Triangle
+
+Suppose we are given $\mathbf{p},\mathbf{q},\mathbf{r}\in \mathbb{R}^3$ to describe triangle $\triangle \mathbf{p}\mathbf{q}\mathbf{r}$. Since triangle is 2D, we will assume we are also given $U_1,U_2$. How do we sample uniformly on $\triangle$?
+
+Remember the triangle area formula $\frac{1}{2}bh$? It is based off of calculating half of the area of a parallelogram (which can always be made of two congruent triangles). Can we do something with it? (Yes, it is a bit like rejection sampling.)
+
+Suppose $\overline{\mathbf{p}\mathbf{q}}$ and $\overline{\mathbf{p}\mathbf{r}}$ constitutes the two edge vectors of the parallelogram. We can let $\mathbf{X}=U_1\overline{\mathbf{p}\mathbf{q}} + U_2\overline{\mathbf{p}\mathbf{r}}$ to uniformly sample over the parallelogram. We also have a third edge $\overline{\mathbf{q}\mathbf{r}}$. If both $\overline{\mathbf{q}\mathbf{r}} \times \overline{\mathbf{q}\mathbf{p}}$ and $\overline{\mathbf{q}\mathbf{r}} \times \overline{\mathbf{q}\mathbf{X}}$ have the same sign, it is in the correct triangle. If their sign does not match, that means their on the wrong side/triangle. We can flip the random point $\mathbf{X}$ over via $\mathbf{X'}=(1-U_1)\overline{\mathbf{p}\mathbf{q}} + (1-U_2)\overline{\mathbf{p}\mathbf{r}}$. Think of the transformation is flipping over $y=-x$ line and shifting up and right by $1$ unit putting the points back to the same triangle (w.r.t. to the parallelogram frame). The pdf will theoretically be the area of the $\triangle$. Notably, the $h$ can be calculated by projection one side to the base and finding the distance from one end of the projected vector to the other point.
+
+Hold up!
+
+Triangles has this nifty feature called barycentric coordinates. Can we use it to make better animation to preserve point locality to emphasize the concept of *transforming density*? We start off knowing it can be natively parameterized/described by two parameters: $\mathbf{X}=U_1\mathbf{p}+U_2(1-U_1)\mathbf{q}+(1-U_1-U_2(1-U_1))\mathbf{r}$[^ogre1]. The additional arithmetic within the weights ensures they all sum to $1$. Yet, is $X$ uniform on the triangle? To check for that we have to find its local distortion via Jacobian determinant[^ogre2].
+
+
+::: {.callout-note collapse="true"}
+### Computing the Jacobian
+
+Suppose $u:=U_1,v:=U_2$ and $A$ is the area of the triangle.
+
+$$
+\begin{align*}
+J
+&= ||\partial_{u}\mathbf{X}(u,v) \times \partial_{v}\mathbf{X}(u,v)|| \\
+&= ||(\mathbf{p}-v\mathbf{q}-(1-v)\mathbf{r}) \times ((1-u)\mathbf{q}-(1-u)\mathbf{r})|| \\
+&= (1-u)||[(\mathbf{p}-\mathbf{r}+v(\mathbf{r}-\mathbf{q}))\times (\mathbf{q}-\mathbf{r})]|| \\
+&= (1-u)||[(\mathbf{p}-\mathbf{r})\times(\mathbf{q}-\mathbf{r})]|| \\
+&= (1-u)2A \\
+\end{align*}
+$$
+
+:::
+
+
+Jacobian is $(1-U_1)2A$, which means not only is it not normalized to the area of the sampling ($A$), but it also varies over $U_1$, which can be seen in the following visualizations. Obtaining $A$ for Jacobian, we suppose our old $U_1$ is redefined as $f(\tilde{U}_1)$ for some arbitrary transformation $f$. If we re-differentiate the Jacobian by $\tilde{U}_1$, we get $(1-f(\tilde{U}_1))2Af'(\tilde{U}_1)$, which we want it to be simplified as $A$[^ogre3].
+
+
+::: {.callout-note collapse="true"}
+### Finding $f$
+
+More explicitly, $u:=f(w)\big|_{w=\tilde{U}_1}$ and $u':=f'(w)\big|_{w=\tilde{U}_1}$.
+
+$$
+\begin{align*}
+(1-f(\tilde{U}_1))2Af'(\tilde{U}_1)=A
+&\implies (1-u)2u'=1 \\
+&\implies (1-u)2du=dw \\
+&\implies \int(1-u)2du=\int dw \\
+&\implies -u^2+2u-w+C=0 \\
+&\implies u = 1\pm\sqrt{1+C-w} \\
+\end{align*}
+$$
+
+Since $u\in [0,1]$ and $w\in [0,1)$, then it must be $u=1-\sqrt{1-w}$ or $U_1:=1-\sqrt{1-\tilde{U}_1}$.
+
+This can also be directly related to inverse CDF but [TL;ND]{.tlnd}.
+
+:::
+
+Once we find the right transformation $f$ to get the proper Jacobian, we get the following corrected triangle sampling:
+$$
+\mathbf{X}=(1-\sqrt{1-\tilde{U}_1})\mathbf{p}+U_2(\sqrt{1-\tilde{U}_1})\mathbf{q}+(\sqrt{1-\tilde{U}_1})(1-U_2)\mathbf{r}
+$$
+
+
+<!-- We can actually do this using inverse CDF to preserve locality for nicer animations and emphasize the notion of density. -->
+
+[^ogre1]: A specific case of convex combinations of points forming the convex hull where we have three points instead of arbitrary amount of points.
+[^ogre2]: Jacobian for $\mathbb{R}^2 \to \mathbb{R}^3$ can be found by $||\partial_{u}\mathbf{X}(u,v) \times \partial_{v}\mathbf{X}(u,v)||$, which is a particular case of Gram determinant that allows determinants to remain meaningful in an assigned lower dimension $\mathbb{R}^k$ where $k<n$ embedded within $\mathbb{R}^n$.
+[^ogre3]: This is still different from transformation of RV, which is given a function $g$, how to properly transform the RV *while maintaing conservation of probability mass* (maintaining normalization).
+
+
+```{pyodide}
+def make_stages(N=200):
+    u1, u2 = np.random.rand(N), np.random.rand(N)
+
+    # feel free to play around with the parameters here
+    p = np.array([0.0, 0.0, 0.0])
+    q = np.array([1.0, 0.0, 0.0])
+    r = np.array([0.5, 1.0, 0.0])
+    pq = q - p
+    pr = r - p
+
+    ############ Naive folding triangle sampling ############
+
+    # 2D uniform square [0,1]^2
+    p0 = np.column_stack([u1, u2, np.zeros(N)])
+
+    # Parallelogram: p + u1*pq + u2*pr
+    p1 = p + u1[:, None] * pq + u2[:, None] * pr
+
+    # Triangle: fold the other half (u1+u2 > 1) back in via (1-u1, 1-u2)
+    mask = (u1 + u2) > 1
+    p2 = p1.copy()
+    p2[mask] = p + (1 - u1[mask])[:, None] * pq + (1 - u2[mask])[:, None] * pr
+
+    ############ Locality-preserving transformation ############
+
+    # Initial naive triangle
+    p3 = u1[:, None]*p + (u2*(1-u1))[:, None]*q + ((1-u1)*(1-u2))[:, None]*r
+    p4 = (1-np.sqrt(1-u1))[:, None]*p + (u2*(np.sqrt(1-u1)))[:, None]*q + (np.sqrt(1-u1)*(1-u2))[:, None]*r
+
+    return [
+        # (p0, "2D Uniform Square", lerp),
+        # (p1, "Parallelogram", lerp),
+        (p3, "Naive Barycentric Triangle", lerp),
+        (p4, "Uniform Triangle (*)", lerp),
+        (p2, "Folded Triangle", None),
+    ]
+
+show_sampling_animation(make_stages, x_range=(-0.5, 2.0), y_range=(-0.5, 1.5), z_range=(-1, 1))
+```
+
+Notice anything between the transformation of `p4` and `p2`? Despite both being proper uniform sampling of the triangle and identical *in distribution*, their realized samples are still different. Animation does seem to reveal a lot of the inner mechanism of various methods of sampling concisely.
+
+
+<!-- 
+Alternatively, we can derive a direct inverse CDF that avoids the fold entirely. The marginal density of the triangle along $U_1$ is $p(U_1) = 1-\sqrt{U_1}$... actually, working it out: $s=1-\sqrt{U_1}$, $t=U_2\sqrt{U_1}$ directly maps the unit square to barycentric coordinates $(s,t)$ with $s+t\leq 1$, with no rejection or fold needed.
+
+```{pyodide}
+def make_stages(N=200):
+    u1, u2 = np.random.rand(N), np.random.rand(N)
+
+    p = np.array([0.0, 0.0, 0.0])
+    q = np.array([1.0, 0.0, 0.0])
+    r = np.array([0.5, 1.0, 0.0])
+    pq = q - p
+    pr = r - p
+
+    sqrt_u1 = np.sqrt(u1)
+    s = 1 - sqrt_u1       # barycentric weight for pq edge
+    t = u2 * sqrt_u1      # barycentric weight for pr edge
+
+    x = u1[:, None]*p[None, :] + (u2*(1-u1))[:, None]*q[None, :] + ((1-u1-u2*(1-u1)))[:, None]*r[None, :]
+    p0n = np.column_stack([
+      x[:,0],
+      x[:,1],
+      x[:,2]
+    ])
+
+    # 2D uniform square
+    p0 = np.column_stack([u1, u2, np.zeros(N)])
+
+    # Barycentric parameter space: (s, t) already lives inside unit right triangle
+    p1 = np.column_stack([s, t, np.zeros(N)])
+
+    # Triangle in 3D: p + s*pq + t*pr
+    p2 = p + s[:, None] * pq + t[:, None] * pr
+
+    return [
+        (p0, "2D Uniform Square", lerp),
+        (p1, "Barycentric (s, t)", lerp),
+        (p2, "Triangle", None),
+    ]
+
+show_sampling_animation(make_stages, x_range=(-0.5, 2.0), y_range=(-0.5, 1.5), z_range=(-1, 1))
+```
+-->
+
+
+## Trowbridge-Reitz (GGX)
+
+This is a distribution that is commonly found in microfacet model for BRDF where many of these mathematical models are empirically[^pog2] formulated from real lighting data. Also known as normal distribution functions (NDFs)[^pog1], these has been integral to modelling PBR in graphics since the beginning---practically. Specifically, they model the distribution of the direction each microfacets are facing; hence, they indirectly model the specularity of a surface (i.e.., how shiny the surface is). This is why NDFs (and microfacets in general) are widely used since the *shineness* (specularity) is non-negotiable for PBR (they're like everywhere in real life). Which only emphasizes the importance in *importance sampling* (haha get it?). While other parts in the microfacet are equally important for efficient sampling overall, for the sake of the blog, we will only focus on sampling NDF.
+
+Throughout the years, there has been many NDF (and proto-NDF) proposals from (chronologically) flat shading, Gouraud shading (think Roblox), Phong shading, Blinn-Phong shading to Beckmann and GGX shading. We will focus on anisotropic GGX paramaterized in spherical coordinates from @pharr2023physically[Equation 9.16], which has the distribution of the following[^pog4]:
+
+$$
+D(\mathbf{m}) = D(\theta_m,\phi_m) = \frac{1}{\pi \alpha_x \alpha_y \cos^4 \theta_m \bigg(1 + \tan^2 \theta_m \bigg(\frac{\cos^2 \phi_m}{\alpha_x^2}+\frac{\sin^2 \phi_m}{\alpha^2_y}\bigg)\bigg)^2}
+$$
+
+Remember, $\mathbf{m}$ is the halfway vector between the incident and outgoing direction of radiance. But for our purpose, we can treat sampling $\mathbf{m}$ as over all of the hemisphere. So, how can we move the NDF in the integrand into the sampling (inducing a PDF weight of the same NDF itself)? So far, inverse CDF has been treating us well, and so we can try it here.
+
+There's a lot of brute-force trig involved which I defer the derivation to another blog written by "A Graphics Guy's Note": [blog link](https://agraphicsguynotes.com/posts/sample_anisotropic_microfacet_brdf/). (I tried (╥‸╥) [TL;ND]{.tlnd})
+
+The final sampling method:
+
+$$
+\begin{align*}
+\phi_m &= \arctan(\frac{\alpha_y}{\alpha_x}\tan(2\pi U_1)) + \begin{cases}
+0 & U_1 \in [0,\frac{1}{4}]  \\
+\pi & U_1 \in (\frac{1}{4},\frac{3}{4}) \\
+2\pi & U_1 \in [\frac{3}{4},1] \\
+\end{cases} \\
+\theta_m &= \arctan{\sqrt{\frac{U_2}{(1-U_2)(\frac{\cos^2(\phi_m)}{\alpha^2_x}+\frac{\sin^2(\phi_m)}{\alpha^2_y})}}} \\
+\end{align*}
+$$
+
+Ensure that $\frac{1}{\alpha_x},\frac{1}{\alpha_y} > 0$ where each of them represents the *roughness* per-axis. Higher roughness means smoother NDFs (i.e., more diffuse scattering). Play around the roughness values!
+
+```{pyodide}
+def make_stages(N=200):
+    u1, u2 = np.random.rand(N), np.random.rand(N)
+
+    alpha_x, alpha_y = 0.3, 0.6
+
+    # Uniform hemisphere: cos θ = u1, φ = 2π u2
+    cos_u = u1
+    sin_u = np.sqrt(np.maximum(1 - cos_u**2, 0))
+    phi_u  = 2 * np.pi * u2
+    p_hemi = np.column_stack([sin_u * np.cos(phi_u), sin_u * np.sin(phi_u), cos_u])
+
+    # GGX φ_m: arctan(α_y/α_x · tan(2π U_1)) + quadrant offset
+    angle = 2 * np.pi * u1
+    phi_m = np.arctan(alpha_y / alpha_x * np.tan(angle))
+    phi_m = np.where(u1 <= 0.25, phi_m,
+            np.where(u1 <= 0.75, phi_m + np.pi, phi_m + 2 * np.pi))
+
+    # GGX θ_m
+    denom   = (1 - u2) * (np.cos(phi_m)**2 / alpha_x**2 + np.sin(phi_m)**2 / alpha_y**2)
+    theta_m = np.arctan(np.sqrt(np.maximum(u2 / denom, 0)))
+
+    sin_t  = np.sin(theta_m)
+    cos_t  = np.cos(theta_m)
+    p_disk = np.column_stack([sin_t * np.cos(phi_m), sin_t * np.sin(phi_m), np.zeros(N)])
+    p_ggx  = np.column_stack([sin_t * np.cos(phi_m), sin_t * np.sin(phi_m), cos_t])
+
+    return [
+        (p_hemi, "Uniform Hemisphere",              lerp),
+        # (p_disk, "GGX Flat Disk",                   lerp),
+        (p_ggx,  f"GGX (αₓ={alpha_x}, αᵧ={alpha_y})", None),
+    ]
+
+show_sampling_animation(make_stages, z_range=(0, 1))
+```
+
+
+<!-- First, let us find the normalized NDF $\hat{D}$ by first finding its normalization constant $Z$.
+
+$$
+\begin{align*}
+Z
+&= \int_0^{2\pi}\int_0^{\frac{\pi}{2}} \frac{\sin\theta}{\pi \alpha_x \alpha_y \cos^4 \theta \bigg(1 + \tan^2 \theta \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\theta d\phi \\
+\end{align*}
+&= \int_0^{2\pi}\int_0^{\frac{\pi}{2}} \frac{\sin\theta}{\pi \alpha_x \alpha_y \cos^4 \theta \bigg(1 + \tan^2 \theta \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\theta d\phi \\
+\end{align*}
+$$
+
+Despite the normalized NDF $\hat{D}$ parameterized in spherical coordinates, we still eventually want the sampled direction back in cartesian[^pog3].
+
+$$
+p(\theta_m, \phi_m) = \hat{D}(\mathbf{m}) \sin\theta_m
+$$
+
+<!-- Despite the spherical paramaterization, it is defined over Cartesian measure. We still need the sinphi to convert it into spherical measure for spherical integration. -->
+
+<!-- Suppose $\mathbf{m}$ is already uniformly sampled on the hemisphere with the RV incline $\theta_m$ and the RV azimuth $\phi_m$ (w.r.t. the surface normal). How can we transform RV from a joint distribution to follow the GGX? -->
+
+<!-- $\theta_m$ and $\phi_m$ are still connected in a single messy expression and it is unclear how one should *individually* sample these two parameters/variables. We can use the following technique to split the expression. The explanation of the technique will be explained in later sections (e.g., the product of RVs enables individual sampling of RV).
+
+
+$$
+p(\theta_m, \phi_m) = p(\theta_m)p(\phi_m | \theta_m) = \int_0^{2\pi}p(\theta_m, \phi)d\phi \frac{p(\theta_m, \phi_m)}{\int_0^{2\pi}p(\theta_m, \phi)d\phi}
+$$
+
+The idea is that now we have individual densities, we can find their CDFs to find their inverse CDFs *individually*. Importantly, the resulting conditional CDF does what it says: You must sample $\theta_m$ first before plugging it into $\phi_m$'s inverse CDF.
+
+$$
+\begin{align*}
+p(\theta_m)
+&= \int_0^{2\pi}p(\theta_m, \phi)d\phi \\
+&= \int_0^{2\pi}\frac{\sin\theta_m}{\pi \alpha_x \alpha_y \cos^4 \theta_m \bigg(1 + \tan^2 \theta_m \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\phi \\
+&= \frac{\sin\theta_m}{\pi \alpha_x \alpha_y \cos^4 \theta_m} \int_0^{2\pi}\frac{1}{\bigg(1 + \tan^2 \theta_m \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\phi \\
+\end{align*}
+$$ -->
+
+
+
+[^pog1]: Normal as in perpendicularity in geometry such as the surface of a triangle, not the normal distribution.
+[^pog2]: Since GGX has been a very good approximation, most work in rendering has been orthogonal to finding a better BSDF model and is mostly assumed. Most of the time it is finding better sampling methods or as a basis for inverse rendering.
+[^pog3]: If everything lives in spherical coordinate space, uniformly sampling $\theta$ and $\phi$ will be uniform in that space. However, majority of the times like here, spherical coordinate is merely a symbolic/notational convenience where we eventually want to convert it back to cartesian. Because we are also working with integration *and sampling*, we have to be careful with what measure we are working with, and in this case the NDF is defined in cartesian (i.e., under cartesian measure) despite their seemingly contradicting parameterization.
+[^pog4]: NDF does not tell us where the most of the specular reflection happens *absolutely*, especially in the context of the half-way/middle direction $\mathbf{m}$ and microfacet models for a given incident and outgoing direction. NDF just tells us *how fast* the reflection should change from perfect-mirror to diffuse as the half-way direction moves away from the surface normal.
+
+
+<!-- ## Henyey-Greenstein
+
+## Von Mises-Fisher (Spherical Gaussians) -->
+
+<!-- # Exotic Geometries
+
+Obviously, you can always mesh the following objects and run a glorified triangle sampler on them, but where's the elegance in that? And usually the direct methods are faster and simpler (not necessarily easier) than indirect methods like meshing.
+
+## Torus
+
+## Spherical triangles
+
+## Klein bottle
+
+## Möbius Strip
+
+## NURBS -->
+
+<!-- # Generalized Transformation
+
+After seeing some of these interesting examples on the transformation of simple n-dimensional uniform distribution, we see that we used various techniques to derive the final sampling process. These techniques ranges from inverse CDF to Jacobian (notably we exclude rejection sampling as un-elegant). Can we generalize these techniques to better automate this transformation process?
+
+## Probability Integral Transform
+
+## Rosenblatt Transform
+
+## Measure Transport
+
+# Reconstructing the Transformation
+
+Recall the reason we originally transform the sampling process is to transform the uniform samples into a factor of the Monte-Carlo estimation (up to scale) to reduce its variance to better approximate a value that would've required intractable analytical integration of some given function (e.g., Cook-Torrance BSDF model). Now, what if the function we are given is *unknown* but we have all the necessary estimates/approximate values (e.g., the output value of the integration) to reconstruct the original function? First thing, this is reconstruction/estimation problem which is largely based on heuristics. In other words, whatever we have done in the introduction section no longer applies here, because there is not exact function to find the transformation. `We` can only rely on techniques that are based off of the inverse of the generalize transformation to guide our ways on solving this problem. Second thing, the problem is also different now, instead of giving a known samples of known distribution (e.g., given uniform samples), we are only given known output samples to reconstruct the function that outputs these output samples given some known distribution[^z1].
+
+This is density estimation, distribution learning, and generative modelling. Obviously, this is so different from the original topic but this is a connection that's interesting to see.
+
+[^z1]: In this area, people usually use Gaussian distribution instead of uniform distribution as the *source of randomness*. -->
+
+# Future Work
+
+[TL;ND]{.tlnd}
+
+While it started with ambition to find many interesting ways to sample and understand what *density* in probability means, the initial naivety on the basics of probability bogged down majority of the time. There's still much to explore from Henyey-Greenstein and Spherical Gaussians to uniform sampling on weird geometric shapes (if it's even possible), including sampling 3D gaussians from inverse CDF for locality-preserving transformation. There's also probability integral transform, Rosenblatt transform, and measure transport with connections to generative modelling. I think it's mentally quite dangerous to continue being gun-ho on something that has lost the initial novelty (especially when it gets repetitive), so I will leave it here *for now*.
+
+I hope those programmatic animations were insightful and fun!
+
+
+For future blog:
+
+* There's practically infinite amount of "basics" to write about. Future blog will likely go over necessary basics that are still interesting (for myself) with an anchor topic on something recent and conceptually interesting
+* If a function can be numerically evaluated in a reasonable constant-bounded time (usually directly exposed as a library function), it is closed to me! (e.g., $\text{erf}$ is a closed-form solution because it can be approximated by Taylor series in finite amount of time because of *limited* precision in practically every computers)
+* Very wordy especially on the side notes out of fear of lack of completeness. Future blog will have significantly reduced words and more emphasis on visuals while keeping the side-notes reasonably small (as intended)
+
+
+
+<!-- ```{=html}
+<script>
+(function() {
+  function reflow() {
+    window.dispatchEvent(new Event('resize'));
+  }
+  ['shown.bs.collapse', 'hidden.bs.collapse'].forEach(function(e) {
+    document.addEventListener(e, function() {
+      reflow();
+      setTimeout(reflow, 50);
+      setTimeout(reflow, 200);
+    });
+  });
+})();
+</script>
+``` -->

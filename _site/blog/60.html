@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-05-11">
+
+<title>The Many Ways of Sampling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-30fc45633b0910a22497ea642fc28e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../math-styling.css">
+</head>
+
+<body class="floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#d-gaussian" id="toc-d-gaussian" class="nav-link" data-scroll-target="#d-gaussian">3D Gaussian</a>
+  <ul class="collapse">
+  <li><a href="#st-attempt-inverse-cdf" id="toc-st-attempt-inverse-cdf" class="nav-link" data-scroll-target="#st-attempt-inverse-cdf">1st attempt: Inverse CDF</a></li>
+  <li><a href="#nd-attempt-extended-box-muller-ebm1" id="toc-nd-attempt-extended-box-muller-ebm1" class="nav-link" data-scroll-target="#nd-attempt-extended-box-muller-ebm1">2nd attempt: (Extended) Box-Muller </a></li>
+  </ul></li>
+  <li><a href="#triangle" id="toc-triangle" class="nav-link" data-scroll-target="#triangle">Triangle</a></li>
+  <li><a href="#trowbridge-reitz-ggx" id="toc-trowbridge-reitz-ggx" class="nav-link" data-scroll-target="#trowbridge-reitz-ggx">Trowbridge-Reitz (GGX)</a></li>
+  </ul></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Many Ways of Sampling</h1>
+<p class="subtitle lead">Micro Blog: Importance Sampling</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 11, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>You will see this dotted around the blog: <span class="tlnd">TL;ND: (Taking) too long; not doing (it).</span>.</p>
+<!-- [TL;ND]{.tlnd} -->
+<!-- *There was suppose to be another micro blog between the last one and this one---discussing the weird nature of continuous probabilities and the lack of hard, intuitive visualization on concepts like independence and Bayesian theorem. Didn't pan out well. Regardless, I'll subtly reveal the enigmatic nature of probabilities and how I get comfortable with it---especially when talking to many people, and reading many articles online, who just gloss over the intuitive, visual details of the inner mechanism of probabilities. [^1]*
+
+[^1]: Also, I'm realizing sometimes the blogs gets over-pedagogical because I like the idea of completeness. Maybe that's theoretically the best way to re-present stuff you have learned, but it always leaves a bad taste in the blog-writing experience. I'm going to be a bit selfish from now on and just jump into the fun details. >:D (I'll leave the completeness to a full blog, if I ever feel like writing one.) -->
+<p>Feel free to read <span class="citation" data-cites="OwenZhou2000"><a href="#ref-OwenZhou2000" role="doc-biblioref">[1, Secs. 1–2.1]</a></span> to quickly get up to speed on what importance sampling is and why we do it (i.e., variance reduction). Here’s a quick teaser:</p>
+<div class="no-row-height column-margin column-container"><div id="ref-OwenZhou2000" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">A. Owen and Y. Zhou, <span>“Safe and effective importance sampling,”</span> <em>Journal of the American Statistical Association</em>, vol. 95, no. 449, pp. 135–143, 2000, Accessed: Apr. 13, 2026. [Online]. Available: <a href="http://www.jstor.org/stable/2669533">http://www.jstor.org/stable/2669533</a></div>
+</div></div><p>We have a standard diffuse Lambertian model.</p>
+<p><span class="math display">\[
+L_o=\int_{H^+}L_i\frac{\rho}{\pi}\cos\theta d\omega
+\]</span></p>
+<p>Most of the time, these models are part of a greater complex model that is intractable. So, we use Monte Carlo sampling <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> with <span class="math inline">\(N\)</span> samples.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Note: <span class="math inline">\(\frac{1}{N}\)</span> is not averaging over the integration. Think of it like Riemann sum (i.e., standard rectangular quadrature rule) but extended probabilistically, which is better known as <em>stochastic</em> quadrature rule. In other words, in terms of 1D interval, think of it like each samples represents <em>random</em> points of evaluation with all having the same average width depending on sample count. The more sample there is, the smaller each samples are weighted, but they’re randomly placed (unlike the aligned rectangular sample grids of Riemann sum).</p></div></div><p><span class="math display">\[
+\langle L_o \rangle = \frac{1}{N}\sum_{k=1}^N\bigg(\frac{L_i\frac{\rho}{\pi}\mathbf{n}\cdot\mathbf{\omega_k}}{\text{pdf}_{H^+}}\bigg) \text{ s.t. } \mathbf{\omega_k}\sim H^+
+\]</span></p>
+<p>The notation <span class="math inline">\(\langle \cdot \rangle\)</span> is confusing and sometimes seems to be inconsistent, but to the best of my knowledge, the notation seems to be borrowed from physics to denote expectation. In computer graphics literature, it is more specifically denoted as the expectation over the partitions of the stochastic quadrature with the sampling technique used by the Monte-Carlo estimation (which is just the Monte-Carlo estimation) with samples limited to <span class="math inline">\(N\)</span>. As you increase the <span class="math inline">\(N\)</span>, the M.C. estimation should <em>converge to</em> (not be) the correct value as if it were analytically integrable. We are still basically summing <span class="math inline">\(N\)</span> random variables which means the M.C. estimate itself is still a random variable. If we were given <span class="math inline">\(100\)</span> samples split into <span class="math inline">\(10\)</span> groups with each having <span class="math inline">\(10\)</span> samples for a total of <span class="math inline">\(10\)</span> M.C. evaluations of the same integral, we still have <span class="math inline">\(10\)</span> R.V. from each of the M.C. evaluations but each of the estimations is a singular value of a valid estimation of the integral that is usable in its own way. So why not just have all <span class="math inline">\(100\)</span> samples be evaluated into a single M.C. estimation? Well, this now depends on the preference of the application. In graphics, we want each M.C. evaluations have a limited samples so that it can run with high FPS. But since the M.C. evaluates only an <em>estimate</em> (and it’s a R.V.), we want to ensure it is unbiased (accurate) and low variance (precise) by running additional statistical analysis over it separately. And this is where it gets confusing again with finding biasness in the M.C. evaluations <span class="math inline">\(\mathbb{E}[\langle \cdot \rangle]\)</span> which is mostly hand-waved in <span class="citation" data-cites="veachthesis"><a href="#ref-veachthesis" role="doc-biblioref">[2, Sec. 2.4]</a></span>.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-veachthesis" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">E. Veach, <span>“Robust monte carlo methods for light transport simulation,”</span> PhD thesis, Stanford University, Stanford, CA, USA, 1998.</div>
+</div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Tangent: “Better” proof on <span class="math inline">\(\mathbb{E}[\langle Y \rangle] = Y\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Disclaimer: I over-complicated and Veach’s proof remains sensical as is. </strong></p>
+<!-- Now, the real confusing part is when people write $\mathbb{E}[\langle \cdot \rangle]$ to find the bias in the M.C. estimation over the same density. Remember, by linearity, it is equivalent to $\langle\mathbb{E}[\cdot]\rangle$. If the PDF in denominator of the Monte-Carlo is evaluated from a set of input samples while the *same* PDF in the numerator of the expectation is evaluated at every point in the domain of the expectation, the numerator and denominator gets cancelled since the set of input samples in Monte-Carlo is replaced with -->
+<p>Suppose <span class="math inline">\(Y=\int f(x)dx\)</span> is M.C. estimated with:</p>
+<p><span class="math display">\[
+\langle Y \rangle = \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)}
+\]</span></p>
+<p>where <span class="math inline">\(X_i \sim p_X\)</span><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> (<span class="math inline">\(X_i\)</span> is a R.V.).</p>
+<p>Suppose <span class="math inline">\(\mathbb{E}[g(z)] = \int g(z)p_X(z)dz\)</span>. We get the following:</p>
+<p><span class="math display">\[
+\mathbb{E}[\langle Y \rangle] = \mathbb{E}\bigg[ \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)} \bigg] = \frac{1}{N}\sum_{i=1}^N \mathbb{E}\bigg[ \frac{f(X_i)}{p_X(X_i)} \bigg] = \frac{1}{N}\sum_{i=1}^N \int \frac{f(X_i)}{p_X(X_i)} p_X(z)dz
+\]</span></p>
+<p>If we simplify the expression, we get <span class="math inline">\(\mathbb{E}_{z\sim p_X}\bigg[ \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)} \bigg]\)</span>. Do you see the problem? I over-complicated the interpretation of Veach’s proof. Of course an expectation over a function (parameterized by <span class="math inline">\(X_i\)</span>) that does not even take the parameter <span class="math inline">\(z\)</span> that’s being expected over is just the function itself again. It’s a totally non-sensical statement that’s only made sense if the expectation is modified into <span class="math inline">\(\mathbb{E}_{X_i\sim p_X}\bigg[ \frac{1}{N}\sum_{i=1}^N \frac{f(X_i)}{p_X(X_i)} \bigg]\)</span>. Rest of the proof should follow trivially.</p>
+<p>The key idea was Monte-Carlo estimator was sampled “externally” and the expectation brought the external sampling into itself, turning the sampling process into an integration over all possible samples. <!-- [^zyxzyx1] --></p>
+<!-- There's a problem, $X_i$ (R.V.) is already pre-sampled from Monte-Carlo different from integrating over every possible sample $z$. -->
+</div>
+</div>
+</div>
+<!-- In this case, we're just constructing a random variable $X_i$ that *has* a density of $p_X$ defined by some (cumulative) distribution function $F(X)$.  -->
+<!-- [^zyxzyx1]: Personally, I got carried away into the idea that the sampling process must be specified in the mathematical expression, which is possible if we re-define the notation to allow it. Nevertheless, math is useless without the language context, and one should not create a fixed barrier between the math and the language that's integral to it. -->
+<!-- [^4a]: Remember, by linearity, it is equivalent to $\langle\mathbb{E}[\cdot]\rangle$. -->
+<!-- Think of the $\langle L_o \rangle$ as the Monte-Carlo estimated evaluation of the integration. -->
+<!-- What used to be a deterministic value $L_o$ is now probabilistic $\langle L_o \rangle$. If we look at each samples of $\langle L_o \rangle$, they are individually deterministic evaluations that is part of a larger group conveying the influence of probability densities of each sample, the sampling process that distributes according to the density, and the overall statistics. However, all these samples are summed into a single estimation of the integral given $N$ samples. Hence, each samples within $\langle L_o \rangle$ has extra dimensions we can analyze it such as median, mean (i.e., average, bias), and the variance. a *redefine* its value as the mean/average/uniform expectation. While the averaging from the Monte Carlo produces a single usable value for a given run, it is an average that comes from an aggregate of many evaluations at many random samples, where each sample is evaluated on an integral at random points in its domain (e.g., time, space, region, point in the world). If we narrow our view to each individual samples of the input and assume each individual samples are deterministic, each evaluations would then be deterministic (assuming the evaluation process itself is deterministic.) However, because Monte Carlo expects a *random* input (i.e., random samples/variables), the single value of that Monte Carlo evaluation of that integral would *vary* over *multiple* input samples. Notionally, this is what $\langle \cdot \rangle$ intends to capture and abstract[^3]: The inherent probabilistic/indeterministic value of an integral evaluation. This allows us to focus more on the overall quantity and makes it more workable with the rest of the math with just an extra properties we just have to think about: variance[^4]. -->
+<!-- [^4]: There's another important property: expectation. Recall, the Monte Carlo estimation of the value itself $\langle L_o \rangle$ is really just a redefinition to the expectation of many evaluations with respect to the M.C. sampling technique. It is different from the originally deterministic, analytical evaluation $L_o$. -->
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;There does seem to be a general ambiguity on how to denote the process of sampling variates or generating random variables from distributions, densities, probability measures, etc. Per §1.2 in <span class="citation" data-cites="Durrett10.5555/1869916"><a href="#ref-Durrett10.5555/1869916" role="doc-biblioref">[3, p. 10]</a></span>, we can say in our case the random variable <span class="math inline">\(X_i\)</span> is generated from another random variable <span class="math inline">\(X\)</span> that induces a push-forward measure <span class="math inline">\(\mu\)</span> with a density <span class="math inline">\(p_X(x)\)</span> for every realization/variates of <span class="math inline">\(x\)</span> from <span class="math inline">\(X\)</span>.</p><div id="ref-Durrett10.5555/1869916" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">R. Durrett, <em>Probability: Theory and examples</em>, 5th ed. USA: Cambridge University Press, 2019.</div>
+</div></div></div><p>In our case, we are interested in reducing the variance, one of the main workable properties of this enigmatic, dynamic/changing evaluations of <span class="math inline">\(\langle L_o \rangle\)</span>. And a common, simple way to reduce variance is by applying importance sampling. In this case, if we swap out our sampling from a uniform hemispherical sampling <span class="math inline">\(\mathbf{\omega_k}\sim H^+\)</span> with a PDF of <span class="math inline">\(\frac{1}{2\pi}\)</span> to a cosine-weighted hemispherical sampling <span class="math inline">\(\mathbf{\omega_k}\sim \cos_\mathbf{n}\)</span> with a PDF of <span class="math inline">\(\frac{\mathbf{n}\cdot\omega_k}{\pi}\)</span>, we can actually get the following.</p>
+<p><span class="math display">\[
+\langle L_o \rangle = \frac{1}{N}\sum_k^N\bigg(\frac{L_i(\mathbf{\omega_k})\frac{\rho}{\pi}\mathbf{n}\cdot\mathbf{\omega_k}}{\frac{\mathbf{n}\cdot\omega_k}{\pi}}\bigg) = \frac{1}{N}\sum_k^N\bigg(L_i(\mathbf{\omega_k})\rho\bigg) \text{ s.t. } \mathbf{\omega_k}\sim \cos_\mathbf{n}
+\]</span></p>
+<p><strong>Isn’t that just satisfying?</strong> Just simply replace <em>how you sample</em> and you get a much more neater expression (that also lowers variance). Now, the interesting part is not the simplification algebra, but rather how are we even able to craft a seemingly arbitrary sampling distribution such as cosine-weighted hemispherical distribution over here? It’s also the idea of the existence of the ability to transport uniform samples to a desired probability “density”<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> itself and <em>how</em> it is done that seems so captivating. This blog will be a focus on how one can craft these seemingly arbitrary <em>samplers</em> from just uniform distributions (a common, sensible, intuitive utility widely available in libraries from Python standard library, PyTorch, cuRAND, etc.), and show where it is commonly applied in (if it has any.)</p>
+<!-- [^5] -->
+<!-- [^5]: There is a common technique called rejection sampling that is able to handle many kinds of PDFs, especially when we just want to mask a di. , but it is slower and less interesting compared to the analytically-derived custom samplers (assuming the derivation exists). -->
+<!-- n example derivation of the -->
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;I’m telling you, probability is just… enigmatic. You either can explain it in words and not visually, or you can show it visually and impossible to explain it in words like here.</p></div></div><p>Here’s a teaser, from barebones uniform sampler <span class="math inline">\(U[0,1)\)</span> (shortened to <span class="math inline">\(U\)</span>) to hemisphere sampler <span class="math inline">\(p_\text{hemisphere}\)</span> to cosine-weighted hemisphere sampling <span class="math inline">\(p_\text{cos}\)</span>. I won’t show the the derivation for this one because if you are just getting started in graphics you probably have incidentally just memorize the formulas from the constant mentioning of cosine-weighted sampling during implementation (i.e., beating a dead horse.)</p>
+<!-- Since a *surface* of a hemisphere is inherently 2D, we start with a simple 2D uniform sampler $[ U_1, U_2, 0 ]$, which is just samples a unit square. Getting a hemisphere requires us to first get a disc $x^2+y^2 < 1$, or $r < 1$ in polar coordinate[^a1]. We can naively let $r \sim U_1$ and $\theta \sim 2\pi U_2$, but the points $(r,\theta)$ gets sampled more frequently near the center than on the edges.
+
+[^a1]: Polar coordinates or else the math gets very messy. -->
+<div>
+<div id="pyodide-1" class="exercise-cell">
+
+</div>
+<script type="pyodide-1-contents">
+eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJpbXBvcnQgcGxvdGx5LmdyYXBoX29iamVjdHMgYXMgZ29cbmZyb20gSVB5dGhvbi5kaXNwbGF5IGltcG9ydCBIVE1MXG5pbXBvcnQganNvbiwgdXVpZFxuaW1wb3J0IG51bXB5IGFzIG5wXG5cbl9TVEFHRV9DT0xPUlMgPSBbXG4gICAgXCIjOTk5OTk5XCIsIFwiIzdiNjhlZVwiLCBcIiM0NjgyYjRcIiwgXCIjZmY4YzAwXCIsIFwiI2U3NGMzY1wiLFxuICAgIFwiIzJlY2M3MVwiLCBcIiNmMzljMTJcIiwgXCIjOWI1OWI2XCIsIFwiIzFhYmM5Y1wiLCBcIiNlNjdlMjJcIixcbl1cblxuXG5kZWYgX2J1aWxkX29uZShzYW1wbGVfZm4sIFQsIEhPTEQsIHdpZHRoLCBoZWlnaHQsIHhfcmFuZ2UsIHlfcmFuZ2UsIHpfcmFuZ2UpOlxuICAgIGl0ZW1zID0gc2FtcGxlX2ZuKClcbiAgICBzdGFnZXMsIGxhYmVscywgdHJhbnMgPSBtYXAobGlzdCwgemlwKCppdGVtcykpXG4gICAgcGFsZXR0ZSA9IF9TVEFHRV9DT0xPUlNbOmxlbihzdGFnZXMpXVxuICAgIHRyYW5zID0gdHJhbnNbOi0xXSAgIyBsYXN0IGVudHJ5IGlzIE5vbmUgc2VudGluZWw7IHRyYW5zaXRpb25zIGFyZSBOLTEgYmV0d2VlbiBOIHN0YWdlc1xuXG4gICAgZGVmIHNzKHQpOiByZXR1cm4gdCp0KigzIC0gMip0KVxuXG4gICAgc2VxID0gW11cbiAgICBmb3IgaSBpbiByYW5nZShsZW4oc3RhZ2VzKSk6XG4gICAgICAgIHNlcSArPSBbKHN0YWdlc1tpXSwgbGFiZWxzW2ldLCBwYWxldHRlW2ldKV0gKiBIT0xEXG4gICAgICAgIGlmIGkgPCBsZW4oc3RhZ2VzKSAtIDE6XG4gICAgICAgICAgICBmbiA9IHRyYW5zW2ldXG4gICAgICAgICAgICBmb3IgZiBpbiByYW5nZShUKTpcbiAgICAgICAgICAgICAgICB0ICAgPSBzcyhmIC8gVClcbiAgICAgICAgICAgICAgICBsYmwgPSBcInt9IOKGkiB7fVwiLmZvcm1hdChsYWJlbHNbaV0sIGxhYmVsc1tpKzFdKVxuICAgICAgICAgICAgICAgIGNvbCA9IHBhbGV0dGVbaV0gaWYgdCA8IDAuNSBlbHNlIHBhbGV0dGVbaSsxXVxuICAgICAgICAgICAgICAgIHBvcyA9IGZuKHQsIHN0YWdlc1tpXSwgc3RhZ2VzW2krMV0pXG4gICAgICAgICAgICAgICAgc2VxLmFwcGVuZCgocG9zLCBsYmwsIGNvbCkpXG5cbiAgICBwMCA9IHN0YWdlc1swXVxuICAgICMgU2xpZGVyIHN0ZXBzIHVzZSBtZXRob2Q9XCJ1cGRhdGVcIiAocmVzdHlsZStyZWxheW91dCkg4oCUIG5ldmVyIGNhbGxzIFBsb3RseS5yZWRyYXcsXG4gICAgIyBzbyB0aGUgV2ViR0wgY2FtZXJhIGlzIG5ldmVyIHJlc2V0IGR1cmluZyBhbmltYXRpb24gb3Igc2NydWJiaW5nLlxuICAgIHN0ZXBzID0gW2RpY3QoXG4gICAgICAgIG1ldGhvZD1cInVwZGF0ZVwiLFxuICAgICAgICBhcmdzPVtcbiAgICAgICAgICAgIHtcInhcIjogW3Bvc1s6LDBdLnRvbGlzdCgpXSwgXCJ5XCI6IFtwb3NbOiwxXS50b2xpc3QoKV0sIFwielwiOiBbcG9zWzosMl0udG9saXN0KCldLFxuICAgICAgICAgICAgIFwibWFya2VyLmNvbG9yXCI6IFtjb2xdfSxcbiAgICAgICAgICAgIHtcInRpdGxlLnRleHRcIjogbGJsfVxuICAgICAgICBdLFxuICAgICAgICBsYWJlbD1cIlwiXG4gICAgKSBmb3IgcG9zLCBsYmwsIGNvbCBpbiBzZXFdXG5cbiAgICByZXR1cm4gZ28uRmlndXJlKFxuICAgICAgICBkYXRhPVtnby5TY2F0dGVyM2QoeD1wMFs6LDBdLCB5PXAwWzosMV0sIHo9cDBbOiwyXSwgbW9kZT1cIm1hcmtlcnNcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIG1hcmtlcj1kaWN0KHNpemU9MiwgY29sb3I9cGFsZXR0ZVswXSwgb3BhY2l0eT0wLjUpLCBzaG93bGVnZW5kPUZhbHNlKV0sXG4gICAgICAgIGxheW91dD1nby5MYXlvdXQoXG4gICAgICAgICAgICB0aXRsZT1kaWN0KHRleHQ9bGFiZWxzWzBdKSwgd2lkdGg9d2lkdGgsIGhlaWdodD1oZWlnaHQsXG4gICAgICAgICAgICBzY2VuZT1kaWN0KHhheGlzPWRpY3QocmFuZ2U9bGlzdCh4X3JhbmdlKSwgdGl0bGU9XCJ4XCIpLFxuICAgICAgICAgICAgICAgICAgICAgICB5YXhpcz1kaWN0KHJhbmdlPWxpc3QoeV9yYW5nZSksIHRpdGxlPVwieVwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgemF4aXM9ZGljdChyYW5nZT1saXN0KHpfcmFuZ2UpLCB0aXRsZT1cInpcIiksXG4gICAgICAgICAgICAgICAgICAgICAgIGFzcGVjdG1vZGU9XCJtYW51YWxcIixcbiAgICAgICAgICAgICAgICAgICAgICAgYXNwZWN0cmF0aW89ZGljdCh4PXhfcmFuZ2VbMV0teF9yYW5nZVswXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB5PXlfcmFuZ2VbMV0teV9yYW5nZVswXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB6PXpfcmFuZ2VbMV0tel9yYW5nZVswXSkpLFxuICAgICAgICAgICAgc2xpZGVycz1bZGljdChzdGVwcz1zdGVwcyxcbiAgICAgICAgICAgICAgICAgICAgICAgICB0cmFuc2l0aW9uPWRpY3QoZHVyYXRpb249MCksIHg9MCwgeT0wLCBsZW49MS4wLFxuICAgICAgICAgICAgICAgICAgICAgICAgIGN1cnJlbnR2YWx1ZT1kaWN0KHZpc2libGU9RmFsc2UpLFxuICAgICAgICAgICAgICAgICAgICAgICAgIHRpY2tsZW49MCwgdGlja2NvbG9yPSdyZ2JhKDAsMCwwLDApJywgbWlub3J0aWNrbGVuPTApXVxuICAgICAgICApXG4gICAgKS50b19kaWN0KClcblxuZGVmIHNob3dfc2FtcGxpbmdfYW5pbWF0aW9uKHNhbXBsZV9mbiwgTl9TRVRTPTMsIFQ9MjAsIEhPTEQ9MTIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgd2lkdGg9NzAwLCBoZWlnaHQ9NTIwLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHhfcmFuZ2U9KC0xLDEpLCB5X3JhbmdlPSgtMSwxKSwgel9yYW5nZT0oLTEsMSkpOlxuICAgIF9kYXRhID0ganNvbi5kdW1wcyhbX2J1aWxkX29uZShzYW1wbGVfZm4sIFQsIEhPTEQsIHdpZHRoLCBoZWlnaHQsIHhfcmFuZ2UsIHlfcmFuZ2UsIHpfcmFuZ2UpIGZvciBfIGluIHJhbmdlKE5fU0VUUyldKVxuICAgIF9ESVYgID0gXCJzYW1wX1wiICsgdXVpZC51dWlkNCgpLmhleFs6OF1cbiAgICBfQlROICA9IF9ESVYgKyBcIl9idG5cIlxuICAgIF9QTEFZID0gX0RJViArIFwiX3BsYXlcIlxuICAgIHJldHVybiBIVE1MKFwiXCJcIlxuPGRpdiBpZD1cIlNBTVBfRElWXCIgc3R5bGU9XCJ3aWR0aDo3MDBweDtoZWlnaHQ6NTIwcHhcIj48L2Rpdj5cbjxkaXYgc3R5bGU9XCJtYXJnaW4tdG9wOjZweDtkaXNwbGF5OmZsZXg7Z2FwOjZweFwiPlxuICA8YnV0dG9uIGlkPVwiU0FNUF9QTEFZXCIgc3R5bGU9XCJwYWRkaW5nOjRweCAxMnB4O2ZvbnQtc2l6ZToxM3B4XCI+JiM5NjU0OyBQbGF5PC9idXR0b24+XG4gIDxidXR0b24gaWQ9XCJTQU1QX0JUTlwiICBzdHlsZT1cInBhZGRpbmc6NHB4IDEycHg7Zm9udC1zaXplOjEzcHhcIj4mIzEyNzkyMjsgUmVzYW1wbGU8L2J1dHRvbj5cbjwvZGl2PlxuPHNjcmlwdD5cbihmdW5jdGlvbigpIHtcbiAgdmFyIEQ9XCJTQU1QX0RJVlwiLCBCPVwiU0FNUF9CVE5cIiwgUD1cIlNBTVBfUExBWVwiLCBzZXRzPVNBTVBfREFUQSwgaWR4PTA7XG4gIHZhciBjdXJGaWc9c2V0c1swXSwgZnJhbWVJZHg9MCwgcGxheVRpbWVyPW51bGwsIGRpcmVjdGlvbj0xO1xuICB2YXIgY3VycmVudENhbT1udWxsLCB3YXNQbGF5aW5nPWZhbHNlO1xuXG4gIGZ1bmN0aW9uIGVuc3VyZVBsb3RseShjYikge1xuICAgIGlmICh0eXBlb2YgUGxvdGx5ICE9PSAndW5kZWZpbmVkJykgeyBjYigpOyByZXR1cm47IH1cbiAgICB2YXIgcyA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpO1xuICAgIHMuc3JjID0gJ2h0dHBzOi8vY2RuLnBsb3QubHkvcGxvdGx5LTIuMzUuMi5taW4uanMnO1xuICAgIHMub25sb2FkID0gY2I7XG4gICAgZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZChzKTtcbiAgfVxuXG4gIGZ1bmN0aW9uIGdldENhbWVyYSgpIHtcbiAgICBpZiAoY3VycmVudENhbSkgcmV0dXJuIGN1cnJlbnRDYW07XG4gICAgdHJ5IHsgcmV0dXJuIEpTT04ucGFyc2UoSlNPTi5zdHJpbmdpZnkoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoRCkuX2Z1bGxMYXlvdXQuc2NlbmUuY2FtZXJhKSk7IH1cbiAgICBjYXRjaChlKSB7IHJldHVybiBudWxsOyB9XG4gIH1cblxuICBmdW5jdGlvbiBhdHRhY2hMaXN0ZW5lcnMoKSB7XG4gICAgdmFyIGVsID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoRCk7XG4gICAgZWwub24oJ3Bsb3RseV9yZWxheW91dCcsIGZ1bmN0aW9uKGVkKSB7XG4gICAgICBpZiAoZWRbJ3NjZW5lLmNhbWVyYSddKSBjdXJyZW50Q2FtID0gSlNPTi5wYXJzZShKU09OLnN0cmluZ2lmeShlZFsnc2NlbmUuY2FtZXJhJ10pKTtcbiAgICB9KTtcbiAgICBlbC5vbigncGxvdGx5X3NsaWRlcmNoYW5nZScsIGZ1bmN0aW9uKGVkKSB7XG4gICAgICBmcmFtZUlkeCA9IGVkLnNsaWRlci5hY3RpdmU7XG4gICAgfSk7XG4gICAgLy8gUGF1c2Ugb24gbW91c2Vkb3duIHNvIHRoZSB1c2VyIGNhbiByb3RhdGUgZnJlZWx5OyByZXN1bWUgb24gbW91c2V1cFxuICAgIGVsLmFkZEV2ZW50TGlzdGVuZXIoJ21vdXNlZG93bicsIGZ1bmN0aW9uKCkge1xuICAgICAgd2FzUGxheWluZyA9ICEhcGxheVRpbWVyO1xuICAgICAgaWYgKHdhc1BsYXlpbmcpIHN0b3BQbGF5KCk7XG4gICAgfSk7XG4gICAgZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignbW91c2V1cCcsIGZ1bmN0aW9uKCkge1xuICAgICAgaWYgKHdhc1BsYXlpbmcpIHsgd2FzUGxheWluZyA9IGZhbHNlOyBzdGFydFBsYXkoKTsgfVxuICAgIH0pO1xuICB9XG5cbiAgZnVuY3Rpb24gYXBwbHlGcmFtZShrKSB7XG4gICAgdmFyIHN0ZXAgPSBjdXJGaWcubGF5b3V0LnNsaWRlcnNbMF0uc3RlcHNba107XG4gICAgdmFyIHJlbGF5b3V0ID0gT2JqZWN0LmFzc2lnbih7fSwgc3RlcC5hcmdzWzFdKTtcbiAgICBpZiAoY3VycmVudENhbSkgcmVsYXlvdXRbJ3NjZW5lLmNhbWVyYSddID0gY3VycmVudENhbTtcbiAgICBQbG90bHkudXBkYXRlKEQsIHN0ZXAuYXJnc1swXSwgcmVsYXlvdXQsIFswXSk7XG4gICAgUGxvdGx5LnJlbGF5b3V0KEQsIHsnc2xpZGVyc1swXS5hY3RpdmUnOiBrfSk7XG4gIH1cblxuICBmdW5jdGlvbiBzdG9wUGxheSgpIHtcbiAgICBpZiAocGxheVRpbWVyKSB7IGNsZWFySW50ZXJ2YWwocGxheVRpbWVyKTsgcGxheVRpbWVyID0gbnVsbDsgfVxuICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFApLmlubmVySFRNTCA9ICcmIzk2NTQ7IFBsYXknO1xuICB9XG5cbiAgZnVuY3Rpb24gc3RhcnRQbGF5KCkge1xuICAgIGlmIChwbGF5VGltZXIpIHJldHVybjtcbiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChQKS5pbm5lckhUTUwgPSAnJiM5NjQ2OyYjOTY0NjsgUGF1c2UnO1xuICAgIHZhciBuZiA9IGN1ckZpZy5sYXlvdXQuc2xpZGVyc1swXS5zdGVwcy5sZW5ndGg7XG4gICAgcGxheVRpbWVyID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7XG4gICAgICBmcmFtZUlkeCArPSBkaXJlY3Rpb247XG4gICAgICBpZiAoZnJhbWVJZHggPj0gbmYgLSAxKSB7IGZyYW1lSWR4ID0gbmYgLSAxOyBkaXJlY3Rpb24gPSAtMTsgfVxuICAgICAgZWxzZSBpZiAoZnJhbWVJZHggPD0gMCkgeyBmcmFtZUlkeCA9IDA7IGRpcmVjdGlvbiA9IDE7IH1cbiAgICAgIGFwcGx5RnJhbWUoZnJhbWVJZHgpO1xuICAgIH0sIDQwKTtcbiAgfVxuXG4gIGZ1bmN0aW9uIHJlbmRlcihmaWcsIGZyYW1lLCBjYW0pIHtcbiAgICBzdG9wUGxheSgpO1xuICAgIGN1ckZpZyA9IGZpZzsgZnJhbWVJZHggPSBmcmFtZSB8fCAwOyBjdXJyZW50Q2FtID0gY2FtIHx8IG51bGw7IGRpcmVjdGlvbiA9IDE7XG4gICAgdmFyIGxheW91dCA9IEpTT04ucGFyc2UoSlNPTi5zdHJpbmdpZnkoZmlnLmxheW91dCkpO1xuICAgIGlmIChjYW0pIHsgbGF5b3V0LnNjZW5lID0gbGF5b3V0LnNjZW5lIHx8IHt9OyBsYXlvdXQuc2NlbmUuY2FtZXJhID0gY2FtOyB9XG4gICAgbGF5b3V0LnNsaWRlcnNbMF0uYWN0aXZlID0gZnJhbWVJZHg7XG4gICAgUGxvdGx5LnB1cmdlKEQpO1xuICAgIFBsb3RseS5uZXdQbG90KEQsIGZpZy5kYXRhLCBsYXlvdXQsIHtyZXNwb25zaXZlOiBmYWxzZX0pXG4gICAgICAudGhlbihmdW5jdGlvbigpIHtcbiAgICAgICAgYXR0YWNoTGlzdGVuZXJzKCk7XG4gICAgICAgIGlmIChmcmFtZUlkeCA+IDApIGFwcGx5RnJhbWUoZnJhbWVJZHgpO1xuICAgICAgfSk7XG4gIH1cblxuICBlbnN1cmVQbG90bHkoZnVuY3Rpb24oKSB7IHJlbmRlcihzZXRzWzBdLCAwLCBudWxsKTsgfSk7XG5cbiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoUCkuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCBmdW5jdGlvbigpIHtcbiAgICBpZiAocGxheVRpbWVyKSBzdG9wUGxheSgpOyBlbHNlIHN0YXJ0UGxheSgpO1xuICB9KTtcbiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoQikuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCBmdW5jdGlvbigpIHtcbiAgICBpZHggPSAoaWR4ICsgMSkgJSBzZXRzLmxlbmd0aDtcbiAgICByZW5kZXIoc2V0c1tpZHhdLCBmcmFtZUlkeCwgZ2V0Q2FtZXJhKCkpO1xuICB9KTtcbn0pKCk7XG48L3NjcmlwdD5cblwiXCJcIi5yZXBsYWNlKFwiU0FNUF9ESVZcIiwgX0RJVikucmVwbGFjZShcIlNBTVBfQlROXCIsIF9CVE4pLnJlcGxhY2UoXCJTQU1QX1BMQVlcIiwgX1BMQVkpLnJlcGxhY2UoXCJTQU1QX0RBVEFcIiwgX2RhdGEpKSJ9
+</script>
+</div>
+<div>
+<div id="pyodide-2" class="exercise-cell">
+
+</div>
+<script type="pyodide-2-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIGxlcnAodCxhLGIpOlxuICAgIHJldHVybiAoMS10KSphICsgdCpiXG5cbmRlZiBzbGVycCh0LCBhLCBiKTpcbiAgICB0aCAgPSAoMS10KSpucC5hcmNjb3MoYVs6LDJdKSArIHQqbnAuYXJjY29zKGJbOiwyXSkgICMgaW50ZXJwb2xhdGUgzrggZnJvbSB6ID0gY29zIM64XG4gICAgcGhpID0gbnAuYXJjdGFuMihhWzosMV0sIGFbOiwwXSkgICAgICAgICAgICAgICAgICAgICAgICMgz4YgZnJvbSB4LCB5XG4gICAgcmV0dXJuIG5wLmNvbHVtbl9zdGFjayhbbnAuc2luKHRoKSpucC5jb3MocGhpKSwgbnAuc2luKHRoKSpucC5zaW4ocGhpKSwgbnAuY29zKHRoKV0pXG5cbmRlZiBzbGVycDJkKHQsIGEsIGIpOlxuICAgIHJhID0gbnAuc3FydChhWzosIDBdKioyICsgYVs6LCAxXSoqMilcbiAgICByYiA9IG5wLnNxcnQoYls6LCAwXSoqMiArIGJbOiwgMV0qKjIpXG4gICAgdGEgPSBucC5hcmN0YW4yKGFbOiwgMV0sIGFbOiwgMF0pXG4gICAgdGIgPSBucC5hcmN0YW4yKGJbOiwgMV0sIGJbOiwgMF0pXG4gICAgciA9ICgxIC0gdCkgKiByYSArIHQgKiByYlxuICAgIGFuZ2xlID0gKDEgLSB0KSAqIHRhICsgdCAqIHRiXG4gICAgcmV0dXJuIG5wLmNvbHVtbl9zdGFjayhbciAqIG5wLmNvcyhhbmdsZSksIHIgKiBucC5zaW4oYW5nbGUpLCBucC56ZXJvcyhsZW4oYSkpXSlcblxuZGVmIG1ha2Vfc3RhZ2VzKE49MjAwKTpcbiAgICB1MSwgdTIgPSBucC5yYW5kb20ucmFuZChOKSwgbnAucmFuZG9tLnJhbmQoTilcblxuICAgICMgMkQgdW5pZm9ybSBzcXVhcmVcbiAgICBwMCA9IG5wLmNvbHVtbl9zdGFjayhbMip1MSAtIDEsIDIqdTIgLSAxLCBucC56ZXJvcyhOKV0pXG5cbiAgICAjIFVuaWZvcm0gaGVtaXNwaGVyZSDigJQgaW52ZXJzZSBDREY6IGNvcyDOuCA9IHUxLCDPhiA9IDLPgCB1MlxuICAgIGNvc191ID0gdTEgICMgYXJjY29zLCBidXQgc2luY2Ugd2UncmUgb3V0cHV0dGluZyBjb3MgYW55d2F5cywgd2UnbGwganVzdCBkaXJlY3RseSB1c2UgaXRcbiAgICBzaW5fdSA9IG5wLnNxcnQoMSAtIGNvc191KioyKVxuICAgIHBoaSA9IDIqbnAucGkqdTJcbiAgICBwMSA9IG5wLmNvbHVtbl9zdGFjayhbc2luX3UqbnAuY29zKHBoaSksIHNpbl91Km5wLnNpbihwaGkpLCBucC56ZXJvcyhOKV0pICAjIGZsYXQgZGlza1xuICAgIHAyID0gbnAuY29sdW1uX3N0YWNrKFtzaW5fdSpucC5jb3MocGhpKSwgc2luX3UqbnAuc2luKHBoaSksIGNvc191XSlcblxuICAgICMgQ29zaW5lLXdlaWdodGVkIGhlbWlzcGhlcmUg4oCUIGludmVyc2UgQ0RGIG9mIHAozrgpIOKInSBjb3Mgzrg6IGNvcyDOuCA9IOKImnUxXG4gICAgY29zX2MgPSBucC5zcXJ0KGNvc191KSAgIyBwZXIgaW52ZXJzZSBDREYsIGl0IHdvdWxkIGJlIDEtY29zX3UsIGJ1dCBmb3IgYmV0dGVyIGFuaW1hdGlvbiwgSSB1c2VkIGNvc191IChtYXRoZW1hdGljYWxseSBzYW1lKVxuICAgIHNpbl9jID0gbnAuc3FydCgxIC0gY29zX3UpXG4gICAgcDMgPSBucC5jb2x1bW5fc3RhY2soW3Npbl9jKm5wLmNvcyhwaGkpLCBzaW5fYypucC5zaW4ocGhpKSwgY29zX2NdKVxuXG4gICAgcmV0dXJuIFtcbiAgICAgIChwMCwgXCIyRCBVbmlmb3JtXCIsIGxlcnApLFxuICAgICAgKHAxLCBcIkZsYXQgRGlza1wiLCBsZXJwKSxcbiAgICAgIChwMiwgXCJVbmlmb3JtIEhlbWlzcGhlcmVcIiwgc2xlcnApLFxuICAgICAgKHAzLCBcIkNvc2luZS13ZWlnaHRlZCBIZW1pc3BoZXJlICgqKVwiLCBOb25lKSxcbiAgICBdXG5cbnNob3dfc2FtcGxpbmdfYW5pbWF0aW9uKG1ha2Vfc3RhZ2VzLCB6X3JhbmdlPSgwLDEpKSJ9
+</script>
+</div>
+<p>The purpose of this visualization shows the <em>deterministic</em> transformation of the samples. This can be thought of as assuming each samples are deterministic to clearly visualize the transformation process of the <em>density</em> and treats the input randomness as something independent. We are given <span class="math inline">\(U_1, U_2, U_3\)</span>.</p>
+<section id="introduction" class="level1 page-columns page-full">
+<h1>Introduction</h1>
+<p>These are some distributions I have come across a lot and seems to have derivation to transform uniform samples into it. I hope this also lets you start seeing the world of transforming uniform samples.</p>
+<section id="d-gaussian" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="d-gaussian">3D Gaussian</h2>
+<p>We will specifically use 3D version of the standard Gaussian. Suppose a Monte Carlo has Normal distribution factor (parameterized by <span class="math inline">\(\mathbf{x}=[x,y,z]\)</span>) that we want to remove via <span class="math inline">\(\mathbf{pdf}_\text{gaussian}=\frac{\exp{(-\frac{1}{2}\mathbf{x}^\top\mathbf{x})}}{\sqrt{(2\pi)^3}}\)</span>. How would we design the sampler such that the sampled points <span class="math inline">\(\mathbf{x}\)</span> naturally follows the Gaussian distribution so that its manufactured density cancels out in the Monte-Carlo expression? Suppose <span class="math inline">\(U_1, U_2, U_3\)</span>.</p>
+<section id="st-attempt-inverse-cdf" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="st-attempt-inverse-cdf">1st attempt: Inverse CDF</h3>
+<p>Recall that a CDF <span class="math inline">\(F\)</span> is an integral of PDF <span class="math inline">\(f\)</span> that describes the percentile for a given random variate <span class="math inline">\(x\)</span> with density <span class="math inline">\(f\)</span>. A nice property of CDF is that <span class="math inline">\(0\leq F(x) \leq 1\)</span> since <span class="math inline">\(f\)</span> is <em>normalized</em>, allowing us to generate uniform samples that will be transformed by <span class="math inline">\(F^{-1}\)</span> to get the original density without the cost of evaluating additional terms. Per Theorem 3.1 of <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, Secs. 11–3.2]</a></span>, we can let each of our target random variables <span class="math inline">\(Y_1, Y_2, Y_3\)</span> be assigned as <span class="math inline">\(Y_i = F^{-1}_i(U_i)\)</span>, and it will still maintain the original density of the 3D gaussian. Additionally, Gaussian distribution is independent with respect to each of its dimension, so we can split them into a product of three marginal Gaussian distribution <span class="math inline">\(\mathbf{pdf}_\text{gaussian}=\mathcal{N}_1(0,1)\mathcal{N}_2(0,1)\mathcal{N}_3(0,1)\)</span> <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> which can be applied to the theorem. However, to obtain <span class="math inline">\(F\)</span> in the first place, we have to find a closed form solution of <span class="math inline">\(F(x)=\int_{-\infty}^x \mathcal{N} dx=\int_{-\infty}^x \frac{e^{-\frac{x^2}{2}}}{\sqrt{2\pi}} dx\)</span>. This is a well-known problem and has no closed-form solution (strictly speaking). Hence, we go with the Box-Muller technique.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Where we do denote <span class="math inline">\(\mathcal{N}\)</span> as the standard marginal Gaussian distribution.</p></div></div></section>
+<section id="nd-attempt-extended-box-muller-ebm1" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="nd-attempt-extended-box-muller-ebm1">2nd attempt: (Extended) Box-Muller <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></h3>
+<p>Since we want to avoid rejection sampling out of elegancy, we are limited to Box-Muller technique that works in 2 dimensions. In other words, we will have to use <span class="math inline">\(U_1,U_2,U_3,U_4\)</span> (2x Box-Muller) to generate a 4D Gaussian which we will just extract the first three components (since each axes are independent of each other). You might argue this is even less elegant, but I’m to deep into Box-Muller such that we’ll just go with it.</p>
+<p>We will focus on <span class="math inline">\(d=2\)</span> case for now. In <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, Secs. 5–4.4]</a></span>, we can generate <span class="math inline">\(d=2\)</span> i.i.d. normal random variates by <span class="math inline">\(RX\)</span>, where <span class="math inline">\(R\)</span> is the scalar random variable<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> of radius and <span class="math inline">\(X\)</span> is the 2-dimensional random variable on the surface of the unit 2D hyper-sphere (<span class="math inline">\(C_2\)</span>). Per Theorem 4.4 of <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, Secs. 5–4.3]</a></span>, statement 5 states <span class="math inline">\(X\sim(\cos(2\pi U_1), \sin(2\pi U_1))\)</span> is uniformly distributed on <span class="math inline">\(C_2\)</span> <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, which summarizes the Box-Muller method. Then, <span class="math inline">\(r\sim R\)</span> is realized on a density of <span class="math inline">\(d\cdot V_d\cdot r^{d-1}\cdot e^{-\frac{r^2}{2}}\)</span> where <span class="math inline">\(d\)</span> is the dimension and <span class="math inline">\(V_d\)</span> is the volume of <span class="math inline">\(d\)</span>-dimension hypersphere<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. However, this is different from Devroye’s originally intended density which is <span class="math inline">\(d \cdot V_d \cdot r^{d-1} \cdot g(r) = d \cdot V_d \cdot r^{d-1} \cdot \frac{e^{-\frac{r^2}{2}}}{(2\pi)^{\frac{d}{2}}}\)</span> from Theorem 4.3 (1st statement) and Theorem 4.2. This is the normalized (hence, correct) version, but Devroye did subtly mention <span class="math inline">\(R \sim \sqrt{2G}\)</span><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> where <span class="math inline">\(G \sim \text{Gamma}(\frac{d}{2},1)\)</span>. In fact, the following note (collapsed by default) will show that <span class="math inline">\(\sqrt{2G}\)</span> is the correct, normalized version <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;Random variate <span class="math inline">\(x\)</span> is a particular <em>realized</em> value/outcome from a random variable <span class="math inline">\(X\)</span>. Random variate <span class="math inline">\(x\)</span> can be exactly treated like traditional variable while random variable <span class="math inline">\(X\)</span> is intrinsically described by a distribution (e.g., CDF, PDF) that <em>could</em> behave differently than a traditional variable within expressions.</p></div><div id="fn7"><p><sup>7</sup>&nbsp;<span class="math inline">\(\tan{\pi U}=\frac{\sin X_1}{\cos X_2}\)</span> where <span class="math inline">\(X_1,X_2\)</span> are on <span class="math inline">\(C_2\)</span>. This is also the main reason why Box-Muller works in 2 dimensions.</p></div><div id="fn8"><p><sup>8</sup>&nbsp;Check <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, Secs. 5–4.1]</a></span> for more info.</p><div id="ref-devroye:1986" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">L. Devroye, <em>Non-uniform random variate generation</em>. New York: Springer-Verlag, 1986. Available: <a href="http://cg.scs.carleton.ca/~luc/rnbookindex.html">http://cg.scs.carleton.ca/~luc/rnbookindex.html</a></div>
+</div></div><div id="fn9"><p><sup>9</sup>&nbsp;If <span class="math inline">\(R=\sqrt{2G}\)</span>, that means every realized values of <span class="math inline">\(\sqrt{2G}\)</span> is <span class="math inline">\(R\)</span> at a concrete, realized level. <span class="math inline">\(R\sim \sqrt{2G}\)</span> just means the underlying realized, concrete values might differ but the distribution (i.e., the <em>density</em>) of these realized values will follow from <span class="math inline">\(R\)</span> to <span class="math inline">\(\sqrt{2G}\)</span> (and vice versa).</p></div><div id="fn10"><p><sup>10</sup>&nbsp;Conceptually, density <em>loosely</em> does not have to be normalized. It makes sense as long the order is kept (higher density will be scaled to be denser in the same amount as the space with lesser density.) However, by definition, we strictly want it to be normalized out of consistency, and I was confused for a long long time on this specific description.</p></div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Ensuring normalization is present in <span class="math inline">\(R\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Given the following:</p>
+<ul>
+<li><span class="math inline">\(G \sim \text{Gamma}(\frac{d}{2},1) = \frac{1}{\Gamma(\frac{d}{2})}x^{(\frac{d}{2}-1)}e^{-x}\)</span> <a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></li>
+<li><span class="math inline">\(V_d=\frac{\pi^\frac{d}{2}}{\Gamma(\frac{d}{2}+1)}\)</span> (the volume of a <span class="math inline">\(d\)</span>-dimensional hypersphere)</li>
+<li><span class="math inline">\(f_G(g) = \frac{1}{\Gamma(\frac{d}{2})}g^{(\frac{d}{2}-1)}e^{-g}\)</span> (the density of the source distribution)</li>
+<li><span class="math inline">\(\Gamma(z+1)=z\Gamma(z)\)</span> where <span class="math inline">\(z\in \mathbb{C}, \mathfrak{R}(z)&gt;0\)</span> <!-- - $R = \sqrt{2G}$ --></li>
+</ul>
+<p>We want to find the density of <span class="math inline">\(R\)</span>:</p>
+<ul>
+<li><span class="math inline">\(y_R(r) ={}?\)</span></li>
+</ul>
+<p>We can start with the transformation of random variable. Per Theorem 4.2 in <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, Secs. 1–4.1]</a></span>, suppose we have a transformation <span class="math inline">\(R=\sqrt{2G}\)</span>. Since <span class="math inline">\(r&gt;0\)</span>, then <span class="math inline">\(G&gt;0\)</span>. Hence, an inverse transformation must also exist where <span class="math inline">\(G=\frac{R^2}{2}\)</span>. Finding the Jacobian in 1D is just the absolute diffentiation of <span class="math inline">\(R\)</span> w.r.t. <span class="math inline">\(G\)</span>.</p>
+<p><span class="math display">\[
+y_R(r) = f_G\bigg(\frac{r^2}{2}\bigg)\bigg|J\bigg| = f_G\bigg(\frac{r^2}{2}\bigg)\bigg|\frac{d\frac{r^2}{2}}{dr}\bigg| = f_G\bigg(\frac{r^2}{2}\bigg)\bigg|r\bigg|
+\]</span></p>
+<p>Since <span class="math inline">\(r\ge 0\)</span>, we can simplify further.</p>
+<p><span class="math display">\[
+\begin{align*}
+y_R(r) &amp;= f_G\bigg(\frac{r^2}{2}\bigg)r \\
+&amp;= \frac{1}{\Gamma(\frac{d}{2})}\bigg(\frac{r^2}{2}\bigg)^{(\frac{d}{2}-1)}e^{-\frac{r^2}{2}}r \\
+&amp;= \frac{1}{\frac{2}{d}\Gamma(\frac{d}{2}+1)}\frac{\pi^\frac{d}{2}}{\pi^\frac{d}{2}}\bigg(\frac{r^{d-2}}{2^{(\frac{d}{2}-1)}}\bigg)e^{-\frac{r^2}{2}}r \\
+&amp;= d \cdot V_d \cdot r^{d-1} \cdot \frac{e^{-\frac{r^2}{2}}}{(2\pi)^\frac{d}{2}}
+\end{align*}
+\]</span></p>
+<p>Despite the first equation shown as un-normalized, the implied sampling distribution <span class="math inline">\(\sqrt{2G}\)</span> from Devroye is actually normalized and we can safely assume it is correct with the full context.</p>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"></div><div class="no-row-height column-margin column-container"><div id="fn11"><p><sup>11</sup>&nbsp;per wikipedia</p></div></div><p>Now with everything satisfied, we can comfortable know that with <span class="math inline">\(X\sim(\cos(2\pi U_1), \sin(2\pi U_1))\)</span> and <span class="math inline">\(R\sim \sqrt{2G}\)</span> we can produce <span class="math inline">\(RX\)</span> that gives us 2 i.i.d. normal samples. Recall the independence assumption, we can get a 3D gaussian by letting <span class="math inline">\((Y_1,Y_2) = RX\)</span> and <span class="math inline">\(Y_3 = RX_1\)</span>. In fact, we can let each <span class="math inline">\(Y_i\)</span> sample be the <span class="math inline">\(\sin\)</span> component of each of the 3 Box-Muller <span class="math inline">\(X\)</span> pairs and theoretically it will still work, but that’s a total waste of computation.</p>
+<p>We’re not done yet, while we can clearly see how to sample <span class="math inline">\(X\)</span>, what about sampling <span class="math inline">\(\sqrt{2G}\)</span>?<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> This should be easier since we’re now working 1D. Recall <span class="math inline">\(G\sim \frac{1}{\Gamma(\frac{d}{2})}r^{(\frac{d}{2}-1)}e^{-r}\)</span>. The gamma function <span class="math inline">\(\Gamma\)</span> (not to be confused with the Gamma distribution) does get wonky with the possiblity of no closed-form solution (i.e., impossible to find a sampling method) on non-integer input, so we’ll assume <span class="math inline">\(d=2\)</span> from now on (another reason we are restricted in terms of 2, dimensionally speaking). We get a convenient distribution <span class="math inline">\(G\sim e^{-r}\)</span>. Easy win: <span class="math inline">\(G \sim -\ln{(1-U)}\)</span>. (Check the notes below for derivation.)</p>
+<div class="no-row-height column-margin column-container"><div id="fn12"><p><sup>12</sup>&nbsp;When we want to sample, we want to work the other way. Previously, we tried to find the density of that. Now, we want to find the sampling method that takes a uniform and transform it into the density.</p></div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Yet another derivation on how to sample exponential distribution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Via inverse CDF.</p>
+<p>We have the density (PDF) <span class="math inline">\(f(r)=e^{-r}\)</span> for <span class="math inline">\(r\geq 0\)</span>. We can get its CDF as follows:</p>
+<p><span class="math display">\[
+\begin{align*}
+F(r) &amp;= \int_{0}^{r} e^{-t}dt \\
+&amp;= -e^{-t} \big|_{0}^{r} \\
+&amp;= -e^{-r}+e^{0} = 1-e^{-r} \\
+\end{align*}
+\]</span></p>
+<p>The inverse CDF is <span class="math inline">\(-\ln{(1-F(r))}=r=F^{-1}(u)\)</span>. Since exponential distribution has infinite support (in one direction), the CDF will never reach to 1. This means the <span class="math inline">\(\ln\)</span> is always defined since <span class="math inline">\(F(r)&lt;1 \implies 1-F(r)&gt;0\)</span>. Because we defined our uniform as <span class="math inline">\(U[0,1)\)</span>, <span class="math inline">\(1-U\)</span> yields an interval of <span class="math inline">\((0,1]\)</span>, ensuring validity.</p>
+<p>Hence, we can sample the distribution as <span class="math inline">\(-\ln{(1-U)}\)</span>.</p>
+</div>
+</div>
+</div>
+<p>Now we have <span class="math inline">\(X\sim(\cos(2\pi U_1), \sin(2\pi U_1))\)</span> and <span class="math inline">\(R \sim \sqrt{-2\ln{(1-U_2)}}\)</span> all in terms of <span class="math inline">\(U\)</span>, we can finally put it altogether.</p>
+<div>
+<div id="pyodide-3" class="exercise-cell">
+
+</div>
+<script type="pyodide-3-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIG1ha2Vfc3RhZ2VzKE49MjAwKTpcbiAgICB1MSwgdTIsIHUzLCB1NCA9IG5wLnJhbmRvbS5yYW5kKE4pLCBucC5yYW5kb20ucmFuZChOKSwgbnAucmFuZG9tLnJhbmQoTiksIG5wLnJhbmRvbS5yYW5kKE4pXG4gICAgdXogPSBucC56ZXJvcyhOKVxuXG4gICAgIyAxRCB1bmlmb3JtXG4gICAgcDAgPSBucC5jb2x1bW5fc3RhY2soW3UxLCB1eiwgdXpdKVxuXG4gICAgIyBYIG9uIEMyXG4gICAgeDEgPSBucC5jb3MoMipucC5waSp1MSlcbiAgICB4MiA9IG5wLnNpbigyKm5wLnBpKnUxKVxuICAgIHAxID0gbnAuY29sdW1uX3N0YWNrKFt4MSwgeDIsIHV6XSlcblxuICAgICMgUiBvbiBzcXJ0KDJHKVxuICAgIHIxID0gbnAuc3FydCgtMipucC5sb2coMS11MikpXG4gICAgcDIgPSBucC5jb2x1bW5fc3RhY2soW3IxLCB1eiwgdXpdKVxuXG4gICAgIyBSWFxuICAgIHAzID0gbnAuY29sdW1uX3N0YWNrKFtyMSp4MSwgcjEqeDIsIHV6XSlcblxuICAgICMgZXh0ZW5kIHRvIDNEXG4gICAgeDMgPSBucC5jb3MoMipucC5waSp1MylcbiAgICB4NCA9IG5wLnNpbigyKm5wLnBpKnUzKVxuICAgIHIyID0gbnAuc3FydCgtMipucC5sb2coMS11NCkpXG4gICAgcDQgPSBucC5jb2x1bW5fc3RhY2soW3IxKngxLCByMSp4MiwgcjIqeDNdKVxuXG4gICAgcmV0dXJuIFtcbiAgICAgIChwMCwgXCIxRCBVbmlmb3JtXCIsIGxlcnApLFxuICAgICAgKHAxLCBcIlhcIiwgbGVycCksXG4gICAgICAocDMsIFwiUlggKDJEIEdhdXNzaWFuKVwiLCBsZXJwKSxcbiAgICAgIChwNCwgXCIzRCBHYXVzc2lhbiAoKilcIiwgTm9uZSksXG4gICAgXVxuXG4gICAgIyBhbmltYXRlIFIgZmlyc3RcbiAgICAjIHJldHVybiBbXG4gICAgIyAgIChwMCwgXCIxRCBVbmlmb3JtXCIsIGxlcnApLFxuICAgICMgICAocDIsIFwiUlwiLCBzbGVycDJkKSxcbiAgICAjICAgKHAzLCBcIlJYICgyRCBHYXVzc2lhbilcIiwgbGVycCksXG4gICAgIyAgIChwNCwgXCIzRCBHYXVzc2lhbiAoKilcIiwgTm9uZSksXG4gICAgIyBdXG5cbnNob3dfc2FtcGxpbmdfYW5pbWF0aW9uKG1ha2Vfc3RhZ2VzLCB4X3JhbmdlPSgtNCw0KSwgeV9yYW5nZT0oLTQsNCksIHpfcmFuZ2U9KC00LDQpKSJ9
+</script>
+</div>
+<p>The steps required to sample a 3D gaussian is more involved with more steps. Feel free to change the code (i.e., permute the transitions) to your liking or visualize the individual parts like sampling the exponential distribution. In later sections, we will show a better animation of the <em>change in density</em> of 3D gaussian by ensuring point-to-point correspondence. Currently, there does seem to be a tradeoff between closed-form sampling methods versus point-corresponding density transformation, which the later sections will relax upon.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Remark: Re-defining what “elementary” functions are
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Closed-form solutions and methods can be thought of as them strictly solved/derived within a self-contained set of functions. Traditionally, perhaps from a pedagogical view, this has been the arbitrarily-defined “elementary” functions. Since we are more focused on the computational, programmatic aspect of probabilities, and math in general (for my blogs), let us redefine the elementary functions that are elementary in the sense that many computational libraries for CPU &amp; GPU provides the function atomically. Usually for good reasons that includes minimal constant-bounded clock cycles if the entire math is viewed from a restricted Turing machine instead of elementary functions or even ZFC. Because at the end of the day, <span class="math inline">\(\sin\)</span> and <span class="math inline">\(\cos\)</span> are numerically approximated and <span class="math inline">\(U\)</span> is provided practically everywhere via computational libraries as aforementioned.</p>
+</div>
+</div>
+</div>
+<!-- [^asdf1]: Closed-form solutions and methods can be thought of as them strictly solved/derived within a self-contained set of functions. Traditionally, perhaps from a pedagogical view, this has been the arbitrarily-defined "elementary" functions. Since we are more focused on the computational, programmatic aspect of probabilities, and math in general (for my blogs), let us redefine the elementary functions that are elementary in the sense that many computational libraries for CPU & GPU provides the function atomically. Usually for good reasons that includes minimal constant-bounded clock cycles if the entire math is viewed from a restricted Turing machine instead of elementary functions or even ZFC. Because at the end of the day, $\sin$ and $\cos$ are numerically approximated and $U$ is provided practically everywhere via computational libraries as aforementioned. -->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Tangent: Proving single-variable inverse CDF technique from transformation of R.V.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Devorye’s <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4]</a></span> definition of R.V. is quite different from the standard defintion of R.V. Suppose a random variable <span class="math inline">\(X\)</span>, Devroye assumes random variable are random variates generated by an algorithm that always halt and produces a real number <span class="math inline">\(X\)</span>, while Kolmogorov’s definition of R.V. per Durrett <span class="citation" data-cites="Durrett10.5555/1869916"><a href="#ref-Durrett10.5555/1869916" role="doc-biblioref">[3]</a></span> is a <em>function</em> where <span class="math inline">\(X:\Omega \to \mathbb{R}\)</span>. Random variable in this sense can be thought of as a variable, but technically we are passing the function object itself (i.e., lambdas in Python) and the inequalities that commonly operate on the R.V. are like the domain restriction on that R.V. Similiarly, <span class="math inline">\(\sim\)</span> describes how the R.V., as a function, is distributed, in relation to other distribution or R.V. Regardless, we’ll continue Devorye’s assumption of R.V. <a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> <a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a></p>
+<p>Suppose we have a distribution function (CDF) <span class="math inline">\(F(x)\)</span>, which always has an inverse <span class="math inline">\(F^{-1}(y)=\inf\{x:F(x)=y, 0&lt;y&lt;1\}\)</span><a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> by Devorye’s infinum definition<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a> of inverse CDF, from the target distribution <span class="math inline">\(X\)</span>. Given a known source distribution <span class="math inline">\(Y\sim U[0,1)\)</span>, how can we obtain the target via transformation of R.V.?</p>
+<p>We will assume the CDF is 1D<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a>.</p>
+<p>Since <span class="math inline">\(Y\)</span> has a density <span class="math inline">\(f_Y(y)=1\)</span> that is continuous <em>a.e.</em> over its support and our transformation, the quantile function <span class="math inline">\(x=F^{-1}(y)\)</span>, is one-to-one and onto (again, because of its <em>quantile</em> definition). Following Theorem 4.2 <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, p. 14]</a></span>, the inverse (of the inverse CDF) must exist as the CDF itself <span class="math inline">\(y=F(x)\)</span>. Since <span class="math inline">\(\frac{dy}{dx}\)</span> exists due to CDF’s continuity and the codomain of <span class="math inline">\(F^{-1}(y)\)</span> is also continuous, by the theorem, <span class="math inline">\(X\)</span> has a density of <span class="math inline">\(f_Y(F(x))|\frac{dy}{dx}|\)</span>. Since <span class="math inline">\(f_Y(y)=1\)</span> and <span class="math inline">\(|\frac{d}{dx}F(x)|=|f_X(x)|\)</span> with the fact that all density must be positively defined, <span class="math inline">\(X\)</span> has the density <span class="math inline">\(f_X(x)\)</span> <em>as expected</em>.</p>
+<p><span class="math inline">\(\Box\)</span></p>
+<!-- Since $f_Y(y)=1$ and the derivative of CDF is the PDF, $f_X=f_Y$, which is a tautology.
+
+This is actually an -->
+<!-- Suppose a uniform distribution (or R.V.) -->
+<!-- Suppose transformation of R.V. where we have a source R.V. $X$ -->
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"></div><div class="no-row-height column-margin column-container"><div id="fn17"><p><sup>17</sup>&nbsp;It was at this point one realizes that the simple inverse CDF only works 1D. Multivariable inverse CDF requires special handling.</p></div></div><div class="no-row-height column-margin column-container"><div id="fn16"><p><sup>16</sup>&nbsp;a.k.a. quantile function</p></div></div><div class="no-row-height column-margin column-container"><div id="fn15"><p><sup>15</sup>&nbsp;The reason it is not <span class="math inline">\(0\le y\le 1\)</span> is we got to find a good definition of inverse CDF that supports various distributions (including those that have infinite support), but also <span class="math inline">\(y=0,1\)</span> are 0-measure that contributes nothing when removed. Hence, it is safe to exclude them. Devorye does this implicitly, but this is more commonly known as <em>almost everywhere</em> (a.e.) and <em>almost surely</em> (a.s.). A fancy way to say we ignore degenerate cases precisely and hand-wavily (usually to keep the definition consistent).</p></div></div><div class="no-row-height column-margin column-container"><div id="fn14"><p><sup>14</sup>&nbsp;Bayesian and frequentist are different <em>views/interpretations</em> of Kolmogorov probability and statistics, which is orthogonal to different definitions of probability that was discussed before.</p></div></div><div class="no-row-height column-margin column-container"><div id="fn13"><p><sup>13</sup>&nbsp;Devorye’s definition of probability is a subsidiary of Kolmogorov’s / Measure-theoretic definition of probability just like Peano’s axiom to ZFC. Additionally, Kolomogorov probability itself can somehow be further verified by ZFC. Regardless, we’ll only focus on Kolmogorov’s since that’s the most widely used. However, there does exist some fringe definitions of probability such as quantum probability that could be useful later on (though I highly doubt quantum computers is even theoretically useful for anything other than cryptography).</p></div></div><div class="no-row-height column-margin column-container"></div><div class="no-row-height column-margin column-container"></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Tangent: Proving variance reduction of importance sampling (single R.V.; scalar)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Suppose we have the following base Monte-Carlo estimation (<span class="math inline">\(X_i \sim p_X\)</span>) of the integral <span class="math inline">\(A = \int_\mathcal{D} f(x)g(x)dx\)</span>. <strong>Assume <span class="math inline">\(g(x)\)</span> is non-negative for almost all <span class="math inline">\(x\)</span><a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a>.</strong></p>
+<p><span class="math display">\[
+A = \frac{|\mathcal{D}|}{N}\sum_{i=1}^{N}\frac{f(X_i)g(X_i)}{p_X(X_i)}
+\]</span></p>
+<p>Let us suppose the domain of integration is simple (<span class="math inline">\(|\mathcal{D}|=1\)</span>) and we naively sample the estimation uniformly <span class="math inline">\(p_\text{naive}(Y_i)=1\)</span>.</p>
+<p><span class="math display">\[
+\langle A \rangle_\text{naive} = \frac{1}{N}\sum_{i=1}^{N}f(Y_i)g(Y_i)
+\]</span></p>
+<p>Let us suppose we employ importance sampling (“i.s.”) technique where <span class="math inline">\(p_\text{i.s.}(Z_i)\propto g(Z_i)\)</span>, we get the following. <span class="math inline">\(c=1/\int_{\mathcal{D}}g(x)dx=1/\mathbb{E}_{X_1\sim p_{\text{naive}}}[g(X_1)]\)</span> <a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a> is the normalization factor for <span class="math inline">\(g\)</span> to ensure its conversion into a sampling process is normalized to <span class="math inline">\(1\)</span>.</p>
+<p><span class="math display">\[
+\langle A \rangle_\text{i.s.} = \frac{1}{N}\sum_{i=1}^{N}\frac{f(Z_i)g(Z_i)}{cg(Z_i)} = \frac{1}{cN}\sum_{i=1}^{N}f(Z_i)
+\]</span></p>
+<p>Now that we have both <span class="math inline">\(\langle A \rangle_\text{naive}\)</span> and <span class="math inline">\(\langle A \rangle_\text{i.s.}\)</span>, we can show if importance sampling truely reduces the variance <span class="math inline">\(\mathbb{V}\)</span>. Remember, the output estimate of the Monte-Carlo is a random variable itself.</p>
+<p><span class="math display">\[
+\begin{align*}
+\mathbb{V}[\langle A \rangle_\text{naive}]
+&amp;= \mathbb{V}_{Y_1,\cdots,Y_N\sim p_\text{naive}}\bigg[ \frac{1}{N}\sum_{i=1}^N f(Y_i)g(Y_i) \bigg] \\
+&amp;= \frac{1}{N^2}\sum_{i=1}^N \mathbb{V}_{Y_i\sim p_\text{naive}}[ f(Y_i)g(Y_i)] \\
+&amp;= \frac{1}{N} \mathbb{V}_{Y_1\sim p_\text{naive}}[ f(Y_1)g(Y_1)]
+\end{align*}
+\]</span></p>
+<p>Since <span class="math inline">\(Y_1,\cdots,Y_N\)</span> are usually i.i.d. in the context of M.C. estimation, we can use Theorem 2.2.1 from <span class="citation" data-cites="Durrett10.5555/1869916"><a href="#ref-Durrett10.5555/1869916" role="doc-biblioref">[3, p. 56]</a></span> to get sum of variance from a variance of sum, since the covariance would theoretically be <span class="math inline">\(0\)</span> because of the independence (stronger assumption than uncorrelated). And since the interior term are <em>identical</em> in distribution, their variance, a property of theirs, would match regardless how many times it is sampled. Hence, we can reduce the sum of variance into a single variance times <span class="math inline">\(N\)</span>.</p>
+<p>We can do the same with <span class="math inline">\(\langle A \rangle_\text{i.s.}\)</span> and get the following, although with a caveat of different sampling method. <span class="math display">\[
+\frac{1}{c^2N} \mathbb{V}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)]
+\]</span></p>
+<p>Now, since we want variance reduction, we can do the following. We hope it is a tautology (i.e., verifies it always reduces variance) but it could just be reduced to a conditional also, which would help with the analysis regardless.</p>
+<p><span class="math display">\[
+\begin{align*}
+\frac{1}{c^2N} \mathbb{V}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)] &lt; \frac{1}{N} \mathbb{V}_{Y_1\sim p_\text{naive}}[ f(Y_1)g(Y_1)] \\
+\implies \frac{1}{c^2} \mathbb{E}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)^2]- \frac{1}{c^2}\mathbb{E}_{Z_1\sim p_\text{i.s.}}[ f(Z_1)]^2 &lt; \mathbb{E}_{Y_1\sim p_\text{naive}}[ (f(Y_1)g(Y_1))^2] - \mathbb{E}_{Y_1\sim p_\text{naive}}[ f(Y_1)g(Y_1)]^2 \\
+\implies \frac{1}{c} \mathbb{E}_{Z_1\sim p_\text{naive}}[ f(Z_1)^2 g(Z_1)]-A^2 &lt; \mathbb{E}_{Y_1\sim p_\text{naive}}[ (f(Y_1)g(Y_1))^2] - A^2 \\
+\implies 0 &lt; \mathbb{E}_{Y_1\sim p_\text{naive}}[ (f(Y_1)g(Y_1))^2] - \mathbb{E}_{X_1\sim p_{\text{naive}}a}[g(X_1)] \mathbb{E}_{Z_1\sim p_\text{naive}}[ f(Z_1)^2 g(Z_1)] \\
+\end{align*}
+\]</span></p>
+<!-- \implies \mathbb{E}_{X_1\sim p_\text{naive}}[ f(X_1)^2 g(X_1) (1 - cg(X_1))] < 0 \\ -->
+<p>Although this looks like covariance, there are still some technical differences especially on finite samples. The first term in the final reduced expression needs to have a sampling from a joint distribution between <span class="math inline">\(f^2g\)</span> vs.&nbsp;<span class="math inline">\(g\)</span> while having the same individual marginal samples from the joint for the second term after the subtraction. <span class="tlnd">TL;ND</span>, I will leave the justification here without an alternative proof.</p>
+<p><span class="math inline">\(\Box\)</span></p>
+<p>(The previous iteration of the proof is lowkey bad in hindsight.)</p>
+<!-- <del>
+For notational clarity, we rewrite it as $0 < \mathbb{E}_Y[(f^2g)\cdot g]-\mathbb{E}_X[g]\cdot \mathbb{E}_Z[f^2g] \overset{?}{=} \mathrm{Cov}(f^2g, g)$ for $X,Y,Z \sim p_\text{naive}$. Additional notes:
+
+- Analytically, the expectation is an integration that equals to the *definition* of covariance
+  - Numerically, it is asymptotically equal ($N \to \infty$) if $N$ is the number of samples to estimate the expectation (if the sample space is infinitely large)
+  - In other words, when we compute the expectation for *all possible samples* numerically or analytically
+- However, if the $X,Y,Z$ sampling does not cover all the samples of the sample space, it is technically not covariance *by definition*
+  - We need either $X$ or $Z$ to be equal to $Y$ (i.e., one of the expectation after the subtraction must be sampled the same way as the first term before the subtraction)
+  - Recall $\mathbb{E}_X[g]$ is just a normalization constant for $g$ (without any sampling assupmtions or restrictions). Hence, we can have $X=Y$, to satisfy the definition of covariance so we can make the condition more interpretable while also maintaining its purpose as a normalization.
+  - This means as we sample the first expectation, we must reuse the sample to compute the normalization of $g$ for the second expectation.
+
+In other words, $0 < \mathbb{E}_Y[(f^2g)\cdot g]-\mathbb{E}_Y[g]\cdot \mathbb{E}_Z[f^2g] = \mathrm{Cov}(f^2g, g)$. -->
+<!-- - Even though all the terms might come from the same source R.V., each function (if non-trivial) $f$,$g$ would make the R.V. different and dependent of each other (preventing the product of integral becoming integral of the product).
+- This does mean if the function $f$,$g$ are trivial enough, the covariance might stick to $0$.
+- The reason the R.V. between the expectation terms are dependent, one-to-one, is due to linearity with the same distribution and also expectation is done over integral (i.e., over all possible samples), which technically means we can re-order the samples such that they are one-to-one dependent when we re-split the expectation. -->
+<!-- So what does $0<\text{Cov}(f^2g, g)$ tell us?  -->
+<!-- Since the conditional expression is not immediately interpretable (and we tried to make it more interpretable), we will try to slowly explore what the condition is intuitively telling us. -->
+<!-- 1. If $f\propto 1$, variance reduction is maximized (i.e., correlation $\rho=1$)
+1. If $g\propto 1$, there are no variance reduction (i.e., $\rho=0$)
+2. If $f\propto g$, variance reduction is largely maximized
+3. If $f\propto \frac{1}{g}$, variance *enlargement* is largely maximized (bad)
+4. If $f=\sqrt{\frac{a}{g}-b}$ with $g<\frac{a}{b}$ (i.e., misaligned), variance enlargement is maximized (i.e., $\rho=-1$)
+   1. variance "reduction" doesn't get any worse than this
+5. There can be an obscure configuration of $f$ and $g$ where $\rho=1,-1$ non-trivially
+6. At the end, a case-by-case analysis is still needed to determine variance reduction. Hopefully, this at least simplifies whether a certain combination of $f,g$ truely reduces the variance and shed some intuition on variance reduction.
+   1. $g$ remains limited to be always positive almost everywhere for now -->
+<!-- 1. Higher covariance between $f^2g$ and $g$ means more variance reduction since we formulated the expression as a difference of two variance
+   1. Covariance can be thought of as correlation but *up to scale*
+2. Variance reduction does not always happen: Consider cases when the covariance is negative
+   1. 
+3. If $f$ is trivial (e.g., $f=1$, $f=c$, $f=g$), then it has correlation of $1$ or close to $1$ (for $f=g$)---cases where variance reduction is maximized
+4. If $f=-1$, $f=-c$, or $f=-g$, then it also maximizes variance reduction (because of the square)
+   1. Increasing samples on regions that are *more* negative reduces variance
+   2. Intuitively, this means we do not care about the sign, we only care about sampling areas that has more magnitude (regardless what direction the value is).
+5. If $g=1,c$ and $f\neq c$, then there's no variance reduction
+6. If $g=f$ (where $f$ is also positively a.e.), then there's some variance reduction
+7. At the end, a case-by-case analysis is still needed to determine variance reduction. Hopefully, this at least simplifies whether a certain combination of $f,g$ truely reduces the variance and shed some intuition on variance reduction.
+   1. $g$ remains limited to be always positive almost everywhere for now -->
+<!-- By the linearity of the expectation, -->
+<!-- Let's make the expression more intuitive---more interpretable.
+
+
+\begin{align*}
+\mathbb{E}[(f^2g)\cdot g]-\mathbb{E}[g]\cdot \mathbb{E}[f^2g] &= 0\\
+\end{align*}
+ -->
+<!-- $\Box$ -->
+<!-- </del> -->
+<p>Similiarly, §9.1 of <span class="citation" data-cites="mcbook"><a href="#ref-mcbook" role="doc-biblioref">[5]</a></span> talks about the effectiviness of importance sampling in variance reduction and proves the optimal density to sample from is <span class="math inline">\(p\propto |fg|\)</span> while we only talk about importance sampling over <em>some</em> of the term (grouped as <span class="math inline">\(g\)</span>) and finding how much variance is reduced given a combination of <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>.</p>
+<p><!-- If $f$ represents all the other term and $g$ represents the term of interest for importance sampling, the term of interest $g$ is always linearly (one-to-one) correlated to itself (regardless how it is distributed itself). Yet, one of the $g$ is weighted with respect to $f^2$, which means --></p>
+<!-- $0 < \mathbb{E}[f^2g(cg - 1)]$[^zzz1] -->
+<!-- [^zzz1]: Note the implicit negation on both sides. -->
+<!--
+
+&= \mathbb{E}[\langle A \rangle_\text{naive}^2] + \mathbb{E}[\langle A \rangle_\text{naive}]^2 \\
+&= \mathbb{E}_{Y_1,\cdots,Y_N \sim p_\text{naive}}\bigg[\big(\frac{1}{N}\sum_{i=1}^N f(Y_i)g(Y_i)\big)^2\bigg] + A^2 \\
+\end{align*}
+
+-->
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"><div id="ref-mcbook" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">A. B. Owen, <em>Monte carlo theory, methods and examples</em>. <a href="https://artowen.su.domains/mc/" class="uri">https://artowen.su.domains/mc/</a>, 2013.</div>
+</div></div><div class="no-row-height column-margin column-container"></div><div class="no-row-height column-margin column-container"><div id="fn19"><p><sup>19</sup>&nbsp;If <span class="math inline">\(|\mathcal{D}|\neq1\)</span>, this expectation will take care of it.</p></div></div><div class="no-row-height column-margin column-container"><div id="fn18"><p><sup>18</sup>&nbsp;Negative density (i.e., negative probabilities) creates a lot of problems.</p></div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Tangent: Unbiased estimation after differentiation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>We are given the following expression that is deceptively simple.</p>
+<p><span class="math display">\[
+f(\langle I(\theta) \rangle)
+\]</span></p>
+<p>We have a deterministic <em>quadratic</em> function <span class="math inline">\(f\)</span> (e.g., objective function) that takes an M.C. estimation of an integral <span class="math inline">\(I(\theta)=\int h_\theta(x)dx\)</span> (e.g., the rendering equation, expectation, etc.) parameterized by some variable <span class="math inline">\(\theta\)</span>. Remember, M.C. estimation is still an R.V. itself. This is recurring theme from a lot of places from differentiable rendering and reinforcement learning to finance—especially when we want to optimize the parameter <span class="math inline">\(\theta\)</span>.</p>
+<p>Currently, optimization is done through differentiation. So, let’s try to differentiate it. Despite the MC estimate is considered a RV, it is linearly composed of <span class="math inline">\(N\)</span> i.i.d. RV’s evaluated on the integrand <span class="math inline">\(N\)</span> times. Since differentiation is linear, it goes right pass through (assuming the domain of the integral does not depend on <span class="math inline">\(\theta\)</span>).</p>
+<p><span class="math display">\[
+\begin{align*}
+\frac{d}{d\theta}f(\langle I(\theta) \rangle)
+&amp;= f'(\langle I(\theta) \rangle) \frac{d}{d\theta}\langle I(\theta) \rangle \\
+&amp;= f'(\langle I(\theta) \rangle) \langle I'(\theta) \rangle \\
+\end{align*}
+\]</span></p>
+<p>The chain rule of differentiation created two MC estimate (symbolically) which are basically two RVs joined by arithmetic. In some domain (<em>cough</em> differentiable rendering), it is deceptively intuitive to compute the derivative <span class="math inline">\(I'\)</span> alongside the original <span class="math inline">\(I\)</span> (i.e., reusing path samples or just samples). But, is reusing samples allowed?</p>
+<p>Key insight: MC estimate is still a RV; hence, the entire expression is a big RV. Let’s call that RV <span class="math inline">\(L\)</span>.</p>
+<p><span class="math display">\[
+L = f'(\langle I(\theta) \rangle) \langle I'(\theta) \rangle
+\]</span></p>
+<p>If you think about, many RV has expectation and variance including this. Why not compare the following two equations to check if they’re unbiased? <strong>Let us assume <span class="math inline">\(f'\)</span> is linear (<span class="math inline">\(f\)</span> is quadratic).</strong></p>
+<p>Uncorrelated sampling with <span class="math inline">\(Y,Z \sim X\)</span> where <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span> are i.i.d.: <span class="math display">\[
+f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Z
+\]</span></p>
+<p>Correlated sampling with <span class="math inline">\(Y\sim X\)</span>: <span class="math display">\[
+f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Y
+\]</span></p>
+<p>Let us start with uncorrelated sampling:</p>
+<p><span class="math display">\[
+\begin{align*}
+\mathbb{E}_{Y,Z\sim X}[f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Z]
+&amp;= \mathbb{E}_{Y_i,Z_i\sim X}\bigg[f'\bigg(\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)}\bigg) \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Z_i)}{p(Z_i)} \bigg] \\
+&amp;= f'\bigg( \mathbb{E}_{Y_i\sim X}\bigg[\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)} \bigg] \bigg) \mathbb{E}_{Z_i\sim X}\bigg[ \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Z_i)}{p(Z_i)} \bigg] \\
+&amp;= f'( I(\theta)) I'(\theta) \\
+\end{align*}
+\]</span></p>
+<p>Uncorrelated sampling is an unbiased estimator of the gradient.</p>
+<p>What about correlated sampling? (Assuming <span class="math inline">\(N=M\)</span>.)</p>
+<p><span class="math display">\[
+\begin{align*}
+\mathbb{E}_{Y\sim X}[f'(\langle I(\theta) \rangle_Y) \langle I'(\theta) \rangle_Y]
+&amp;= \mathbb{E}_{Y_i \sim X}\bigg[f'\bigg(\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)}\bigg) \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Y_i)}{p(Y_i)} \bigg] \\
+&amp;= f'\bigg( \mathbb{E}_{Y_i\sim X}\bigg[\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)} \bigg] \bigg) \mathbb{E}_{Y_i\sim X}\bigg[ \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Y_i)}{p(Y_i)} \bigg] + \text{Cov}_{(Y_i, Y_i)\sim X}\bigg(\frac{1}{N}\sum_{i=1}^{N} \frac{h_\theta(Y_i)}{p(Y_i)}, \frac{1}{M}\sum_{i=1}^{M} \frac{h'_\theta(Y_i)}{p(Y_i)}\bigg) \\
+&amp;= f'( I(\theta)) I'(\theta) + \text{Cov}(\langle I(\theta) \rangle_Y, \langle I'(\theta) \rangle_Y ) \\
+\end{align*}
+\]</span></p>
+<p>As you can clearly see, correlated sampling has an additional covariance term <span class="math inline">\(\text{Cov}(\langle I(\theta) \rangle_Y, \langle I'(\theta) \rangle_Y )\)</span> which can potentially make correlated sampling <em>biased</em>. But I said <em>can potentially</em>, not <em>must</em>. Making covariance <span class="math inline">\(0\)</span> is a rather lax requirment (compared to independence). We just need to find <span class="math inline">\(I(\theta)\)</span> such that <span class="math inline">\(I(\theta)\)</span> and <span class="math inline">\(I'(\theta)\)</span> are non-linear. While this seems achievable (?), in differentiable rendering these expressions can be complicated really quickly. While it is reasonable to think a more complicated an expression is the more likely it’s derivative will be non-linear w.r.t. to itself, it is still biased nonetheless in the strictest sense. Disclaimer: no proof has been done nor will be done on how much bias exists. Will leave that as an excercise for the reader /j.</p>
+<!-- Since the left samples are being multiplied with the right samples in some ways, they must be independent of each other for expectation to be split (i.e., the integration split over independence). However, both samples rely on $Y_i$ (with the implicit constraint of $N=M$), which are clearly correlated and dependent. Hence, we are stuck with this form and cannot show 
+
+By  -->
+<!-- But, what does it mean to differentiate a Monte-Carlo estimate (i.e., random variable)?
+
+Given the following:
+
+
+NOTE: FIND A WAY TO FORMALIZE THE NOTION OF CORRELATION WHEN YOU (ACCIDENTALLY) USE THE SAME UNIFORM SAMPLE (WHEN IT SHOULD BE DIFFERENT) -->
+</div>
+</div>
+</div>
+</section>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Forgot Box-Muller dimensionally works only in 2. The exercises in <span class="citation" data-cites="devroye:1986"><a href="#ref-devroye:1986" role="doc-biblioref">[4, Secs. 5–4]</a></span> are interesting and adjacently concerns the issue we’re having with 3D sampling of Gaussian. There is likely an elegant method out there, but due to limited time, we’ll just implement 4D Box-Muller and extract the first 3 dimensions.</p></div></div></section>
+<section id="triangle" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="triangle">Triangle</h2>
+<p>Suppose we are given <span class="math inline">\(\mathbf{p},\mathbf{q},\mathbf{r}\in \mathbb{R}^3\)</span> to describe triangle <span class="math inline">\(\triangle \mathbf{p}\mathbf{q}\mathbf{r}\)</span>. Since triangle is 2D, we will assume we are also given <span class="math inline">\(U_1,U_2\)</span>. How do we sample uniformly on <span class="math inline">\(\triangle\)</span>?</p>
+<p>Remember the triangle area formula <span class="math inline">\(\frac{1}{2}bh\)</span>? It is based off of calculating half of the area of a parallelogram (which can always be made of two congruent triangles). Can we do something with it? (Yes, it is a bit like rejection sampling.)</p>
+<p>Suppose <span class="math inline">\(\overline{\mathbf{p}\mathbf{q}}\)</span> and <span class="math inline">\(\overline{\mathbf{p}\mathbf{r}}\)</span> constitutes the two edge vectors of the parallelogram. We can let <span class="math inline">\(\mathbf{X}=U_1\overline{\mathbf{p}\mathbf{q}} + U_2\overline{\mathbf{p}\mathbf{r}}\)</span> to uniformly sample over the parallelogram. We also have a third edge <span class="math inline">\(\overline{\mathbf{q}\mathbf{r}}\)</span>. If both <span class="math inline">\(\overline{\mathbf{q}\mathbf{r}} \times \overline{\mathbf{q}\mathbf{p}}\)</span> and <span class="math inline">\(\overline{\mathbf{q}\mathbf{r}} \times \overline{\mathbf{q}\mathbf{X}}\)</span> have the same sign, it is in the correct triangle. If their sign does not match, that means their on the wrong side/triangle. We can flip the random point <span class="math inline">\(\mathbf{X}\)</span> over via <span class="math inline">\(\mathbf{X'}=(1-U_1)\overline{\mathbf{p}\mathbf{q}} + (1-U_2)\overline{\mathbf{p}\mathbf{r}}\)</span>. Think of the transformation is flipping over <span class="math inline">\(y=-x\)</span> line and shifting up and right by <span class="math inline">\(1\)</span> unit putting the points back to the same triangle (w.r.t. to the parallelogram frame). The pdf will theoretically be the area of the <span class="math inline">\(\triangle\)</span>. Notably, the <span class="math inline">\(h\)</span> can be calculated by projection one side to the base and finding the distance from one end of the projected vector to the other point.</p>
+<p>Hold up!</p>
+<p>Triangles has this nifty feature called barycentric coordinates. Can we use it to make better animation to preserve point locality to emphasize the concept of <em>transforming density</em>? We start off knowing it can be natively parameterized/described by two parameters: <span class="math inline">\(\mathbf{X}=U_1\mathbf{p}+U_2(1-U_1)\mathbf{q}+(1-U_1-U_2(1-U_1))\mathbf{r}\)</span><a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>. The additional arithmetic within the weights ensures they all sum to <span class="math inline">\(1\)</span>. Yet, is <span class="math inline">\(X\)</span> uniform on the triangle? To check for that we have to find its local distortion via Jacobian determinant<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn20"><p><sup>20</sup>&nbsp;A specific case of convex combinations of points forming the convex hull where we have three points instead of arbitrary amount of points.</p></div><div id="fn21"><p><sup>21</sup>&nbsp;Jacobian for <span class="math inline">\(\mathbb{R}^2 \to \mathbb{R}^3\)</span> can be found by <span class="math inline">\(||\partial_{u}\mathbf{X}(u,v) \times \partial_{v}\mathbf{X}(u,v)||\)</span>, which is a particular case of Gram determinant that allows determinants to remain meaningful in an assigned lower dimension <span class="math inline">\(\mathbb{R}^k\)</span> where <span class="math inline">\(k&lt;n\)</span> embedded within <span class="math inline">\(\mathbb{R}^n\)</span>.</p></div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Computing the Jacobian
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Suppose <span class="math inline">\(u:=U_1,v:=U_2\)</span> and <span class="math inline">\(A\)</span> is the area of the triangle.</p>
+<p><span class="math display">\[
+\begin{align*}
+J
+&amp;= ||\partial_{u}\mathbf{X}(u,v) \times \partial_{v}\mathbf{X}(u,v)|| \\
+&amp;= ||(\mathbf{p}-v\mathbf{q}-(1-v)\mathbf{r}) \times ((1-u)\mathbf{q}-(1-u)\mathbf{r})|| \\
+&amp;= (1-u)||[(\mathbf{p}-\mathbf{r}+v(\mathbf{r}-\mathbf{q}))\times (\mathbf{q}-\mathbf{r})]|| \\
+&amp;= (1-u)||[(\mathbf{p}-\mathbf{r})\times(\mathbf{q}-\mathbf{r})]|| \\
+&amp;= (1-u)2A \\
+\end{align*}
+\]</span></p>
+</div>
+</div>
+</div>
+<p>Jacobian is <span class="math inline">\((1-U_1)2A\)</span>, which means not only is it not normalized to the area of the sampling (<span class="math inline">\(A\)</span>), but it also varies over <span class="math inline">\(U_1\)</span>, which can be seen in the following visualizations. Obtaining <span class="math inline">\(A\)</span> for Jacobian, we suppose our old <span class="math inline">\(U_1\)</span> is redefined as <span class="math inline">\(f(\tilde{U}_1)\)</span> for some arbitrary transformation <span class="math inline">\(f\)</span>. If we re-differentiate the Jacobian by <span class="math inline">\(\tilde{U}_1\)</span>, we get <span class="math inline">\((1-f(\tilde{U}_1))2Af'(\tilde{U}_1)\)</span>, which we want it to be simplified as <span class="math inline">\(A\)</span><a href="#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn22"><p><sup>22</sup>&nbsp;This is still different from transformation of RV, which is given a function <span class="math inline">\(g\)</span>, how to properly transform the RV <em>while maintaing conservation of probability mass</em> (maintaining normalization).</p></div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Finding <span class="math inline">\(f\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>More explicitly, <span class="math inline">\(u:=f(w)\big|_{w=\tilde{U}_1}\)</span> and <span class="math inline">\(u':=f'(w)\big|_{w=\tilde{U}_1}\)</span>.</p>
+<p><span class="math display">\[
+\begin{align*}
+(1-f(\tilde{U}_1))2Af'(\tilde{U}_1)=A
+&amp;\implies (1-u)2u'=1 \\
+&amp;\implies (1-u)2du=dw \\
+&amp;\implies \int(1-u)2du=\int dw \\
+&amp;\implies -u^2+2u-w+C=0 \\
+&amp;\implies u = 1\pm\sqrt{1+C-w} \\
+\end{align*}
+\]</span></p>
+<p>Since <span class="math inline">\(u\in [0,1]\)</span> and <span class="math inline">\(w\in [0,1)\)</span>, then it must be <span class="math inline">\(u=1-\sqrt{1-w}\)</span> or <span class="math inline">\(U_1:=1-\sqrt{1-\tilde{U}_1}\)</span>.</p>
+<p>This can also be directly related to inverse CDF but <span class="tlnd">TL;ND</span>.</p>
+</div>
+</div>
+</div>
+<p>Once we find the right transformation <span class="math inline">\(f\)</span> to get the proper Jacobian, we get the following corrected triangle sampling: <span class="math display">\[
+\mathbf{X}=(1-\sqrt{1-\tilde{U}_1})\mathbf{p}+U_2(\sqrt{1-\tilde{U}_1})\mathbf{q}+(\sqrt{1-\tilde{U}_1})(1-U_2)\mathbf{r}
+\]</span></p>
+<!-- We can actually do this using inverse CDF to preserve locality for nicer animations and emphasize the notion of density. -->
+<div>
+<div id="pyodide-4" class="exercise-cell">
+
+</div>
+<script type="pyodide-4-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIG1ha2Vfc3RhZ2VzKE49MjAwKTpcbiAgICB1MSwgdTIgPSBucC5yYW5kb20ucmFuZChOKSwgbnAucmFuZG9tLnJhbmQoTilcblxuICAgICMgZmVlbCBmcmVlIHRvIHBsYXkgYXJvdW5kIHdpdGggdGhlIHBhcmFtZXRlcnMgaGVyZVxuICAgIHAgPSBucC5hcnJheShbMC4wLCAwLjAsIDAuMF0pXG4gICAgcSA9IG5wLmFycmF5KFsxLjAsIDAuMCwgMC4wXSlcbiAgICByID0gbnAuYXJyYXkoWzAuNSwgMS4wLCAwLjBdKVxuICAgIHBxID0gcSAtIHBcbiAgICBwciA9IHIgLSBwXG5cbiAgICAjIyMjIyMjIyMjIyMgTmFpdmUgZm9sZGluZyB0cmlhbmdsZSBzYW1wbGluZyAjIyMjIyMjIyMjIyNcblxuICAgICMgMkQgdW5pZm9ybSBzcXVhcmUgWzAsMV1eMlxuICAgIHAwID0gbnAuY29sdW1uX3N0YWNrKFt1MSwgdTIsIG5wLnplcm9zKE4pXSlcblxuICAgICMgUGFyYWxsZWxvZ3JhbTogcCArIHUxKnBxICsgdTIqcHJcbiAgICBwMSA9IHAgKyB1MVs6LCBOb25lXSAqIHBxICsgdTJbOiwgTm9uZV0gKiBwclxuXG4gICAgIyBUcmlhbmdsZTogZm9sZCB0aGUgb3RoZXIgaGFsZiAodTErdTIgPiAxKSBiYWNrIGluIHZpYSAoMS11MSwgMS11MilcbiAgICBtYXNrID0gKHUxICsgdTIpID4gMVxuICAgIHAyID0gcDEuY29weSgpXG4gICAgcDJbbWFza10gPSBwICsgKDEgLSB1MVttYXNrXSlbOiwgTm9uZV0gKiBwcSArICgxIC0gdTJbbWFza10pWzosIE5vbmVdICogcHJcblxuICAgICMjIyMjIyMjIyMjIyBMb2NhbGl0eS1wcmVzZXJ2aW5nIHRyYW5zZm9ybWF0aW9uICMjIyMjIyMjIyMjI1xuXG4gICAgIyBJbml0aWFsIG5haXZlIHRyaWFuZ2xlXG4gICAgcDMgPSB1MVs6LCBOb25lXSpwICsgKHUyKigxLXUxKSlbOiwgTm9uZV0qcSArICgoMS11MSkqKDEtdTIpKVs6LCBOb25lXSpyXG4gICAgcDQgPSAoMS1ucC5zcXJ0KDEtdTEpKVs6LCBOb25lXSpwICsgKHUyKihucC5zcXJ0KDEtdTEpKSlbOiwgTm9uZV0qcSArIChucC5zcXJ0KDEtdTEpKigxLXUyKSlbOiwgTm9uZV0qclxuXG4gICAgcmV0dXJuIFtcbiAgICAgICAgIyAocDAsIFwiMkQgVW5pZm9ybSBTcXVhcmVcIiwgbGVycCksXG4gICAgICAgICMgKHAxLCBcIlBhcmFsbGVsb2dyYW1cIiwgbGVycCksXG4gICAgICAgIChwMywgXCJOYWl2ZSBCYXJ5Y2VudHJpYyBUcmlhbmdsZVwiLCBsZXJwKSxcbiAgICAgICAgKHA0LCBcIlVuaWZvcm0gVHJpYW5nbGUgKCopXCIsIGxlcnApLFxuICAgICAgICAocDIsIFwiRm9sZGVkIFRyaWFuZ2xlXCIsIE5vbmUpLFxuICAgIF1cblxuc2hvd19zYW1wbGluZ19hbmltYXRpb24obWFrZV9zdGFnZXMsIHhfcmFuZ2U9KC0wLjUsIDIuMCksIHlfcmFuZ2U9KC0wLjUsIDEuNSksIHpfcmFuZ2U9KC0xLCAxKSkifQ==
+</script>
+</div>
+<p>Notice anything between the transformation of <code>p4</code> and <code>p2</code>? Despite both being proper uniform sampling of the triangle and identical <em>in distribution</em>, their realized samples are still different. Animation does seem to reveal a lot of the inner mechanism of various methods of sampling concisely.</p>
+<!-- 
+Alternatively, we can derive a direct inverse CDF that avoids the fold entirely. The marginal density of the triangle along $U_1$ is $p(U_1) = 1-\sqrt{U_1}$... actually, working it out: $s=1-\sqrt{U_1}$, $t=U_2\sqrt{U_1}$ directly maps the unit square to barycentric coordinates $(s,t)$ with $s+t\leq 1$, with no rejection or fold needed.
+
+```fcjquntuu
+def make_stages(N=200):
+    u1, u2 = np.random.rand(N), np.random.rand(N)
+
+    p = np.array([0.0, 0.0, 0.0])
+    q = np.array([1.0, 0.0, 0.0])
+    r = np.array([0.5, 1.0, 0.0])
+    pq = q - p
+    pr = r - p
+
+    sqrt_u1 = np.sqrt(u1)
+    s = 1 - sqrt_u1       # barycentric weight for pq edge
+    t = u2 * sqrt_u1      # barycentric weight for pr edge
+
+    x = u1[:, None]*p[None, :] + (u2*(1-u1))[:, None]*q[None, :] + ((1-u1-u2*(1-u1)))[:, None]*r[None, :]
+    p0n = np.column_stack([
+      x[:,0],
+      x[:,1],
+      x[:,2]
+    ])
+
+    # 2D uniform square
+    p0 = np.column_stack([u1, u2, np.zeros(N)])
+
+    # Barycentric parameter space: (s, t) already lives inside unit right triangle
+    p1 = np.column_stack([s, t, np.zeros(N)])
+
+    # Triangle in 3D: p + s*pq + t*pr
+    p2 = p + s[:, None] * pq + t[:, None] * pr
+
+    return [
+        (p0, "2D Uniform Square", lerp),
+        (p1, "Barycentric (s, t)", lerp),
+        (p2, "Triangle", None),
+    ]
+
+show_sampling_animation(make_stages, x_range=(-0.5, 2.0), y_range=(-0.5, 1.5), z_range=(-1, 1))
+```
+-->
+</section>
+<section id="trowbridge-reitz-ggx" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="trowbridge-reitz-ggx">Trowbridge-Reitz (GGX)</h2>
+<p>This is a distribution that is commonly found in microfacet model for BRDF where many of these mathematical models are empirically<a href="#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a> formulated from real lighting data. Also known as normal distribution functions (NDFs)<a href="#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a>, these has been integral to modelling PBR in graphics since the beginning—practically. Specifically, they model the distribution of the direction each microfacets are facing; hence, they indirectly model the specularity of a surface (i.e.., how shiny the surface is). This is why NDFs (and microfacets in general) are widely used since the <em>shineness</em> (specularity) is non-negotiable for PBR (they’re like everywhere in real life). Which only emphasizes the importance in <em>importance sampling</em> (haha get it?). While other parts in the microfacet are equally important for efficient sampling overall, for the sake of the blog, we will only focus on sampling NDF.</p>
+<div class="no-row-height column-margin column-container"><div id="fn23"><p><sup>23</sup>&nbsp;Since GGX has been a very good approximation, most work in rendering has been orthogonal to finding a better BSDF model and is mostly assumed. Most of the time it is finding better sampling methods or as a basis for inverse rendering.</p></div><div id="fn24"><p><sup>24</sup>&nbsp;Normal as in perpendicularity in geometry such as the surface of a triangle, not the normal distribution.</p></div><div id="ref-pharr2023physically" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline">M. Pharr, W. Jakob, and G. Humphreys, <em>Physically based rendering, fourth edition: From theory to implementation</em>. MIT Press, 2023. Available: <a href="https://books.google.ad/books?id=kUtwEAAAQBAJ">https://books.google.ad/books?id=kUtwEAAAQBAJ</a></div>
+</div><div id="fn25"><p><sup>25</sup>&nbsp;NDF does not tell us where the most of the specular reflection happens <em>absolutely</em>, especially in the context of the half-way/middle direction <span class="math inline">\(\mathbf{m}\)</span> and microfacet models for a given incident and outgoing direction. NDF just tells us <em>how fast</em> the reflection should change from perfect-mirror to diffuse as the half-way direction moves away from the surface normal.</p></div></div><p>Throughout the years, there has been many NDF (and proto-NDF) proposals from (chronologically) flat shading, Gouraud shading (think Roblox), Phong shading, Blinn-Phong shading to Beckmann and GGX shading. We will focus on anisotropic GGX paramaterized in spherical coordinates from <span class="citation" data-cites="pharr2023physically"><a href="#ref-pharr2023physically" role="doc-biblioref">[6]</a>, Equation 9.16</span>, which has the distribution of the following<a href="#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a>:</p>
+<p><span class="math display">\[
+D(\mathbf{m}) = D(\theta_m,\phi_m) = \frac{1}{\pi \alpha_x \alpha_y \cos^4 \theta_m \bigg(1 + \tan^2 \theta_m \bigg(\frac{\cos^2 \phi_m}{\alpha_x^2}+\frac{\sin^2 \phi_m}{\alpha^2_y}\bigg)\bigg)^2}
+\]</span></p>
+<p>Remember, <span class="math inline">\(\mathbf{m}\)</span> is the halfway vector between the incident and outgoing direction of radiance. But for our purpose, we can treat sampling <span class="math inline">\(\mathbf{m}\)</span> as over all of the hemisphere. So, how can we move the NDF in the integrand into the sampling (inducing a PDF weight of the same NDF itself)? So far, inverse CDF has been treating us well, and so we can try it here.</p>
+<p>There’s a lot of brute-force trig involved which I defer the derivation to another blog written by “A Graphics Guy’s Note”: <a href="https://agraphicsguynotes.com/posts/sample_anisotropic_microfacet_brdf/">blog link</a>. (I tried (╥‸╥) <span class="tlnd">TL;ND</span>)</p>
+<p>The final sampling method:</p>
+<p><span class="math display">\[
+\begin{align*}
+\phi_m &amp;= \arctan(\frac{\alpha_y}{\alpha_x}\tan(2\pi U_1)) + \begin{cases}
+0 &amp; U_1 \in [0,\frac{1}{4}]  \\
+\pi &amp; U_1 \in (\frac{1}{4},\frac{3}{4}) \\
+2\pi &amp; U_1 \in [\frac{3}{4},1] \\
+\end{cases} \\
+\theta_m &amp;= \arctan{\sqrt{\frac{U_2}{(1-U_2)(\frac{\cos^2(\phi_m)}{\alpha^2_x}+\frac{\sin^2(\phi_m)}{\alpha^2_y})}}} \\
+\end{align*}
+\]</span></p>
+<p>Ensure that <span class="math inline">\(\frac{1}{\alpha_x},\frac{1}{\alpha_y} &gt; 0\)</span> where each of them represents the <em>roughness</em> per-axis. Higher roughness means smoother NDFs (i.e., more diffuse scattering). Play around the roughness values!</p>
+<div>
+<div id="pyodide-5" class="exercise-cell">
+
+</div>
+<script type="pyodide-5-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIG1ha2Vfc3RhZ2VzKE49MjAwKTpcbiAgICB1MSwgdTIgPSBucC5yYW5kb20ucmFuZChOKSwgbnAucmFuZG9tLnJhbmQoTilcblxuICAgIGFscGhhX3gsIGFscGhhX3kgPSAwLjMsIDAuNlxuXG4gICAgIyBVbmlmb3JtIGhlbWlzcGhlcmU6IGNvcyDOuCA9IHUxLCDPhiA9IDLPgCB1MlxuICAgIGNvc191ID0gdTFcbiAgICBzaW5fdSA9IG5wLnNxcnQobnAubWF4aW11bSgxIC0gY29zX3UqKjIsIDApKVxuICAgIHBoaV91ICA9IDIgKiBucC5waSAqIHUyXG4gICAgcF9oZW1pID0gbnAuY29sdW1uX3N0YWNrKFtzaW5fdSAqIG5wLmNvcyhwaGlfdSksIHNpbl91ICogbnAuc2luKHBoaV91KSwgY29zX3VdKVxuXG4gICAgIyBHR1ggz4ZfbTogYXJjdGFuKM6xX3kvzrFfeCDCtyB0YW4oMs+AIFVfMSkpICsgcXVhZHJhbnQgb2Zmc2V0XG4gICAgYW5nbGUgPSAyICogbnAucGkgKiB1MVxuICAgIHBoaV9tID0gbnAuYXJjdGFuKGFscGhhX3kgLyBhbHBoYV94ICogbnAudGFuKGFuZ2xlKSlcbiAgICBwaGlfbSA9IG5wLndoZXJlKHUxIDw9IDAuMjUsIHBoaV9tLFxuICAgICAgICAgICAgbnAud2hlcmUodTEgPD0gMC43NSwgcGhpX20gKyBucC5waSwgcGhpX20gKyAyICogbnAucGkpKVxuXG4gICAgIyBHR1ggzrhfbVxuICAgIGRlbm9tICAgPSAoMSAtIHUyKSAqIChucC5jb3MocGhpX20pKioyIC8gYWxwaGFfeCoqMiArIG5wLnNpbihwaGlfbSkqKjIgLyBhbHBoYV95KioyKVxuICAgIHRoZXRhX20gPSBucC5hcmN0YW4obnAuc3FydChucC5tYXhpbXVtKHUyIC8gZGVub20sIDApKSlcblxuICAgIHNpbl90ICA9IG5wLnNpbih0aGV0YV9tKVxuICAgIGNvc190ICA9IG5wLmNvcyh0aGV0YV9tKVxuICAgIHBfZGlzayA9IG5wLmNvbHVtbl9zdGFjayhbc2luX3QgKiBucC5jb3MocGhpX20pLCBzaW5fdCAqIG5wLnNpbihwaGlfbSksIG5wLnplcm9zKE4pXSlcbiAgICBwX2dneCAgPSBucC5jb2x1bW5fc3RhY2soW3Npbl90ICogbnAuY29zKHBoaV9tKSwgc2luX3QgKiBucC5zaW4ocGhpX20pLCBjb3NfdF0pXG5cbiAgICByZXR1cm4gW1xuICAgICAgICAocF9oZW1pLCBcIlVuaWZvcm0gSGVtaXNwaGVyZVwiLCAgICAgICAgICAgICAgbGVycCksXG4gICAgICAgICMgKHBfZGlzaywgXCJHR1ggRmxhdCBEaXNrXCIsICAgICAgICAgICAgICAgICAgIGxlcnApLFxuICAgICAgICAocF9nZ3gsICBmXCJHR1ggKM6x4oKTPXthbHBoYV94fSwgzrHhtac9e2FscGhhX3l9KVwiLCBOb25lKSxcbiAgICBdXG5cbnNob3dfc2FtcGxpbmdfYW5pbWF0aW9uKG1ha2Vfc3RhZ2VzLCB6X3JhbmdlPSgwLCAxKSkifQ==
+</script>
+</div>
+<!-- First, let us find the normalized NDF $\hat{D}$ by first finding its normalization constant $Z$.
+
+$$
+\begin{align*}
+Z
+&= \int_0^{2\pi}\int_0^{\frac{\pi}{2}} \frac{\sin\theta}{\pi \alpha_x \alpha_y \cos^4 \theta \bigg(1 + \tan^2 \theta \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\theta d\phi \\
+\end{align*}
+&= \int_0^{2\pi}\int_0^{\frac{\pi}{2}} \frac{\sin\theta}{\pi \alpha_x \alpha_y \cos^4 \theta \bigg(1 + \tan^2 \theta \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\theta d\phi \\
+\end{align*}
+$$
+
+Despite the normalized NDF $\hat{D}$ parameterized in spherical coordinates, we still eventually want the sampled direction back in cartesian[^pog3].
+
+$$
+p(\theta_m, \phi_m) = \hat{D}(\mathbf{m}) \sin\theta_m
+$$
+
+<!-- Despite the spherical paramaterization, it is defined over Cartesian measure. We still need the sinphi to convert it into spherical measure for spherical integration. -->
+<!-- Suppose $\mathbf{m}$ is already uniformly sampled on the hemisphere with the RV incline $\theta_m$ and the RV azimuth $\phi_m$ (w.r.t. the surface normal). How can we transform RV from a joint distribution to follow the GGX? -->
+<!-- $\theta_m$ and $\phi_m$ are still connected in a single messy expression and it is unclear how one should *individually* sample these two parameters/variables. We can use the following technique to split the expression. The explanation of the technique will be explained in later sections (e.g., the product of RVs enables individual sampling of RV).
+
+
+$$
+p(\theta_m, \phi_m) = p(\theta_m)p(\phi_m | \theta_m) = \int_0^{2\pi}p(\theta_m, \phi)d\phi \frac{p(\theta_m, \phi_m)}{\int_0^{2\pi}p(\theta_m, \phi)d\phi}
+$$
+
+The idea is that now we have individual densities, we can find their CDFs to find their inverse CDFs *individually*. Importantly, the resulting conditional CDF does what it says: You must sample $\theta_m$ first before plugging it into $\phi_m$'s inverse CDF.
+
+$$
+\begin{align*}
+p(\theta_m)
+&= \int_0^{2\pi}p(\theta_m, \phi)d\phi \\
+&= \int_0^{2\pi}\frac{\sin\theta_m}{\pi \alpha_x \alpha_y \cos^4 \theta_m \bigg(1 + \tan^2 \theta_m \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\phi \\
+&= \frac{\sin\theta_m}{\pi \alpha_x \alpha_y \cos^4 \theta_m} \int_0^{2\pi}\frac{1}{\bigg(1 + \tan^2 \theta_m \bigg(\frac{\cos^2 \phi}{\alpha_x^2}+\frac{\sin^2 \phi}{\alpha^2_y}\bigg)\bigg)^2}d\phi \\
+\end{align*}
+$$ -->
+<!-- ## Henyey-Greenstein
+
+## Von Mises-Fisher (Spherical Gaussians) -->
+<!-- # Exotic Geometries
+
+Obviously, you can always mesh the following objects and run a glorified triangle sampler on them, but where's the elegance in that? And usually the direct methods are faster and simpler (not necessarily easier) than indirect methods like meshing.
+
+## Torus
+
+## Spherical triangles
+
+## Klein bottle
+
+## Möbius Strip
+
+## NURBS -->
+<!-- # Generalized Transformation
+
+After seeing some of these interesting examples on the transformation of simple n-dimensional uniform distribution, we see that we used various techniques to derive the final sampling process. These techniques ranges from inverse CDF to Jacobian (notably we exclude rejection sampling as un-elegant). Can we generalize these techniques to better automate this transformation process?
+
+## Probability Integral Transform
+
+## Rosenblatt Transform
+
+## Measure Transport
+
+# Reconstructing the Transformation
+
+Recall the reason we originally transform the sampling process is to transform the uniform samples into a factor of the Monte-Carlo estimation (up to scale) to reduce its variance to better approximate a value that would've required intractable analytical integration of some given function (e.g., Cook-Torrance BSDF model). Now, what if the function we are given is *unknown* but we have all the necessary estimates/approximate values (e.g., the output value of the integration) to reconstruct the original function? First thing, this is reconstruction/estimation problem which is largely based on heuristics. In other words, whatever we have done in the introduction section no longer applies here, because there is not exact function to find the transformation. `We` can only rely on techniques that are based off of the inverse of the generalize transformation to guide our ways on solving this problem. Second thing, the problem is also different now, instead of giving a known samples of known distribution (e.g., given uniform samples), we are only given known output samples to reconstruct the function that outputs these output samples given some known distribution[^z1].
+
+This is density estimation, distribution learning, and generative modelling. Obviously, this is so different from the original topic but this is a connection that's interesting to see.
+
+[^z1]: In this area, people usually use Gaussian distribution instead of uniform distribution as the *source of randomness*. -->
+</section>
+</section>
+<section id="future-work" class="level1">
+<h1>Future Work</h1>
+<p><span class="tlnd">TL;ND</span></p>
+<p>While it started with ambition to find many interesting ways to sample and understand what <em>density</em> in probability means, the initial naivety on the basics of probability bogged down majority of the time. There’s still much to explore from Henyey-Greenstein and Spherical Gaussians to uniform sampling on weird geometric shapes (if it’s even possible), including sampling 3D gaussians from inverse CDF for locality-preserving transformation. There’s also probability integral transform, Rosenblatt transform, and measure transport with connections to generative modelling. I think it’s mentally quite dangerous to continue being gun-ho on something that has lost the initial novelty (especially when it gets repetitive), so I will leave it here <em>for now</em>.</p>
+<p>I hope those programmatic animations were insightful and fun!</p>
+<p>For future blog:</p>
+<ul>
+<li>There’s practically infinite amount of “basics” to write about. Future blog will likely go over necessary basics that are still interesting (for myself) with an anchor topic on something recent and conceptually interesting</li>
+<li>If a function can be numerically evaluated in a reasonable constant-bounded time (usually directly exposed as a library function), it is closed to me! (e.g., <span class="math inline">\(\text{erf}\)</span> is a closed-form solution because it can be approximated by Taylor series in finite amount of time because of <em>limited</em> precision in practically every computers)</li>
+<li>Very wordy especially on the side notes out of fear of lack of completeness. Future blog will have significantly reduced words and more emphasis on visuals while keeping the side-notes reasonably small (as intended)</li>
+</ul>
+<!-- ```{=html}
+<script>
+(function() {
+  function reflow() {
+    window.dispatchEvent(new Event('resize'));
+  }
+  ['shown.bs.collapse', 'hidden.bs.collapse'].forEach(function(e) {
+    document.addEventListener(e, function() {
+      reflow();
+      setTimeout(reflow, 50);
+      setTimeout(reflow, 200);
+    });
+  });
+})();
+</script>
+``` -->
+
+
+<script type="pyodide-data">
+eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yOC4xL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIiwicGxvdGx5Il19fQ==
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl81ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS01LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzUgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzUsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl80ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS00LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzQgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8zID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzMgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzMsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8yID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0yLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzIgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzIsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoiX3B5b2RpZGVfdmFsdWVfMSA9IHtcbiAgY29uc3QgeyBoaWdobGlnaHRQeXRob24sIGI2NERlY29kZX0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0xLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBldmFsdWF0aW9uIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oe1xuICAgIGlkOiBcInB5b2RpZGUtMS1jb250ZW50c1wiLFxuICAgIGVjaG86IHRydWUsXG4gICAgb3V0cHV0OiB0cnVlXG4gIH0sIGJsb2NrLmF0dHIpO1xuXG4gIC8vIEV2YWx1YXRlIHRoZSBwcm92aWRlZCBQeXRob24gY29kZVxuICBjb25zdCByZXN1bHQgPSBweW9kaWRlT2pzLnByb2Nlc3Moe2NvZGU6IGJsb2NrLmNvZGUsIG9wdGlvbnN9LCB7fSk7XG5cbiAgLy8gRWFybHkgeWllbGQgd2hpbGUgd2Ugd2FpdCBmb3IgdGhlIGZpcnN0IGV2YWx1YXRpb24gYW5kIHJlbmRlclxuICBpZiAob3B0aW9ucy5vdXRwdXQgJiYgIShcIjFcIiBpbiBweW9kaWRlT2pzLnJlbmRlcmVkT2pzKSkge1xuICAgIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XG4gICAgY29uc3Qgc3Bpbm5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XG5cbiAgICBpZiAob3B0aW9ucy5lY2hvKSB7XG4gICAgICAvLyBTaG93IG91dHB1dCBhcyBoaWdobGlnaHRlZCBzb3VyY2VcbiAgICAgIGNvbnN0IHByZUVsZW0gPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwicHJlXCIpO1xuICAgICAgY29udGFpbmVyLmNsYXNzTmFtZSA9IFwic291cmNlQ29kZVwiO1xuICAgICAgcHJlRWxlbS5jbGFzc05hbWUgPSBcInNvdXJjZUNvZGUgcHl0aG9uXCI7XG4gICAgICBwcmVFbGVtLmFwcGVuZENoaWxkKGhpZ2hsaWdodFB5dGhvbihibG9jay5jb2RlKSk7XG4gICAgICBzcGlubmVyLmNsYXNzTmFtZSA9IFwic3Bpbm5lci1ncm93IHNwaW5uZXItZ3Jvdy1zbSBtLTIgcG9zaXRpb24tYWJzb2x1dGUgdG9wLTAgZW5kLTBcIjtcbiAgICAgIHByZUVsZW0uYXBwZW5kQ2hpbGQoc3Bpbm5lcik7XG4gICAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQocHJlRWxlbSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHNwaW5uZXIuY2xhc3NOYW1lID0gXCJzcGlubmVyLWJvcmRlciBzcGlubmVyLWJvcmRlci1zbVwiO1xuICAgICAgY29udGFpbmVyLmFwcGVuZENoaWxkKHNwaW5uZXIpO1xuICAgIH1cblxuICAgIHlpZWxkIGNvbnRhaW5lcjtcbiAgfVxuXG4gIHB5b2RpZGVPanMucmVuZGVyZWRPanNbXCIxXCJdID0gdHJ1ZTtcbiAgeWllbGQgYXdhaXQgcmVzdWx0O1xufVxuIn0seyJjZWxsTmFtZSI6InB5b2RpZGUtcHJlbHVkZSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InB5b2RpZGVPanMgPSB7XG4gIGNvbnN0IHtcbiAgICBQeW9kaWRlRXZhbHVhdG9yLFxuICAgIFB5b2RpZGVFbnZpcm9ubWVudE1hbmFnZXIsXG4gICAgc2V0dXBQeXRob24sXG4gICAgc3RhcnRQeW9kaWRlV29ya2VyLFxuICAgIGI2NERlY29kZSxcbiAgICBjb2xsYXBzZVBhdGgsXG4gIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHN0YXR1c0NvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1zdGF0dXNcIik7XG4gIGNvbnN0IGluZGljYXRvckNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGluZGljYXRvckNvbnRhaW5lci5jbGFzc0xpc3QucmVtb3ZlKFwiZC1ub25lXCIpO1xuXG4gIGxldCBzdGF0dXNUZXh0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKVxuICBzdGF0dXNUZXh0LmNsYXNzTGlzdCA9IFwiZXhlcmNpc2UtbG9hZGluZy1kZXRhaWxzXCI7XG4gIHN0YXR1c1RleHQgPSBzdGF0dXNDb250YWluZXIuYXBwZW5kQ2hpbGQoc3RhdHVzVGV4dCk7XG4gIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5pdGlhbGlzZWA7XG5cbiAgLy8gSG9pc3QgaW5kaWNhdG9yIG91dCBmcm9tIGZpbmFsIHNsaWRlIHdoZW4gcnVubmluZyB1bmRlciByZXZlYWxcbiAgY29uc3QgcmV2ZWFsU3RhdHVzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgLmV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpZiAocmV2ZWFsU3RhdHVzKSB7XG4gICAgcmV2ZWFsU3RhdHVzLnJlbW92ZSgpO1xuICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsID4gLnNsaWRlc1wiKS5hcHBlbmRDaGlsZChyZXZlYWxTdGF0dXMpO1xuICB9XG5cbiAgLy8gTWFrZSBhbnkgcmV2ZWFsIHNsaWRlcyB3aXRoIGxpdmUgY2VsbHMgc2Nyb2xsYWJsZVxuICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKFwiLnJldmVhbCAuZXhlcmNpc2UtY2VsbFwiKS5mb3JFYWNoKChlbCkgPT4ge1xuICAgIGVsLmNsb3Nlc3QoJ3NlY3Rpb24uc2xpZGUnKS5jbGFzc0xpc3QuYWRkKFwic2Nyb2xsYWJsZVwiKTtcbiAgfSlcblxuICAvLyBQeW9kaWRlIHN1cHBsZW1lbnRhbCBkYXRhIGFuZCBvcHRpb25zXG4gIGNvbnN0IGRhdGFDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInB5b2RpZGUtZGF0YVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGI2NERlY29kZShkYXRhQ29udGVudCkpO1xuXG4gIC8vIEdyYWIgbGlzdCBvZiByZXNvdXJjZXMgdG8gYmUgZG93bmxvYWRlZFxuICBjb25zdCBmaWxlc0NvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwidmZzLWZpbGVcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBmaWxlcyA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGZpbGVzQ29udGVudCkpO1xuXG4gIGxldCBweW9kaWRlUHJvbWlzZSA9IChhc3luYyAoKSA9PiB7XG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBQeW9kaWRlYDtcbiAgICBjb25zdCBweW9kaWRlID0gYXdhaXQgc3RhcnRQeW9kaWRlV29ya2VyKGRhdGEub3B0aW9ucyk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6IG1pY3JvcGlwYDtcbiAgICBhd2FpdCBweW9kaWRlLmxvYWRQYWNrYWdlKFwibWljcm9waXBcIik7XG4gICAgY29uc3QgbWljcm9waXAgPSBhd2FpdCBweW9kaWRlLnB5aW1wb3J0KFwibWljcm9waXBcIik7XG4gICAgYXdhaXQgZGF0YS5wYWNrYWdlcy5wa2dzLm1hcCgocGtnKSA9PiAoKSA9PiB7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6ICR7cGtnfWA7XG4gICAgICByZXR1cm4gbWljcm9waXAuaW5zdGFsbChwa2cpO1xuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuICAgIGF3YWl0IG1pY3JvcGlwLmRlc3Ryb3koKTtcblxuICAgIC8vIERvd25sb2FkIGFuZCBpbnN0YWxsIHJlc291cmNlc1xuICAgIGF3YWl0IGZpbGVzLm1hcCgoZmlsZSkgPT4gYXN5bmMgKCkgPT4ge1xuICAgICAgY29uc3QgbmFtZSA9IGZpbGUuc3Vic3RyaW5nKGZpbGUubGFzdEluZGV4T2YoJy8nKSArIDEpO1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyByZXNvdXJjZTogJHtuYW1lfWA7XG4gICAgICBjb25zdCByZXNwb25zZSA9IGF3YWl0IGZldGNoKGZpbGUpO1xuICAgICAgaWYgKCFyZXNwb25zZS5vaykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYENhbid0IGRvd25sb2FkIFxcYCR7ZmlsZX1cXGAuIEVycm9yICR7cmVzcG9uc2Uuc3RhdHVzfTogXCIke3Jlc3BvbnNlLnN0YXR1c1RleHR9XCIuYCk7XG4gICAgICB9XG4gICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuYXJyYXlCdWZmZXIoKTtcblxuICAgICAgLy8gU3RvcmUgVVJMcyBpbiB0aGUgY3dkIHdpdGhvdXQgYW55IHN1YmRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGlmIChmaWxlLmluY2x1ZGVzKFwiOi8vXCIpKSB7XG4gICAgICAgIGZpbGUgPSBuYW1lO1xuICAgICAgfVxuXG4gICAgICAvLyBDb2xsYXBzZSBoaWdoZXIgZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgZmlsZSA9IGNvbGxhcHNlUGF0aChmaWxlKTtcblxuICAgICAgLy8gQ3JlYXRlIGRpcmVjdG9yeSB0cmVlLCBpZ25vcmluZyBcImRpcmVjdG9yeSBleGlzdHNcIiBWRlMgZXJyb3JzXG4gICAgICBjb25zdCBwYXJ0cyA9IGZpbGUuc3BsaXQoJy8nKS5zbGljZSgwLCAtMSk7XG4gICAgICBsZXQgcGF0aCA9ICcnO1xuICAgICAgd2hpbGUgKHBhcnRzLmxlbmd0aCA+IDApIHtcbiAgICAgICAgcGF0aCArPSBwYXJ0cy5zaGlmdCgpICsgJy8nO1xuICAgICAgICB0cnkge1xuICAgICAgICAgIGF3YWl0IHB5b2RpZGUuRlMubWtkaXIocGF0aCk7XG4gICAgICAgIH0gY2F0Y2ggKGUpIHtcbiAgICAgICAgICBpZiAoZS5uYW1lICE9PSBcIkVycm5vRXJyb3JcIikgdGhyb3cgZTtcbiAgICAgICAgICBpZiAoZS5lcnJubyAhPT0gMjApIHtcbiAgICAgICAgICAgIGNvbnN0IGVycm9yVGV4dFB0ciA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5fc3RyZXJyb3IoZS5lcnJubyk7XG4gICAgICAgICAgICBjb25zdCBlcnJvclRleHQgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuVVRGOFRvU3RyaW5nKGVycm9yVGV4dFB0cik7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYEZpbGVzeXN0ZW0gRXJyb3IgJHtlLmVycm5vfSBcIiR7ZXJyb3JUZXh0fVwiLmApO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICAvLyBXcml0ZSB0aGlzIGZpbGUgdG8gdGhlIFZGU1xuICAgICAgdHJ5IHtcbiAgICAgICAgcmV0dXJuIGF3YWl0IHB5b2RpZGUuRlMud3JpdGVGaWxlKGZpbGUsIG5ldyBVaW50OEFycmF5KGRhdGEpKTtcbiAgICAgIH0gY2F0Y2ggKGUpIHtcbiAgICAgICAgaWYgKGUubmFtZSAhPT0gXCJFcnJub0Vycm9yXCIpIHRocm93IGU7XG4gICAgICAgIGNvbnN0IGVycm9yVGV4dFB0ciA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5fc3RyZXJyb3IoZS5lcnJubyk7XG4gICAgICAgIGNvbnN0IGVycm9yVGV4dCA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5VVEY4VG9TdHJpbmcoZXJyb3JUZXh0UHRyKTtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yICR7ZS5lcnJub30gXCIke2Vycm9yVGV4dH1cIi5gKTtcbiAgICAgIH1cbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgUHlvZGlkZSBlbnZpcm9ubWVudCBzZXR1cGA7XG4gICAgYXdhaXQgc2V0dXBQeXRob24ocHlvZGlkZSk7XG5cbiAgICBzdGF0dXNUZXh0LnJlbW92ZSgpO1xuICAgIGlmIChzdGF0dXNDb250YWluZXIuY2hpbGRyZW4ubGVuZ3RoID09IDApIHtcbiAgICAgIHN0YXR1c0NvbnRhaW5lci5wYXJlbnROb2RlLnJlbW92ZSgpO1xuICAgIH1cbiAgICByZXR1cm4gcHlvZGlkZTtcbiAgfSkoKS5jYXRjaCgoZXJyKSA9PiB7XG4gICAgc3RhdHVzVGV4dC5zdHlsZS5jb2xvciA9IFwidmFyKC0tZXhlcmNpc2UtZWRpdG9yLWhsLWVyLCAjQUQwMDAwKVwiO1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBlcnIubWVzc2FnZTtcbiAgICAvL2luZGljYXRvckNvbnRhaW5lci5xdWVyeVNlbGVjdG9yKFwiLnNwaW5uZXItZ3Jvd1wiKS5jbGFzc0xpc3QuYWRkKFwiZC1ub25lXCIpO1xuICAgIHRocm93IGVycjtcbiAgfSk7XG5cbiAgLy8gS2VlcCB0cmFjayBvZiBpbml0aWFsIE9KUyBibG9jayByZW5kZXJcbiAgY29uc3QgcmVuZGVyZWRPanMgPSB7fTtcblxuICBjb25zdCBwcm9jZXNzID0gYXN5bmMgKGNvbnRleHQsIGlucHV0cykgPT4ge1xuICAgIGNvbnN0IHB5b2RpZGUgPSBhd2FpdCBweW9kaWRlUHJvbWlzZTtcbiAgICBjb25zdCBldmFsdWF0b3IgPSBuZXcgUHlvZGlkZUV2YWx1YXRvcihweW9kaWRlLCBjb250ZXh0KTtcbiAgICBhd2FpdCBldmFsdWF0b3IucHJvY2VzcyhpbnB1dHMpO1xuICAgIHJldHVybiBldmFsdWF0b3IuY29udGFpbmVyO1xuICB9XG5cbiAgcmV0dXJuIHtcbiAgICBweW9kaWRlUHJvbWlzZSxcbiAgICByZW5kZXJlZE9qcyxcbiAgICBwcm9jZXNzLFxuICB9O1xufVxuIn1dfQ==
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+
+</section>
+
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../blog";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark_dimmed">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      if (authorPrefersDark) {
+          [baseTheme, altTheme] = [altTheme, baseTheme];
+      }
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "andrew-shc/andrew-shc.github.io";
+    script.dataset.repoId = "R_kgDOMDq5Jg";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOMDq5Js4C2fss";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "bottom";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
