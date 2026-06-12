@@ -6,8 +6,8 @@ subtitle: "Micro Blog: Nature"
 # date-modified: last-modified
 csl: ieee.csl
 format:
-    r-wasm/live-html: 
-      grid: 
+    r-wasm/live-html:
+      grid:
         margin-width: 350px
       pyodide:
         packages: [plotly]
@@ -22,5 +22,58 @@ toc-location: left
 
 <!-- [TL;ND]{.tlnd} -->
 
-TBD
+<!--
+
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+
+Motto for this blog: DO, DONT TELL! (BC TOO WORDY)
+
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+
+ -->
+
+
+Two aspects in rendering realistic clouds:
+
+- Effective sampling of light paths through the participating media (i.e., cloud)
+- Realistic (physically-correct?) simulation of the participating media's geometry, density, etc.
+
+There's many online tutorial that *emulates* the realism of the cloud
+(e.g., Perlin noise, Worley noise), but there's few (none?) that attempts to simulate cloud *more* realistically.
+This blog will primarily be driven on finding THE realistic process that simulates cloud such that
+it is visually correct to clouds you see in day-to-day life. We will specifically look into altocumulus clouds
+in the context of mackerel sky.
+
+<!-- Like who wants to download a model that doesn't even respond to user's assigned environment or interactions? -->
+
+Altocumulus cloud rendering pipeline:
+1. Simulation of cloud dynamics
+2. Obtaining the density field
+3. Volumetric path tracing through the heterogenous medium
+
+# Clouds IRL
+
+<!--
+notes from the book
+
+low clouds either too boring (stratus) or... too boring (cumulus, anvils) as in seen too much
+high clouds feel too distant (cirrus)
+middle clouds balance them appearance-wise and very memorable
+
+1.2.3 middle clouds (pg. 11)
+
+ -->
+
+# Simulating Clouds (2D)
+
+# Simulating Clouds
+
+# Rendering Clouds
+
 

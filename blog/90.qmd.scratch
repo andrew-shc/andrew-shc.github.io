@@ -1,0 +1,27 @@
+---
+title: "AI in Research"
+subtitle: "Full Blog: General"
+# image: ???
+# date: ???
+# date-modified: last-modified
+csl: ieee.csl
+format:
+    r-wasm/live-html: 
+      grid: 
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---
+
+In the post-WWII era with most of its time led under the Cold War, government spurred a huge push for STEM research. Whatever reason it may be, it directly or indirectly brought us NSF, AP exams, NASA, etc. It created a focus on post-secondary education and a push for science in research. It brought us ENIAC. Engineering done via large tables, bright lamps, papers, and pens are later done via software. Computations for orbital trajectories done by hand can later be done with software. What started as niche projects for the government found uses in general public such as internet. Despite the underlying drive for STEM research shifts from government to the general market, STEM research continues chugging all because of inter-government competition.
+
+Imagine you are a 10 year old in the 1950s, you caught a glimpse of "8" from a street sign, "31" from a newspaper, or "47" from a storefront as you walk back home from school. You don't care what these number mean or where they're from, but they are interesting for all you care. You go back home grab a piece of paper and pencil and immediately start listing numbers from 1 to 1000 because you *just* love seeing these numbers. Might've taken the whole afternoon or a few days but you're not satisfied, so you decided to list the numbers up to 10000. Maybe you want to be more adventurous and list a table of values for sine, cosine, or logarithms. When your parents ask you what you want to do in the future? You respond with "I want to be a computer, major in B.S. arithmetic & computations, and maybe do research in all kinds of numbers!" You never thought to ask numbers for what purpose? But, only to satisfy your own obsession.
+
+It's not exactly automation making certain profession like computers obsolete for efficiency and neither technological progress making our lives "easier." It could be people wanting to live happier but, compared to pre-historic Homo Sapiens, are we? In some cases, some civilization *are* happy and satisfied, got complacent, until one day are forced to reckon their realities or just mysteriously disappear. Maybe the question is not to find the answer to everything: It may as well be asking is the red I see the same red you see? Perhaps we have conditioned to see patterns in the history of technological advancement from a range of last 1000s year or a range of the last 70 years---or the last 20 years---to extrapolate what's next? Where is the society going next 100 years? Where are we going in the next 30 years? What should you and I be preparing right now for the next 5 years? W
