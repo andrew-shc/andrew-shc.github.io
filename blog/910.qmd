@@ -2,7 +2,7 @@
 title: "A Stab at RL for Trading"
 subtitle: "Micro Blog: RL"
 # image: ???
-# date: 6-11-2026
+date: 6-26-2026
 # date-modified: last-modified
 csl: ieee.csl
 format:
