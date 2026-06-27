@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>A Stab at RL for Trading</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-30fc45633b0910a22497ea642fc28e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../math-styling.css">
+</head>
+
+<body class="floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#interesting-rl-paradigms" id="toc-interesting-rl-paradigms" class="nav-link active" data-scroll-target="#interesting-rl-paradigms">Interesting RL Paradigms</a>
+  <ul class="collapse">
+  <li><a href="#distributional-rl" id="toc-distributional-rl" class="nav-link" data-scroll-target="#distributional-rl">Distributional RL</a>
+  <ul class="collapse">
+  <li><a href="#fundamental-differences" id="toc-fundamental-differences" class="nav-link" data-scroll-target="#fundamental-differences">Fundamental Differences</a></li>
+  <li><a href="#empirical-representations-of-eta" id="toc-empirical-representations-of-eta" class="nav-link" data-scroll-target="#empirical-representations-of-eta">Empirical Representations of <span class="math inline">\(\eta\)</span></a></li>
+  <li><a href="#risk-sensitive-control" id="toc-risk-sensitive-control" class="nav-link" data-scroll-target="#risk-sensitive-control">Risk-sensitive control</a></li>
+  <li><a href="#statistical-functionals" id="toc-statistical-functionals" class="nav-link" data-scroll-target="#statistical-functionals">Statistical Functionals</a></li>
+  </ul></li>
+  <li><a href="#general-sum-multi-agent-rl-marl" id="toc-general-sum-multi-agent-rl-marl" class="nav-link" data-scroll-target="#general-sum-multi-agent-rl-marl">General-sum Multi-agent RL (MARL)</a>
+  <ul class="collapse">
+  <li><a href="#markov-games-mg" id="toc-markov-games-mg" class="nav-link" data-scroll-target="#markov-games-mg">Markov games (MG)</a></li>
+  <li><a href="#extensive-form-games-efg" id="toc-extensive-form-games-efg" class="nav-link" data-scroll-target="#extensive-form-games-efg">Extensive-form games (EFG)</a></li>
+  <li><a href="#other-game-properties" id="toc-other-game-properties" class="nav-link" data-scroll-target="#other-game-properties">Other game properties</a></li>
+  <li><a href="#mean-field-games-mfg-and-mean-field-marl" id="toc-mean-field-games-mfg-and-mean-field-marl" class="nav-link" data-scroll-target="#mean-field-games-mfg-and-mean-field-marl">Mean-field games (MFG) and mean-field MARL</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications">Applications</a>
+  <ul class="collapse">
+  <li><a href="#portfolio-management" id="toc-portfolio-management" class="nav-link" data-scroll-target="#portfolio-management">Portfolio Management</a></li>
+  <li><a href="#market-making" id="toc-market-making" class="nav-link" data-scroll-target="#market-making">Market Making</a></li>
+  <li><a href="#options-hedging" id="toc-options-hedging" class="nav-link" data-scroll-target="#options-hedging">Options Hedging</a></li>
+  <li><a href="#future-work-tlfw" id="toc-future-work-tlfw" class="nav-link" data-scroll-target="#future-work-tlfw">Future Work <span class="tlnd">TL;FW</span></a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">A Stab at RL for Trading</h1>
+<p class="subtitle lead">Micro Blog: RL</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>FYI: <span class="tlnd">TL;FW: (Taking) too long; (deferred for) future work.</span>.</p>
+<!-- [TL;FW]{.tlnd} -->
+<!-- Since the dawn of humanity, people have always searched for immortality such as the fountain of youth. -->
+<!-- And then there's RL, perfectly existing to satisfy one's obsession in hopes of discovering a generalist, end-to-end -->
+<!-- trading system that profit hands-free. No Free Lunch theorem dies today (for now). -->
+<p>RL is an elegant, theoretical framework that enables concise description of agents that are tightly coupled to its environment (i.e., states) and its actions (i.e., policy). This allows beautiful end-to-end models to be described at a high-level without abstraction; in other words, no hacky engineering needs to be described. However, as the mode of description gets more theoretical and elegant, the more inconsistent and volatile/risky for it to be deployed in reality.</p>
+<p>Nonetheless, there must exist a profitable<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> system that is able to account for non-stationarity and is mostly automated (i.e., minimal intervention needed), and I hypothesize RL is the right language (excluding purely speculative/predictive/directional trading).</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;At worse, it shouldn’t be taking loss (i.e., zero profit).</p></div></div><section id="interesting-rl-paradigms" class="level1 page-columns page-full">
+<h1>Interesting RL Paradigms</h1>
+<p><em>Disclaimer: These are RL ideas that have interesting uses in our situation but will be deferred for future research (probably after deciding to focus on one specific application).</em></p>
+<!-- While these all sound intriguing, we have to remind ourselves what do each paradigms offer? -->
+<!-- New insights? New solutions to the problem? -->
+<p>While the idea of a lifelong automated trader that is completely hands-off sounds awesome <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, there’s many problem to it. Even if non-stationarity is resolved, psychological fear factor makes it rather unappealing to pursue such idea, especially when there are other more practical and theoretically interesting directions to explore in RL. Because pyschological fear factor is so important, Constrained MDP (CMDP), risk-constrained RL, and safe RL are particularly interesting in our case. However, CMDP seems to amortize/average the risk while risk-constrained RL better handles single bad event (e.g., NYSE: AMPY single-day ~50% drop on 2021 Hungtington Beach oil spill). Regardless, this has been explored and prevalent; hence, this will not be looked into in itself as it is practically naturally-occuring at this point.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Continual RL (CRL) / Lifelong RL (LRL) and Meta-RL</p></div></div><p>Just like differentiable rendering is currently actively explored because differentiability is the key enabler for optimizing deep models, stochasticity has grown importance as the framework to describe the model that are optimized on huge amounts of data. While great amounts of RL are already described stochastically, it doesn’t seem to be too far-fetched of an idea to take stochasticity further into the values: <span class="math inline">\(V(s)\)</span> and <span class="math inline">\(Q(s,a)\)</span>. This is <strong>Distributional RL</strong>, and it might be the better way since now the returns can be described stochastically. It incorporates the concept of volatility down to the core of the (PO)MDP, which could allow the model to better consider the risk (i.e., the safety) of the return and actively minimize it.</p>
+<p>Non-stationarity is the problem when trying to extend an algorithmic trader into the future, and it can mostly be explained by <strong>multi-agent RL (MARL)</strong>, especially as we narrow the timescale (e.g., market making). If we let the entire market be represented as a MARL, it would approximately be a zero-sum game that yields competitive MARL. If there are more than 2 agents, Nash equilibrium might not exist and the question becomes how can we let our agent get ahead of other agents in hopes of continuing to profit? What about in the scenario of information asymmetry (e.g., alphas and insider information)? Is the answer something more simple (e.g., just have a faster reaction time)? Can we simulate non-stationarity as competitive MARL to learn non-stationarity in models? Side note: cooperative MARL (and a mix of both) seems to be important also in cases where we want several agents to work together on reducing correlation or some agents working together and some competing against each other.</p>
+<section id="distributional-rl" class="level2">
+<h2 class="anchored" data-anchor-id="distributional-rl">Distributional RL</h2>
+<p><em>Source: <a href="https://www.distributional-rl.org">Distributional Reinforcement Learning (2023)</a></em></p>
+<section id="fundamental-differences" class="level3">
+<h3 class="anchored" data-anchor-id="fundamental-differences">Fundamental Differences</h3>
+<ul>
+<li>State values &amp; rewards:
+<ul>
+<li><u>(Standard) RL</u>:
+<ul>
+<li>As scalar <span class="math inline">\(V(X)\)</span>
+<ul>
+<li>Consequence of having the rewards <span class="math inline">\(r(s,a)\)</span> scalar</li>
+</ul></li>
+</ul></li>
+<li><u>Distributional RL</u>:
+<ul>
+<li>As R.V. <span class="math inline">\(G(X)\)</span>
+<ul>
+<li>Consequence of having the rewards <span class="math inline">\(R(s,a)\)</span> as a R.V.
+<ul>
+<li><strong>This is a modelling assumption rather than an attempt to codify the underlying nature/truth (§1.1)</strong></li>
+</ul></li>
+</ul></li>
+<li>Or, as a distribution itself <span class="math inline">\(\eta(X)\)</span> describing <span class="math inline">\(G(X)\)</span> from a distributional perspective
+<ul>
+<li>Commonly as density (PDF)</li>
+<li>Or, as distribution function (CDF)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Dynamic Programming
+<ul>
+<li><u>(Standard) RL</u>:
+<ul>
+<li>Bellman Equation: <span class="math inline">\(V^\pi(x)=\mathbb{E}_\pi[R + \gamma V^\pi(X') | X=x]\)</span></li>
+</ul></li>
+<li><u>Distributional RL</u>:
+<ul>
+<li>Distributional Bellman Equation: <span class="math inline">\(\eta^\pi(x)=\mathbb{E}_\pi[(b_{R,\gamma})_{\sharp}\eta^\pi (X')|X=x]\)</span>
+<ul>
+<li><span class="math inline">\((\cdot)_\sharp\)</span> is the pushforward measure that transforms one measure in one measurable space to another measurable space
+<ul>
+<li>In the context of distributions and random variables, the key difference compared to the regular transformation <span class="math inline">\(b\)</span> is to ensure normalization. This can be visualized as pushing the distribution curve around without changing its volume underneath the curve (e.g., pressing down a water balloon where the volume stays but the <em>shape</em> is matched to a desired one.)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Operators (allows the analysis of convergence)
+<ul>
+<li><u>(Standard) RL</u>:
+<ul>
+<li>Bellman operator: <span class="math inline">\((T^\pi V)(x):=\mathbb{E}_\pi[R+\gamma V(X') | X=x]\)</span>
+<ul>
+<li><span class="math inline">\(T^\pi\)</span> is a contraction mapping, which means applying <span class="math inline">\(T\)</span> on <span class="math inline">\(V_k\)</span> repeatedly will eventually converge to a value <span class="math inline">\(V^\pi\)</span> (e.g., the fixed point of the mapping) as number of iterations <span class="math inline">\(k\to\infty\)</span>.</li>
+</ul></li>
+</ul></li>
+<li><u>Distributional RL</u>:
+<ul>
+<li>distributional Bellman operator: <span class="math inline">\((\mathcal{T}^\pi\eta)(x):=\mathbb{E}_\pi[(b_{R,\gamma})_{\sharp}\eta (X')|X=x]\)</span>
+<ul>
+<li>If the converged distribution <span class="math inline">\(\eta^\pi\in \mathscr{P}_d(\mathbb{R})\)</span> and the same space <span class="math inline">\(\mathscr{P}_d(\mathbb{R})\)</span> is closed under the distributional Bellman operator <span class="math inline">\(\mathcal{T}^\pi\)</span>, then for any distribution <span class="math inline">\(\eta\in \mathscr{P}_d(\mathbb{R})\)</span> (e.g., the initial <span class="math inline">\(\eta_0\)</span>) can be shown to converge towards <span class="math inline">\(\eta^\pi\)</span> with respect to <span class="math inline">\(\overline{d}\)</span>. (§4.6-.7)
+<ul>
+<li><span class="math inline">\(\mathscr{P}(\mathbb{R})\)</span> is the space of all possible distributions on <span class="math inline">\(\mathbb{R}\)</span> (e.g., the Normal distribution and the exponential distribution)</li>
+<li><span class="math inline">\(d\)</span> is the probability metric that computes the “distance” between two distributions in <span class="math inline">\(\mathscr{P}(\mathbb{R})\)</span>
+<ul>
+<li><span class="math inline">\(\mathcal{l}_p\)</span> and <span class="math inline">\(p\)</span>-Wasserstein are common examples of <span class="math inline">\(d\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\overline{d}\)</span> is the generalization of <span class="math inline">\(d\)</span> to find the upper bound of <span class="math inline">\(d\)</span> for all possible given states in the (PO)MDP</li>
+<li><span class="math inline">\(\mathscr{P}_d(\mathbb{R})\)</span> is a restriction of the space <span class="math inline">\(\mathscr{P}(\mathbb{R})\)</span> where all probability distribution are finite <span class="math inline">\(d\)</span>-metric of each other (i.e., no infinite distance)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Following sub-sections concerns distributional RL specifically.</p>
+</section>
+<section id="empirical-representations-of-eta" class="level3">
+<h3 class="anchored" data-anchor-id="empirical-representations-of-eta">Empirical Representations of <span class="math inline">\(\eta\)</span></h3>
+<p>Before commenting on whether can’t we just use the parameterized representation of <span class="math inline">\(\eta\)</span> with a best-fit simple analytical models like the Normal distribution, the book already talked about this in §5.4. However, it is likely they have not discussed about mixture of distributions (e.g., mixture of Gaussians) but at that point we have to consider the space complexity and whether it brings any more benefit compared to <span class="math inline">\(m\)</span>-categorical representation, <span class="math inline">\(m\)</span>-quantile representation, and <span class="math inline">\(m\)</span>-particle representation.</p>
+<p>All of the aformentioned representations can be abstracted away as some sort of a projection operator <span class="math inline">\(\Pi_\mathscr{F}\)</span> that attempts to represent the continuous distributions <span class="math inline">\(\mathscr{P}(\mathbb{R})\)</span> into a representation <span class="math inline">\(\mathscr{F}\)</span> that is something more workable computationally. <span class="math inline">\(m\)</span>-categorical can be thought of as a histogram, binning each range of the continuous distribution, while <span class="math inline">\(m\)</span>-quantile can be thought of as an extension of the standard quartile (plus the min. and the max.) from 5 numbers to <span class="math inline">\(m\)</span> numbers. We now can succinctly compute the number of iterations to guarantee a convergence within some error.</p>
+<ol type="1">
+<li>Number of iterations <span class="math inline">\(K\)</span> for the projected Bellman operator <span class="math inline">\(\hat{\eta}^\pi = \Pi_\mathscr{F}\mathcal{T}^\pi\hat{\eta}^\pi\)</span> to converge up to <span class="math inline">\(\varepsilon&gt;0\)</span>
+<ul>
+<li>Suppose <span class="math inline">\(\overline{d}(\eta_K,\hat{\eta}^\pi) \leq \varepsilon\)</span> given <span class="math inline">\(K\)</span> iterations.</li>
+<li>We need <span class="math inline">\(K \geq \frac{\log(\frac{1}{\varepsilon})+\log{\overline{d}(\eta_0,\hat{\eta}^\pi)}}{c\log{(\frac{1}{\gamma})}}\)</span> to satisfy the given error <span class="math inline">\(\varepsilon\)</span>
+<ul>
+<li><span class="math inline">\(c\)</span> is some intrinsic constant of the metric <span class="math inline">\(d\)</span></li>
+<li>Full details can be found in Prop. 5.27.</li>
+</ul></li>
+</ul></li>
+<li>Best convergence error for <span class="math inline">\(m\)</span>-categorical representation as <span class="math inline">\(\Pi_C\)</span> (w.r.t. <span class="math inline">\(\overline{\mathcal{l}}_2\)</span>)
+<ul>
+<li>…is <span class="math inline">\(\frac{\overline{\mathcal{l}}_2(\Pi_C \eta^\pi, \eta^\pi)}{1-\gamma^{1/2}}\)</span></li>
+<li>If the converged values <span class="math inline">\(\forall x\in\mathcal{X},\eta^\pi(x)\)</span> are supported on <span class="math inline">\([\theta_1, \theta_m]\)</span>
+<ul>
+<li>We can find a tighter convergence at <span class="math inline">\(\frac{1}{1-\gamma^{1/2}}\frac{\theta_m-\theta_1}{m-1}\)</span></li>
+</ul></li>
+</ul></li>
+<li>Best convergence error for <span class="math inline">\(m\)</span>-quantile representation as <span class="math inline">\(\Pi_Q\)</span> (w.r.t. <span class="math inline">\(\overline{\mathcal{w}}_1\)</span>)
+<ul>
+<li>…is <span class="math inline">\(\frac{3(V_\text{MAX}-V_\text{MIN})}{2m(1-\gamma)}\)</span></li>
+<li>If the initial value <span class="math inline">\(\eta_0\)</span> has a support of <span class="math inline">\([V_\text{MIN}, V_\text{MAX}]\)</span> and iterated via quantile DP
+<ul>
+<li>We can find its convergence over all iterations <span class="math inline">\(k\geq 0\)</span> as <span class="math inline">\(\gamma^k(V_\text{MAX}-V_\text{MIN})+\frac{3(V_\text{MAX}-V_\text{MIN})}{2m(1-\gamma)}\)</span></li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="risk-sensitive-control" class="level3">
+<h3 class="anchored" data-anchor-id="risk-sensitive-control">Risk-sensitive control</h3>
+<p>We have analyzed the evaluation aspect of the (distributional) RL (e.g., the convergence property of the values) and now we move on the control aspect of it: How do we find the policy that best maximizes the objectives given the state(-action) values (i.e., optimal policy)? Going into the meat of distributional RL, how can we find the optimal policy that also minimize the risk of the return?</p>
+<ul>
+<li><u>(Standard) RL</u>
+<ul>
+<li>Risk-neutral control where <span class="math inline">\(\pi^*=\text{argmax}_\pi J(\pi)\)</span>: <span class="math display">\[J(\pi) := \mathbb{E}_\pi\bigg[\sum_{t=0}^\infty \gamma^t r_t \bigg]\]</span></li>
+<li>Risk-sensitive control:
+<ul>
+<li>reward modelling (no theoretical guarantees)</li>
+<li>Constrained MDP (CMDP) (similiar, applies hard constraint)</li>
+<li>etc…</li>
+</ul></li>
+</ul></li>
+<li><u>Distributional RL</u>:
+<ul>
+<li>Risk-neutral control: <span class="math display">\[J(\pi) := \mathbb{E}_\pi\bigg[\sum_{t=0}^\infty \gamma^t R_t\bigg] = \mathbb{E}_\pi\bigg[G^\pi(X_0) \bigg]\]</span></li>
+<li>Risk-sensitive control with risk measure <span class="math inline">\(\rho: \mathscr{P}_\rho(\mathbb{R}) \to [-\infty,\infty)\)</span>: <span class="math display">\[J_\rho(\pi) = \rho\bigg(\sum_{t=0}^\infty \gamma^t R_t\bigg)\]</span>
+<ul>
+<li>Examples of <span class="math inline">\(\rho\)</span>:
+<ul>
+<li>Mean-variance criterion: <span class="math inline">\(\rho^\lambda_\text{MV}(Z):=\mathbb{E}-\lambda\text{Var}(Z)\)</span> where <span class="math inline">\(\lambda &gt; 0\)</span></li>
+<li>Entropic risk (ERM): <span class="math inline">\(\rho^\lambda_\text{ERM}:=-\frac{1}{\lambda}\log\mathbb{E}[e^{-\lambda Z}]\)</span> where <span class="math inline">\(\lambda &gt; 0\)</span></li>
+<li>Value-at-risk (VaR): <span class="math inline">\(\rho^\tau_\text{VaR}(Z)=F^{-1}_Z(\tau)\)</span></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>However, risk-sensitive control generally requires more involved methods to find the optimal policy and sometimes even impossible (i.e., no mathematical guarantees), but we do have an option when our risk measure <span class="math inline">\(\rho\)</span> is <span class="math inline">\(\text{CVaR}\)</span>.</p>
+<p>With <span class="math inline">\(\text{CVaR}\)</span> as our risk measure, optimal policy may be complicated or even impossible to find with a regular state space; we need to introduce additional assumptions. Suppose the rewards are bounded on both sides <span class="math inline">\([R_\text{MIN},R_\text{MAX}]\)</span>, finding the optimal policy is tractable if we assume deterministic, stationary Markov policy with its states augmented with <span class="math inline">\(\mathcal{B}=[V_\text{MIN}, V_\text{MAX}]\)</span>.</p>
+<p><span class="math display">\[
+J_\text{CVaR}(\pi) = \text{CVaR}_\tau\bigg(\sum_{t=0}^\infty \gamma^tR_t\bigg)
+\]</span></p>
+<p>We are given <span class="math inline">\(\text{CVaR}_\tau(Z)=\max_{b\in\mathbb{R}}(b-\tau^{-1}\mathbb{E}[[b-Z]^+])\)</span> from (Eq. 7.23) with <span class="math inline">\(b\)</span> as our desired minimum return. If we re-introduce the maximization over the policy <span class="math inline">\(\pi\)</span> (i.e., standard RL control objective), we get the following where the <span class="math inline">\(\text{CVaR}\)</span> objective jointly optimizes for <span class="math inline">\(b\)</span> and the expected shortfall <span class="math inline">\(\mathbb{E}[[b-G^\pi]^+]\)</span>. The <span class="math inline">\((\cdot)^+\)</span> denotes we filter out any negative values (i.e., we only keep the difference whenever <span class="math inline">\(G^\pi\)</span> falls below the <span class="math inline">\(b\)</span>).</p>
+<p><span class="math display">\[
+\max_\pi J_\text{CVaR}(\pi)=\max_{b\in\mathbb{R}}(b-\tau^{-1}\min_\pi \mathbb{E}[[b-G^\pi]^+])
+\]</span></p>
+<p>Now, we can construct a <strong>risk-sensitive value iteration</strong> method that is based on distributional value iteration (which is based on the standard value iteration). Notationally, it can be described as iterating over the distributional Bellman operator <span class="math inline">\(\eta_{k+1}=\mathcal{T}^{\tilde{\mathcal{G}}}\eta_k\)</span> and extracting the final, approximately optimal policy <span class="math inline">\(\pi_k=\tilde{\mathcal{G}}(\eta_k)\)</span> where <span class="math inline">\(\tilde{\mathcal{G}}\)</span> is the policy derived from greedy rule. Finally, it can be shown that <span class="math inline">\(\pi_k\)</span> satisfies following convergent properties on the expected shortfall and the overall <span class="math inline">\(\text{CVaR}\)</span> objective of the optimal policy control problem on the <span class="math inline">\(k\)</span>th iteration.</p>
+<ul>
+<li>Convergence of expected shortfall
+<ul>
+<li>For all states <span class="math inline">\(x\)</span>, target <span class="math inline">\(b\)</span>, and actions <span class="math inline">\(a\)</span>: <span class="math inline">\(\mathbb{E}[[b-G^{\pi_k}(x,b,a)]^+] \leq \min_\pi \mathbb{E}[[b-G^\pi(X_0,b,a)]^+]+\frac{\gamma^k(V_\text{MAX}-V_\text{MIN})}{1-\gamma}\)</span></li>
+</ul></li>
+<li>Convergence of the overall <span class="math inline">\(\text{CVaR}\)</span> objective
+<ul>
+<li>For some suitable choice of <span class="math inline">\(b_0\)</span>, <span class="math inline">\(J_\text{CVaR}(\pi_k,b_0)\geq \max_b\max_\pi J_\text{CVaR}(\pi,b) - \frac{\gamma^k(V_\text{MAX}-V_\text{MIN})}{\tau(1-\gamma)}\)</span></li>
+</ul></li>
+</ul>
+<p>For both of the above convergence equation, the first term on the RHS is just the theoretically optimal and the more concrete, workable error term are all on the second term. Notice as <span class="math inline">\(k\to\infty\)</span> the error <span class="math inline">\(\varepsilon\to 0\)</span>. Remember, <span class="math inline">\(\gamma\in(0,1)\)</span>.</p>
+</section>
+<section id="statistical-functionals" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-functionals">Statistical Functionals</h3>
+<p>Naturally, when we work with the higher-dimensional distributions instead of the standard expectation, what other functions of the distributions can be used to work within the distributional RL framework? We have seen <span class="math inline">\(\mathbb{E}\)</span> is just a specific kind of distributional RL, and so as <span class="math inline">\(\text{CVaR}\)</span> and other risk measures <span class="math inline">\(\rho\)</span>. All of these attempts to quantify the distribution of return into a single number despite the purpose of distributional RL is to work with the distributions themselves because it is intuitive to think about the objective in scalar terms, although we are no longer limited to the expectation. Are there any other functions that takes the distributions (e.g., <span class="math inline">\(\eta\)</span>) and attempt to quantify it as an objective to be optimized?</p>
+<p>A statistical functional <span class="math inline">\(\psi:\mathscr{P}_\psi(\mathbb{R})\to\mathbb{R}\)</span> abstracts the notion of any mapping that takes a distribution and outputs a scalar description of the distribution (e.g., average/mean/expectation, variance, median, etc.) And yes, we have Statistical Functional Dynamic Programming (SFDP) as a construction to also show the convergence of <span class="math inline">\(\psi\)</span>-based RL. However, we can only show SFDP converges only when it is “Bellman closed”, “imputation strategy is exact”, and <span class="math inline">\(\psi\)</span> is Wasserstein continuous. We show this for the sake of completion, but we won’t discuss the details here as it’s not integral to understand the point of distributional RL overall.</p>
+</section>
+</section>
+<section id="general-sum-multi-agent-rl-marl" class="level2">
+<h2 class="anchored" data-anchor-id="general-sum-multi-agent-rl-marl">General-sum Multi-agent RL (MARL)</h2>
+<p><em>Source: <a href="https://arxiv.org/pdf/1911.10635">Multi-Agent Reinforcement Learning: A Selective Overview of Theories and Algorithms (2021)</a></em></p>
+<p>Remember, we are not trying to model the entire market dynamics, but rather trying to find theories and models that not only better explain the dynamics but are capable to produce better returns than <em>existing</em> solutions. General-sum MARL should inject exciting new insights to develop or apply better algorithms in our case. We will not look into cooperative MARL (unbounded sum) nor competitive MARL (zero/constant-sum) per the following note.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Misconception: Zero-sum environment does not mean zero-sum games
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Suppose <span class="math inline">\(R_1,R_2,\cdots,R_n\)</span> represents each of the <span class="math inline">\(n\)</span> agents’ rewards.</p>
+<p>A competitive <span class="math inline">\(n=2\)</span> game is trivially formulated as <span class="math inline">\(R_1+R_2=0 \implies R_1=-R_2\)</span>. Optimizing in this game just results in maximizing <span class="math inline">\(R_1\)</span> and minimizing <span class="math inline">\(R_2\)</span> (i.e., maximizing <span class="math inline">\(-R_2\)</span>). 2 players competing for a limited resource/reward/return/utility (i.e., zero-sum/constant-sum).</p>
+<p><span class="math display">\[
+\max_{\pi_1} \mathbb{E}[R_1], \max_{\pi_2} \mathbb{E}[R_2] \implies \max_{\pi_1}\min_{\pi_2}\mathbb{E}[R]
+\]</span></p>
+<p>Remember, we assume all <span class="math inline">\(n\)</span> players have a shared reward structure.</p>
+<p>What about competitive <span class="math inline">\(n&gt;2\)</span> game? These are commonly modelled as zero-sum games. While an <span class="math inline">\(n\)</span>-player poker game and <span class="math inline">\(n\)</span>-traders trading at an exchange are all examples of zero-sum environment, we will quickly see how it starts to break down game-theoretically speaking. Let us consider <span class="math inline">\(n=3\)</span>. We have <span class="math inline">\(R_1+R_2+R_3=0 \implies R_1=-R_2-R_3, R_2=-R_1-R_3, R_3=-R_1-R_2\)</span>. If all three are to be simultaneously maximized, how do we optimize it?</p>
+<p>Like this? <span class="math display">\[
+\max_{\pi_1}\min_{\pi_2}\text{maxmin??}_{\pi_3}\mathbb{E}[R]
+\]</span></p>
+<p>It quickly devolves into a mess with unclear optimization goals and proven to be PPAD-complete.</p>
+<p>So what does it mean to be in a <em>fully</em> competitive setting and how does it diverge to what zero-sum environment mean? Zero-sum environment just means zero-sum, but it does not limit the formation of coalition, which contradicts what it means for a game to be fully competitive. A coalition naturally occurs even for 3-players, where 1-player wins and 2-player naturally form a group to share the losses, either inadverdently or intentionally. While there’s probably more to look into <span class="math inline">\(n&gt;2\)</span> fully competitive game, we will focus only on large <span class="math inline">\(n\)</span> mixed setting MARL, where it is neither fully cooperative nor fully competitive (e.g., teams).</p>
+</div>
+</div>
+</div>
+<section id="markov-games-mg" class="level3">
+<h3 class="anchored" data-anchor-id="markov-games-mg">Markov games (MG)</h3>
+<p><em>a.k.a. Stochastic games</em></p>
+<p>In direct generalization of MDP, Markov games are defined as <span class="math inline">\((\mathcal{N}, \mathcal{S}, \{\mathcal{A}^i\}, \mathcal{P}, \{\mathcal{R}^i\}, \gamma)\)</span> where each <span class="math inline">\(i\)</span>th agent of <span class="math inline">\(\mathcal{N}\)</span> has their own actions and their own reward functions while all part of the same environment (i.e., state space). For every <span class="math inline">\(i\)</span>th agent given a joint policy <span class="math inline">\(\pi(a|s):=\prod \pi^i(a^i|s)\)</span>, we simulatenously obtain each agent’s value.</p>
+<p><span class="math display">\[
+V^i_{\pi^i,\pi^{-i}}(s) := \mathbb{E}\bigg[\sum_{t\geq 0} \gamma^t R^i \bigg| a_t^i \sim \pi^i(\cdot|s_t), s_0 = s \bigg]
+\]</span></p>
+<p>where <span class="math inline">\(-i\)</span> is all the agents in <span class="math inline">\(\mathcal{N}\)</span> except the <span class="math inline">\(i\)</span>th agent.</p>
+<p>A big difference between MDP is now the optimal performance of the <span class="math inline">\(i\)</span>th agent has to also include the choices made by other agents <span class="math inline">\(-i\)</span> in its environment.</p>
+<p>Now, why Markov Games? Because it (and other game models) allows us to define solutions we are interested in and analyze various properties of MARL (e.g., existence of convergence, uniqueness of convergence, convergence complexity, etc…). In this case, a popular solution concept we are interested in is Nash equilibrium (NE). For all agents <span class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[
+V^i_{\pi^{i,*},\pi^{-i,*}}(s) \geq V^i_{\pi^i, \pi^{-i,*}}(s)
+\]</span></p>
+<p>Under NE at equilibrium point of <span class="math inline">\(\pi^*\)</span>, for each agent <span class="math inline">\(i\in\mathcal{N}\)</span> and all of it’s states <span class="math inline">\(s\in\mathcal{S}\)</span>, any deviation in its policy (<span class="math inline">\(\pi^i\)</span>) will result in smaller value for any states for all agents assuming <span class="math inline">\(\pi^{{-i},*}\)</span> is optimal. In other words, all of the agents has no incentive to deviate their policy. This means in-production, each agent will follow its own NE-optimal policy that tries to maximize profits and minimize losses fully knowing other agents are also trying to maximize profits and minimize losses against them.</p>
+<p>For the sake of completion, Normal-form games (NFGs) is another well-known kind of game within MG to work with simpler models. Notably, 2-player NFGs can be represented as matrix and solved via linear algebra (e.g., linear programming) to find the Nash equilibrium.</p>
+</section>
+<section id="extensive-form-games-efg" class="level3">
+<h3 class="anchored" data-anchor-id="extensive-form-games-efg">Extensive-form games (EFG)</h3>
+<p>We will not delve into EFG too thoroughly since not much theoretical research has been done on EFG for general-sum setting (let alone MARL). <em>(I don’t know why? And lowkey this is already on the edge of my interest.)</em> Partially observerable Markov/Stochastic game (POSG) has been proposed, but it is even theoretically proven to be strictly more intractable, while EFG at least admits polynomial-time convergence (class P) under “mild conditions.” Yes, EFG is a way to model partial observations (e.g., poker) in game theoretic way, but it seems POSG is more popular in-relation to MARL for some various reasons. <em>(Perhaps its because EFG’s restriction to finite state space, which means the game model must be discrete.)</em></p>
+<p>Tangent: In RL, and especially MARL, we have talked about complexity and convergence issues all the time, but why (un)supervised ML are not plagued with these issues? Recall, when there are multiple agents training against/with each other, it creates a moving target in the environment that causes the gradient-based optimization to take a longer time to reach a solution. Sometimes, there might not even be a fixed-point convergence or it reaches a state where the gradients loops back each other (i.e., intractable and <em>vague description of</em> solutions). This is just one kind of problem and MARL is plagued with many other problems. Who knew trying to model a society can be that hard?</p>
+<p>EFG is defined by <span class="math inline">\((\mathcal{N}\cup\{c\},\mathcal{H},\mathcal{Z},\mathcal{A},\{\mathcal{R}^i\},\tau,\pi^c,\mathcal{S})\)</span>. Check §2.2.2.</p>
+</section>
+<section id="other-game-properties" class="level3">
+<h3 class="anchored" data-anchor-id="other-game-properties">Other game properties</h3>
+<p>MG and EFG (?) are the two dominant frameworks in modelling MARL; these two frameworks are both implemented as a MARL (and its corresponding learning algorithms). The rest of the game models are more niche with their own interesting theoretical properties that augments the aformentioned two: Stackelberg, Linear-quadratic (LQ), Morse-Smale, and Hamiltonian (requires further reading.)</p>
+<!-- ---listed below. -->
+<!---->
+<!-- **Stackelberg games.** -->
+<!---->
+<!-- **Linear-quadratic (LQ) games.** -->
+<!-- A specific MG with quadratic reward (w.r.t. states and actions) and linear dynamics. Its simplicity -->
+<!-- yet properties that breaks intuition of MG (despite being a MG) holds value for theoretical analysis, -->
+<!-- especially in the context of learning algorithms. -->
+<!---->
+<!-- **Morse-Smale (continuous) games.** -->
+<!-- In policy-gradient learning methods, the gradient dynamics follows the game dynamics that allows the use -->
+<!-- of dynamical system theory. -->
+<!---->
+<!-- **Hamiltonian (continuous) games.** -->
+</section>
+<section id="mean-field-games-mfg-and-mean-field-marl" class="level3">
+<h3 class="anchored" data-anchor-id="mean-field-games-mfg-and-mean-field-marl">Mean-field games (MFG) and mean-field MARL</h3>
+<p><em>Source: <a href="https://arxiv.org/pdf/1802.05438">Mean Field Multi-Agent Reinforcement Learning (2020)</a></em></p>
+<p>The motivation for MARL is for some environment (e.g., market dynamics) the non-stationarity can be completely explained by other agents (e.g., market participants). However, this requires omdelling interactions between each agents pair-wise via joint-action space, resulting in non-polynomial (i.e., exponential <span class="math inline">\(|\mathcal{A}|^N\)</span>) scaling for <span class="math inline">\(N\)</span> many agents. MFG is an approximation that allows linear scaling at <span class="math inline">\(2|\mathcal{A}|\)</span> by aggregating all external agents’ effects as an average term: <span class="math inline">\(\mu^i_t\)</span>. Basically, we would be training <span class="math inline">\(n\)</span> single-agent RL with an extra <span class="math inline">\(\mu^i_t\)</span> parameter for the Q-value to incorporate the overall effects from other agents in the environment.</p>
+<p><strong>Mean field approximation.</strong> Suppose the pairwise Q-value <span class="math inline">\(Q^j(s,a^j,a^k)\)</span> is twice-differentiable w.r.t. action <span class="math inline">\(a^k\)</span> where <span class="math inline">\(\mathbf{a}=\begin{bmatrix}a_1 &amp; a_2 &amp; \cdots &amp; a_N \end{bmatrix}^\top\)</span>. Additionally, <span class="math inline">\(a^k=\mu^j+\delta a^{j,k}\)</span> where <span class="math inline">\(\mu^j=\frac{1}{N}\sum_{k=1}^n a^k\)</span>. <span class="math display">\[
+\begin{align}
+Q^j(s,\mathbf{a})
+&amp;\triangleq \frac{1}{N} \sum_{k=1}^N Q^j (s, a^j, a^k) \\
+&amp;= \frac{1}{N} \sum_{k=1}^N \bigg(Q^j (s, a^j, \mu^j) + \nabla_{\mu^j}Q^j(s, a^j, \mu^j)\delta a^{j,k} + \frac{1}{2}\delta a^{j,k} \cdot \nabla^2_{a_*^{j,k}}(s,a^j,a_*^{j,k}) \cdot \delta a^{j,k}\bigg) \\
+&amp;= Q^j (s, a^j, \mu^j) +  \nabla_{\mu^j}Q^j(s, a^j, \mu^j) \bigg( \frac{1}{N} \sum_{k=1}^N \delta a^{j,k} \bigg) + \frac{1}{N}\sum_{k=1}^N R^j_{s,a^j}(a^k)  \\
+&amp;\approx Q^j (s, a^j, \mu^j) \\
+\end{align}
+\]</span> In the first equality, we suppose the Q-function can be approximated via pair-wise factorization. In the second equality, we use 1st order Taylor series with Lagrange remainder <span class="math inline">\(R^j_{s,a^j}\)</span> where <span class="math inline">\(\forall i, a_*^{j,k}[i] \in (\mu^j[i], a^k[i])\)</span>. At the third equality, the 1st-order term disappears due to <span class="math inline">\(\sum_k\delta a^{j,k}=0\)</span>. Finally, the second-order remainder term <span class="math inline">\(R\)</span> can also be dropped since it’s usually many small fluctations near zero that cancels each correlation out between every <span class="math inline">\(a^j\)</span> and <span class="math inline">\(a^k\)</span> pair. However, this second-order remainder approximation remains to be seen if it holds in our case.</p>
+<p><strong>Nash equilibrium convergence.</strong></p>
+<p>Theorem 1 from the source proves the existence of convergence for MFG towards a mean field equilibrium, where every agents’ policy <span class="math inline">\(\pi^i\)</span> is Nash-optimal. We won’t directly look at the proof since it requires concepts of filtration and filtered probability space for stochastic process (requires further reading.) However, we can look at what properties are required to satisfy the convergence:</p>
+<ol type="1">
+<li>Every action-value pair is visited infinitely often and the reward is bounded (i.e., no infinite rewards for a given state-action pair.)</li>
+<li>Agent’s policy is GLIE (greedy at the limit with infinite exploration.)
+<ul>
+<li>Since we need every state-action pair to be visited infinitely often but also require the policy to be greedy eventually. Unless the greedy policy also visits every state-action pair, this condition would still, regardless, be satisfied asymptotically (<span class="math inline">\(t\to\infty\)</span>).</li>
+</ul></li>
+<li>At every time <span class="math inline">\(t\)</span>, a Nash equilibrium exists (as Nash-optimal policy <span class="math inline">\(\pi_*\)</span>) as a global optimum or as a saddle point.
+<ul>
+<li>Empirically, this is not necessary for learning algorithms to converge.</li>
+</ul></li>
+<li>Learning rate <span class="math inline">\(\alpha_t(x)\)</span>: How much to keep the old Q-value versus replacing it with the new Q-value from TD.
+<ul>
+<li><span class="math inline">\(0\leq \alpha_t(x) \leq 1\)</span></li>
+<li><span class="math inline">\(\sum a_t(x)=\infty\)</span></li>
+<li><span class="math inline">\(\sum a_t^2(x)&lt;\infty\)</span>
+<ul>
+<li>An example that satisfies both constraints: Harmonic series.</li>
+</ul></li>
+</ul></li>
+<li>Have finite states (e.g., no continuous states)</li>
+</ol>
+<p>In practice, just have a good learner that explores all options that eventually takes a greedy policy. Popular function approximators like neural networks have self-regularizing properties that should be able to handle “continuous” states—digitally. And, don’t give a state-action pair infinite reward.</p>
+<p>Additional directions of reading near-term:</p>
+<ul>
+<li>partial observability (POMF): <em><a href="https://arxiv.org/pdf/2012.15791">Partially Observable Mean Field Reinforcement Learning (2021)</a></em></li>
+<li>applications in order book simulation and optimal execution: <em><a href="https://arxiv.org/pdf/2006.05574">Multi-Agent Reinforcement Learning in a Realistic Limit Order Book Market Simulation (2020)</a></em></li>
+</ul>
+<!-- ## Continual RL (CRL) -->
+<!---->
+<!-- *Survey: [Towards Continual Reinforcement Learning: A Review and Perspectives (2022)](https://arxiv.org/pdf/2012.13490) | [A Survey of Continual Reinforcement Learning (2026)](https://arxiv.org/pdf/2506.21872)* -->
+<!---->
+<!---->
+<!-- ::: {.callout-note collapse="true"} -->
+<!-- # Raw Notes -->
+<!---->
+<!-- Adjacent subjects: -->
+<!---->
+<!-- * Domain adaptation, transfer in RL, **meta-training/testing/RL**, multi-task RL -->
+<!-- * Representation learning (e.g., compact latent spaces), generalization in RL (RL has an overfitting problem) -->
+<!--   * This is problematic especially in non-stationary MDP (When applying RL algorithms to non-stationary MDP, they tend to be myopic.) -->
+<!---->
+<!-- Non-stationary views: -->
+<!---->
+<!-- * Intrinsically non-stantionary MDPs -->
+<!-- * Partially-observable MDPs (non-stationarity strictly to do unaccounted observations) -->
+<!--   * **MARL** -->
+<!---->
+<!-- Common problems in Continual RL (Lifelong RL): -->
+<!---->
+<!-- * Retrieving relevant info from massive online data stream -->
+<!--   * Rapid adaptation to new tasks -->
+<!-- * Limited/constrained memory (or history) -->
+<!--   * Credit-assignment problem (of history) -->
+<!-- * Quick adaptation (re-learning previously forgotten learned behaviors) -->
+<!-- * Stability-plasticity dilemma & catastrophic forgetting -->
+<!--   * Problematic in supervised learning & episodic RL -->
+<!---->
+<!-- There's also a strong connection between continual RL and pyschology/neuroscience. -->
+<!---->
+<!-- CRL is all about learning a persistent agent on new, time-variant MDP with emphasis on not needing to -->
+<!-- re-train the agent just because it is time-variant (non-stationary). -->
+<!---->
+<!-- + Catastrophic forgetting & knowledge transfer (across time) -->
+<!--   + Quick adaptation -->
+<!-- + Stability-plasticity dilemma -->
+<!-- + Scalability: memory, computation, capacity on tasks -->
+<!-- + Balance between stability, plasticity, scalability -->
+<!---->
+<!-- CRL four main scenarios: -->
+<!-- * Lifelong adaptation -->
+<!-- * Non-stationarity learning -->
+<!-- * Task incremental learning -->
+<!-- * Task-agnostic learning -->
+<!---->
+<!-- It feels like something like the 2D matrix of transformers with quadratic scaling could solve catestrophic -->
+<!-- forgetting which as a big problem pre-GPT era. Honestly, the whole thing feels like it can be solved -->
+<!-- with a big foundation model and some engineering. -->
+<!---->
+<!-- ::: -->
+<!---->
+<!---->
+<!-- ## Meta RL -->
+<!---->
+<!-- *Survey: [A Survey of Meta-Reinforcement Learning](https://arxiv.org/pdf/2301.08028v3)* -->
+<!---->
+<!-- Similiar to continual RL. -->
+<!---->
+<!-- ## Multi-agent RL (MARL) & Markov Games -->
+<!---->
+<!-- *Survey: [Multi-Agent Reinforcement Learning: A Selective Overview of Theories and Algorithms](https://arxiv.org/pdf/1911.10635)* -->
+<!---->
+<!-- ## Distributional RL -->
+<!---->
+<!-- ## CMDP & Risk-constrained RL -->
+<!-- # Sample Cases of Non-Stationary Market Dynamics -->
+<!---->
+<!-- These are some of ideas that I think that are important to understand the non-stationarity of -->
+<!-- market dynamics[^z11] and can also be explicitly described. This is incomplete without realizing -->
+<!-- there are potentially many implicit dynamics that can only be understood through one's own experience -->
+<!-- with the market like intuition (??). -->
+<!---->
+<!-- [^z11]: It could be possible the non-stationarity can be modelled by a stationary distribution (i.e., 1st-order non-stationarity). -->
+<!---->
+<!-- ## Information speed & correlation -->
+<!---->
+<!-- earnings are usually aftermarket, but things like breaking news, whats the time travalled -->
+<!-- when it was first first reported and when the stock market reacted. -->
+<!---->
+<!-- de-tuning from Trump's speech. -->
+<!---->
+<!-- ## Periodic Effects (Pyschology) -->
+<!---->
+<!-- weekly effects (military actions??), daily effects (earnings), annual effects (bear market, economics) -->
+</section>
+</section>
+</section>
+<section id="applications" class="level1 page-columns page-full">
+<h1>Applications</h1>
+<section id="portfolio-management" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="portfolio-management">Portfolio Management</h2>
+<p><em>Baseline Paper (re-implemented<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>): “DDPG-MPT” <a href="https://www.sciencedirect.com/science/article/abs/pii/S095741742300057X">Jang, et al.&nbsp;(2023)</a></em></p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Re-implemented and re-trained models introduces a lot of potential inconsistencies to the original implementation and serves more as a personal learning process.</p></div></div><p><em>Data: FMP 5-minute interval index price (GSPC and others) over a 5-year period</em></p>
+<p>Despite the high citation of this source, it has some questionable formatting and is also closed-source (i.e., poorly written). Regardless, this will be our first end-to-end trial run from modelling an end-to-end RL system, collecting data, and evaluating (e.g., backtesting). Loosely following the paper<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, the general specification of our pipeline is as follow:</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Honestly, the more I read the source the more I’m mildly infuriated how a paper cited this many time can be this poorly written. Someone please englighten me what am I missing here.</p></div></div><ol type="1">
+<li>Closing price &amp; technical indicators
+<ul>
+<li><span class="math inline">\(\mathbf{V}_t^i = \begin{bmatrix} \mathbf{V}_t^\text{C} &amp; \mathbf{V}_t^\text{MA} &amp; \mathbf{V}_t^\text{RSI} &amp; \mathbf{V}_t^\text{MACD} \end{bmatrix}_i \in \mathbb{R}^{4\times n \times m}\)</span></li>
+<li><em>Via <a href="https://github.com/ta-lib/ta-lib-python">TA-Lib</a></em></li>
+<li>MACD is just difference between two EMAs at different lookback periods</li>
+<li>RSI just computes the overall effect of aggregated up movements separately from the down movements</li>
+</ul></li>
+<li>Rolling correlation features
+<ul>
+<li><span class="math inline">\(\textbf{Cor}_t^i = \begin{bmatrix} \textbf{Cor}_t^\text{C} &amp; \textbf{Cor}_t^\text{MA} &amp; \textbf{Cor}_t^\text{RSI} &amp; \textbf{Cor}_t^\text{MACD} \end{bmatrix}_i \in \mathbb{R}^{4\times n \times n}\)</span></li>
+</ul></li>
+<li>Key contributions in the source’s actor (e.g., policy) model <span class="math inline">\(\mu\)</span>
+<ul>
+<li>Fused “multi-modal” tensor: <span class="math inline">\(\mathbf{F}^{i,n}_t = \mathbf{V}^{i,n}_t [\textbf{Cor}_t^{i,n}]^\top \in \mathbb{R}^{m\times n}\)</span>
+<ul>
+<li><span class="math inline">\(\mathbf{V}^{i,n}_t \in \mathbb{R}^{m\times 1}\)</span></li>
+<li><span class="math inline">\([\textbf{Cor}_t^{i,n}]^\top \in \mathbb{R}^{1\times n}\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\mathbf{G}_t = \text{Conv3D}(\mathbf{F}_t) \in \mathbb{R}^{32\times n \times (m-2) \times n}\)</span></li>
+<li>Tucker decomposition: <span class="math inline">\(G_t \approx \mathcal{T} \times_1 U_1 \times_2 U_2 \times_3 U_3 \times_4 U_4\)</span>
+<ul>
+<li>Extract <span class="math inline">\(\mathcal{T}\in \mathbb{R}^{R_1\times R_2\times R_3\times R_4}\)</span></li>
+<li><em>Via <a href="https://github.com/tensorly/tensorly">tensorly</a></em></li>
+</ul></li>
+</ul></li>
+<li>DDPG (<em>Based on <a href="https://github.com/vwxyzjn/cleanrl">CleanRL</a></em>)
+<ul>
+<li><span class="math inline">\(\mathcal{S}:=\mathcal{A} \times \mathcal{V} \times \mathcal{C} = \mathbb{R}^{n+1} \times \mathbb{R}^{4\times n\times m} \times \mathbb{R}^{4 \times n \times n}\)</span>
+<ul>
+<li><span class="math inline">\(\mathcal{A}\)</span> is the action space represented as the current, normalized weights on all <span class="math inline">\(n\)</span> assets and cash</li>
+<li><span class="math inline">\(\mathcal{V}\)</span> is the value space based on <span class="math inline">\(\mathbf{V}_t\)</span> for each technical indicators (TI) and the closing price (not state value <span class="math inline">\(V\)</span> for model-based RL)</li>
+<li><span class="math inline">\(\mathcal{C}\)</span> is the correlation space based on <span class="math inline">\(\textbf{Cor}_t\)</span> for each TI and the closing price</li>
+</ul></li>
+<li><span class="math inline">\(\mathcal{A}:=\mathbb{R}^{n+1}\)</span> for the new weights (e.g., if the weights increase for a certain asset, we buy more of that asset)</li>
+<li><span class="math inline">\(\displaystyle r_t=\ln\frac{v_{t}}{v_{t-1}}+c\sum_{i=1}^{n+1} \max{(w_{i,t-1}-w_{i,t}, 0)}\cdot v_{t-1}\)</span>
+<ul>
+<li><span class="math inline">\(v_t = \mathbf{w}_t^\top \cdot \mathbf{p}_t\)</span></li>
+</ul></li>
+</ul></li>
+<li>Experiments &amp; Evaluations
+<ul>
+<li>Hyperparam tuning: <a href="https://github.com/optuna/optuna">optuna</a></li>
+<li>Comprehensive backtestester (comprehensive metrics): <a href="https://github.com/ranaroussi/quantstats">quantstats</a></li>
+<li>Another comprehensive backtester (interactivity): <a href="https://github.com/polakowo/vectorbt">vectorbt</a></li>
+</ul></li>
+</ol>
+<!-- Process visualized:
+
+1. Animated asset allocation pie chart
+2. Top 10 correlation matrix animated with stock price shown on the side of their respective ticker
+3. Animated the % return over time
+4. Animate top 10 changes in delta ratios for re-allocating asset weights as a dynamic list
+
+Backtesting:
+
+1. Backtesting over the approximate SPY ETF with Sharpe ratios, MDD, fAPV, and other metrics
+2. with a sample return trajectory visualized -->
+<!-- ::: {.callout-note} -->
+<!-- # Misc. -->
+<!---->
+<!-- It will be interesting if I do a paper monitoring on the portfolio (~one month) based on S&P 500 and do -->
+<!-- a follow-up. -->
+<!-- ::: -->
+<!---->
+<p><span class="tlnd">TL;FW</span></p>
+</section>
+<section id="market-making" class="level2">
+<h2 class="anchored" data-anchor-id="market-making">Market Making</h2>
+<p><em>Baseline Paper (re-implemented): “IMM” <a href="https://www.ijcai.org/proceedings/2024/0663.pdf">Niu, et al.&nbsp;(2023)</a></em></p>
+<p><em>Data: <a href="https://php.lobsterdata.com/info/DataSamples.php">LOBSTER sample</a></em></p>
+<p>Because of vague descriptions of the exact input features from the source (intentionally?), we decided to redefine what they are and train them on assets that have more accessible data (e.g., common stocks). It would be interesting to do some ablation study on their components again to see how resilient their framework is.</p>
+<p>Defining our own state space <span class="math inline">\(\mathbf{s}_t = (\mathbf{s}^m_t,\mathbf{s}^s_t,\mathbf{s}^p_t)\)</span> for our MDP:</p>
+<ul>
+<li>Private (trader) variables <span class="math inline">\(\mathbf{s}^p_t\)</span>
+<ul>
+<li>Net inventory: <span class="math inline">\(z_t\)</span></li>
+<li>Queue position per level <span class="math inline">\(i\)</span>: <span class="math inline">\(q^i_t\)</span></li>
+<li>Agent volumes per level <span class="math inline">\(i\)</span>: <span class="math inline">\(v^i_t\)</span></li>
+<li>Time remaining (normalized): <span class="math inline">\(\tau_t\)</span>
+<ul>
+<li>Episode length</li>
+<li>Day length (seems to be very common for most MMs to liquidate EOD and avoid holding overnight)</li>
+</ul></li>
+<li>Realized PnL (normalized): <span class="math inline">\(\Phi_t\)</span></li>
+<li>Unrealized PnL: <span class="math inline">\(\Psi_t\)</span></li>
+<li>Last filled bid volume: <span class="math inline">\(b_t\)</span></li>
+<li>Last filled ask volume: <span class="math inline">\(a_t\)</span></li>
+<li>Reference price staleness: <span class="math inline">\(d=|\tilde{p}^\text{ref}_t - p^\text{ref}_t|\)</span></li>
+</ul></li>
+<li>(Latent) market variables <span class="math inline">\(\mathbf{s}^m_t\)</span> (<span class="math inline">\(F\)</span> features and <span class="math inline">\(L\)</span> ticks)
+<ul>
+<li>Derived from <span class="math inline">\(\text{TCSA}(\mathbf{x}) \in \mathbb{R}^{F'}\)</span></li>
+<li>Noisy market data <span class="math inline">\(\mathbf{x} \in \mathbb{R}^{F\times L}\)</span>
+<ul>
+<li>LOB snapshot: 10-depth LOB (prices and sizes at each level for bid &amp; ask sides)</li>
+<li>1/5/10-min lookback: 10-depth LOB at closing, mid-price OHLC, number of transactions, total volume, order flow (buy - sell volumes), VWAP</li>
+</ul></li>
+</ul></li>
+<li>(Predictive) signal variables <span class="math inline">\(\mathbf{s}^s_t\)</span>
+<ul>
+<li><span class="math inline">\(\begin{bmatrix} y^{20} &amp; y^{120} &amp; y^{240} &amp; y^{600} \end{bmatrix} = \text{SL}(\mathbf{x})\)</span></li>
+<li>Each <span class="math inline">\(y^h\in \{-1,0,1\}\)</span> refers to a simple, (ordinal) categorical prediction of the future price movement given time period <span class="math inline">\(h\)</span></li>
+<li>Labels are merely future states (i.e., predictive model) of the same input stream
+<ul>
+<li><span class="math inline">\(y^h=\begin{cases} +1 &amp; \frac{p_{t+h}-p_t}{p_t} &gt; \varepsilon \\ -1 &amp;  \frac{p_{t+h}-p_t}{p_t} &lt; -\varepsilon  \\ 0 &amp; \text{otherwise} \end{cases}\)</span></li>
+<li>Where epsilon is the one-sided spread (i.e., half of the spread which is double-sided) averaged to the period <span class="math inline">\(h\)</span></li>
+</ul></li>
+</ul></li>
+</ul>
+<!-- Process visualized:
+
+1. Animated LOB environment with the current auto MM's placed order with market order flow visualized (MO buy/sell)
+2. Currently predicted signal variables from the SL
+
+Backtesting:
+
+1. Tabular metrics: EPnL, MAP, PnLMAP, #T, SR
+2. inventory process
+3. sample trajectory of the return -->
+<p><span class="tlnd">TL;FW</span></p>
+</section>
+<section id="options-hedging" class="level2">
+<h2 class="anchored" data-anchor-id="options-hedging">Options Hedging</h2>
+<p><em>Baseline Paper (re-implemented): “D4PG-QR” <a href="https://arxiv.org/pdf/2205.05614">Cao, et al.&nbsp;(2022)</a></em></p>
+<p><em>Data: model simulation via <a href="https://www.deriscope.com/docs/Hagan_2002.pdf">SABR</a>/GBM</em></p>
+<p>Basically, D4PG is distributed and distributional (categorical-based C51) DDPG applied to robotics when simulation is slow. The source just strip the distributed portion since the simulation is fast and replaced the categorical-based distributional representation with quantiles—hence, quantile regression (-QR). (If anyone is wondering, D4PG existed before any distributional DDPG did, but distributional DQN did exist.)</p>
+<p>Also, before commenting how we are emphasizing too much on the methodology, it is fun and interesting to see how various components are integrated together to improve performance while the point of this paper is to clearly show how hedging against vega and gamma can be exploited to maximize return when delta is heavily constrained either from federal regulation or internal institutional rules.</p>
+<p>As with any papers regarding financial derivatives (case in point: options), hedging is an important topic and risk management even more so. A common risk objective is VaR (value at risk) and CVaR (conditional value at risk) which is conveniently defined on the CDF (i.e., percentiles/quantiles). And guess what, distributional RL has just the right, precise tool for this: quantile representation for the distributionals. However, to understand how to natively manipulate quantiles, we either have to defer back to reading the book or look at the QR-DQN. Due to limited time, this will be sidelined for further reading.</p>
+<!-- Process visualized:
+
+1.
+
+Backtesting:
+
+1.
+ -->
+<!---->
+<!-- ::: {.callout-note} -->
+<!-- # Misc. -->
+<!---->
+<!-- ::: -->
+<!---->
+<p><span class="tlnd">TL;FW</span></p>
+</section>
+<section id="future-work-tlfw" class="level2">
+<h2 class="anchored" data-anchor-id="future-work-tlfw">Future Work <span class="tlnd">TL;FW</span></h2>
+<p>The scope for this blog/note was way too wide. Individual experiments and conceptual visualization will have to be done at a later time.</p>
+<p><del>It will be interesting to do a follow-up on paper monitoring on the portfolio optimization for about a month. Other than that, more realistic backtesting and paper monitoring on other two would also be interesting instead of just focusing on model development and training. In practice, it would also be interesting to evaluate how well custom end-to-end RL models work against public SL-based methods.</del></p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../blog";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark_dimmed">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      if (authorPrefersDark) {
+          [baseTheme, altTheme] = [altTheme, baseTheme];
+      }
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "andrew-shc/andrew-shc.github.io";
+    script.dataset.repoId = "R_kgDOMDq5Jg";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOMDq5Js4C2fss";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "bottom";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

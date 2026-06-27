@@ -1,0 +1,663 @@
+---
+title: "A Stab at RL for Trading"
+subtitle: "Micro Blog: RL"
+# image: ???
+# date: 6-11-2026
+# date-modified: last-modified
+csl: ieee.csl
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---
+
+FYI: [TL;FW: (Taking) too long; (deferred for) future work.]{.tlnd}.
+
+<!-- [TL;FW]{.tlnd} -->
+
+<!-- Since the dawn of humanity, people have always searched for immortality such as the fountain of youth. -->
+<!-- And then there's RL, perfectly existing to satisfy one's obsession in hopes of discovering a generalist, end-to-end -->
+<!-- trading system that profit hands-free. No Free Lunch theorem dies today (for now). -->
+
+RL is an elegant, theoretical framework that enables concise description of agents that are tightly
+coupled to its environment (i.e., states) and its actions (i.e., policy). This allows beautiful
+end-to-end models to be described at a high-level without abstraction; in other words, no hacky engineering
+needs to be described. However, as the mode of description gets more theoretical and elegant, the more inconsistent and volatile/risky
+for it to be deployed in reality.
+
+Nonetheless, there must exist a profitable[^1] system that is able to account for non-stationarity and is mostly automated (i.e., minimal intervention needed),
+and I hypothesize RL is the right language (excluding purely speculative/predictive/directional trading).
+
+[^1]: At worse, it shouldn't be taking loss (i.e., zero profit).
+
+# Interesting RL Paradigms
+
+*Disclaimer: These are RL ideas that have interesting uses in our situation but will be deferred
+for future research (probably after deciding to focus on one specific application).*
+
+<!-- While these all sound intriguing, we have to remind ourselves what do each paradigms offer? -->
+<!-- New insights? New solutions to the problem? -->
+
+While the idea of a lifelong automated trader
+that is completely hands-off sounds awesome [^og1], there's many problem to it. Even if non-stationarity
+is resolved, psychological fear factor makes it rather unappealing to pursue such idea, especially when there are
+other more practical and theoretically interesting directions to explore in RL. Because pyschological fear factor is so important,
+Constrained MDP (CMDP), risk-constrained RL, and safe RL are particularly interesting in our case. However,
+CMDP seems to amortize/average the risk while risk-constrained RL better handles single bad event (e.g., NYSE: AMPY single-day ~50% drop on 2021 Hungtington Beach oil spill).
+Regardless, this has been explored and prevalent; hence, this will not be looked into in itself as it
+is practically naturally-occuring at this point.
+
+Just like differentiable rendering is currently actively explored because differentiability is the key
+enabler for optimizing deep models, stochasticity has grown importance as the framework to describe the model
+that are optimized on huge amounts of data. While great amounts of RL are already described stochastically,
+it doesn't seem to be too far-fetched of an idea to take stochasticity further into the values: $V(s)$ and $Q(s,a)$.
+This is **Distributional RL**, and it might be the better way since now the returns can be described stochastically.
+It incorporates the concept of volatility down to the core of the (PO)MDP, which could allow the model
+to better consider the risk (i.e., the safety) of the return and actively minimize it.
+
+Non-stationarity is the problem when trying to extend an algorithmic trader into the future, and it can
+mostly be explained by **multi-agent RL (MARL)**, especially as we narrow the timescale (e.g., market making).
+If we let the entire market be represented as a MARL, it would approximately be a zero-sum game that yields
+competitive MARL. If there are more than 2 agents, Nash equilibrium might not exist and the question becomes
+how can we let our agent get ahead of other agents in hopes of continuing to profit? What about in the scenario of information asymmetry (e.g., alphas and insider information)?
+Is the answer something more simple (e.g., just have a faster reaction time)? Can we simulate non-stationarity
+as competitive MARL to learn non-stationarity in models? Side note: cooperative MARL (and a mix of both) seems to be important also in cases
+where we want several agents to work together on reducing correlation or some agents working together and some competing against each other.
+
+[^og1]: Continual RL (CRL) / Lifelong RL (LRL) and Meta-RL
+
+## Distributional RL
+
+*Source: [Distributional Reinforcement Learning (2023)](https://www.distributional-rl.org)*
+
+### Fundamental Differences
+
+* State values & rewards:
+  * [(Standard) RL]{.underline}:
+    * As scalar $V(X)$
+      * Consequence of having the rewards $r(s,a)$ scalar
+  * [Distributional RL]{.underline}:
+    * As R.V. $G(X)$
+      * Consequence of having the rewards $R(s,a)$ as a R.V.
+        * **This is a modelling assumption rather than an attempt to codify the underlying nature/truth (§1.1)**
+    * Or, as a distribution itself $\eta(X)$ describing $G(X)$ from a distributional perspective
+      * Commonly as density (PDF)
+      * Or, as distribution function (CDF)
+* Dynamic Programming
+  * [(Standard) RL]{.underline}:
+    * Bellman Equation: $V^\pi(x)=\mathbb{E}_\pi[R + \gamma V^\pi(X') | X=x]$
+  * [Distributional RL]{.underline}:
+    * Distributional Bellman Equation: $\eta^\pi(x)=\mathbb{E}_\pi[(b_{R,\gamma})_{\sharp}\eta^\pi (X')|X=x]$
+      * $(\cdot)_\sharp$ is the pushforward measure that transforms one measure in one measurable space to another measurable space
+        * In the context of distributions and random variables, the key difference compared to the regular transformation $b$ is to
+ensure normalization. This can be visualized as pushing the distribution curve around without changing its volume underneath the
+curve (e.g., pressing down a water balloon where the volume stays but the *shape* is matched to a desired one.)
+* Operators (allows the analysis of convergence)
+  * [(Standard) RL]{.underline}:
+    * Bellman operator: $(T^\pi V)(x):=\mathbb{E}_\pi[R+\gamma V(X') | X=x]$
+      * $T^\pi$ is a contraction mapping, which means applying $T$ on $V_k$ repeatedly will eventually converge to
+a value $V^\pi$ (e.g., the fixed point of the mapping) as number of iterations $k\to\infty$.
+  * [Distributional RL]{.underline}:
+    * distributional Bellman operator: $(\mathcal{T}^\pi\eta)(x):=\mathbb{E}_\pi[(b_{R,\gamma})_{\sharp}\eta (X')|X=x]$
+      * If the converged distribution $\eta^\pi\in \mathscr{P}_d(\mathbb{R})$ and the same space $\mathscr{P}_d(\mathbb{R})$
+is closed under the distributional Bellman operator $\mathcal{T}^\pi$, then for any distribution $\eta\in \mathscr{P}_d(\mathbb{R})$ (e.g., the initial $\eta_0$)
+can be shown to converge towards $\eta^\pi$ with respect to $\overline{d}$. (§4.6-.7)
+        * $\mathscr{P}(\mathbb{R})$ is the space of all possible distributions on $\mathbb{R}$ (e.g., the Normal distribution and the exponential distribution)
+        * $d$ is the probability metric that computes the "distance" between two distributions in $\mathscr{P}(\mathbb{R})$
+          * $\mathcal{l}_p$ and $p$-Wasserstein are common examples of $d$
+        * $\overline{d}$ is the generalization of $d$ to find the upper bound of $d$ for all possible given states in the (PO)MDP
+        * $\mathscr{P}_d(\mathbb{R})$ is a restriction of the space $\mathscr{P}(\mathbb{R})$ where all probability distribution are finite $d$-metric of each other (i.e., no infinite distance)
+
+
+Following sub-sections concerns distributional RL specifically.
+
+### Empirical Representations of $\eta$
+
+Before commenting on whether can't we just use the parameterized representation of $\eta$ with a best-fit simple analytical models like the Normal distribution,
+the book already talked about this in §5.4. However, it is likely they have not discussed about
+mixture of distributions (e.g., mixture of Gaussians) but at that point we have to consider the space complexity and whether it brings any more benefit compared
+to $m$-categorical representation, $m$-quantile representation, and $m$-particle representation.
+
+All of the aformentioned representations can be abstracted away as some sort of a projection operator $\Pi_\mathscr{F}$
+that attempts to represent the continuous distributions $\mathscr{P}(\mathbb{R})$ into a representation $\mathscr{F}$
+that is something more workable computationally. $m$-categorical can be thought of as a histogram, binning
+each range of the continuous distribution, while $m$-quantile can be thought of as an extension of
+the standard quartile (plus the min. and the max.) from 5 numbers to $m$ numbers. We now can succinctly
+compute the number of iterations to guarantee a convergence within some error.
+
+1. Number of iterations $K$ for the projected Bellman operator $\hat{\eta}^\pi = \Pi_\mathscr{F}\mathcal{T}^\pi\hat{\eta}^\pi$ to converge up to $\varepsilon>0$
+    * Suppose $\overline{d}(\eta_K,\hat{\eta}^\pi) \leq \varepsilon$ given $K$ iterations.
+    * We need $K \geq \frac{\log(\frac{1}{\varepsilon})+\log{\overline{d}(\eta_0,\hat{\eta}^\pi)}}{c\log{(\frac{1}{\gamma})}}$ to satisfy the given error $\varepsilon$
+        * $c$ is some intrinsic constant of the metric $d$
+        * Full details can be found in Prop. 5.27.
+2. Best convergence error for $m$-categorical representation as $\Pi_C$ (w.r.t. $\overline{\mathcal{l}}_2$)
+    * ...is $\frac{\overline{\mathcal{l}}_2(\Pi_C \eta^\pi, \eta^\pi)}{1-\gamma^{1/2}}$
+    * If the converged values $\forall x\in\mathcal{X},\eta^\pi(x)$ are supported on $[\theta_1, \theta_m]$
+        * We can find a tighter convergence at $\frac{1}{1-\gamma^{1/2}}\frac{\theta_m-\theta_1}{m-1}$
+3. Best convergence error for $m$-quantile representation as $\Pi_Q$ (w.r.t. $\overline{\mathcal{w}}_1$)
+    * ...is $\frac{3(V_\text{MAX}-V_\text{MIN})}{2m(1-\gamma)}$
+    * If the initial value $\eta_0$ has a support of $[V_\text{MIN}, V_\text{MAX}]$ and iterated via quantile DP
+        * We can find its convergence over all iterations $k\geq 0$ as $\gamma^k(V_\text{MAX}-V_\text{MIN})+\frac{3(V_\text{MAX}-V_\text{MIN})}{2m(1-\gamma)}$
+
+
+### Risk-sensitive control
+We have analyzed the evaluation aspect of the (distributional) RL (e.g., the convergence property of the values) and now
+we move on the control aspect of it: How do we find the policy that best maximizes the objectives
+given the state(-action) values (i.e., optimal policy)? Going into the meat of distributional RL,
+how can we find the optimal policy that also minimize the risk of the return?
+
+* [(Standard) RL]{.underline}
+  * Risk-neutral control where $\pi^*=\text{argmax}_\pi J(\pi)$: $$J(\pi) := \mathbb{E}_\pi\bigg[\sum_{t=0}^\infty \gamma^t r_t \bigg]$$
+  * Risk-sensitive control:
+    * reward modelling (no theoretical guarantees)
+    * Constrained MDP (CMDP) (similiar, applies hard constraint)
+    * etc...
+* [Distributional RL]{.underline}:
+  * Risk-neutral control: $$J(\pi) := \mathbb{E}_\pi\bigg[\sum_{t=0}^\infty \gamma^t R_t\bigg] = \mathbb{E}_\pi\bigg[G^\pi(X_0) \bigg]$$
+  * Risk-sensitive control with risk measure $\rho: \mathscr{P}_\rho(\mathbb{R}) \to [-\infty,\infty)$: $$J_\rho(\pi) = \rho\bigg(\sum_{t=0}^\infty \gamma^t R_t\bigg)$$
+    * Examples of $\rho$:
+      * Mean-variance criterion: $\rho^\lambda_\text{MV}(Z):=\mathbb{E}-\lambda\text{Var}(Z)$ where $\lambda > 0$
+      * Entropic risk (ERM): $\rho^\lambda_\text{ERM}:=-\frac{1}{\lambda}\log\mathbb{E}[e^{-\lambda Z}]$ where $\lambda > 0$
+      * Value-at-risk (VaR): $\rho^\tau_\text{VaR}(Z)=F^{-1}_Z(\tau)$
+
+However, risk-sensitive control generally requires more involved methods to find the optimal policy and sometimes
+even impossible (i.e., no mathematical guarantees), but we do have an option when our risk measure $\rho$ is $\text{CVaR}$.
+
+With $\text{CVaR}$ as our risk measure, optimal policy may be complicated or even impossible
+to find with a regular state space; we need to introduce additional assumptions. Suppose the rewards are bounded
+on both sides $[R_\text{MIN},R_\text{MAX}]$, finding the optimal policy is tractable if we assume
+deterministic, stationary Markov policy with its states augmented with $\mathcal{B}=[V_\text{MIN}, V_\text{MAX}]$.
+
+$$
+J_\text{CVaR}(\pi) = \text{CVaR}_\tau\bigg(\sum_{t=0}^\infty \gamma^tR_t\bigg)
+$$
+
+We are given $\text{CVaR}_\tau(Z)=\max_{b\in\mathbb{R}}(b-\tau^{-1}\mathbb{E}[[b-Z]^+])$ from (Eq. 7.23) with $b$
+as our desired minimum return. If we re-introduce the maximization over the policy $\pi$ (i.e., standard RL control objective),
+we get the following where the $\text{CVaR}$ objective jointly optimizes for $b$ and the expected shortfall $\mathbb{E}[[b-G^\pi]^+]$.
+The $(\cdot)^+$ denotes we filter out any negative values (i.e., we only keep the difference whenever $G^\pi$ falls below the $b$).
+
+$$
+\max_\pi J_\text{CVaR}(\pi)=\max_{b\in\mathbb{R}}(b-\tau^{-1}\min_\pi \mathbb{E}[[b-G^\pi]^+])
+$$
+
+Now, we can construct a **risk-sensitive value iteration** method that is based on distributional value iteration (which is based on the standard value iteration).
+Notationally, it can be described as iterating over the distributional Bellman operator $\eta_{k+1}=\mathcal{T}^{\tilde{\mathcal{G}}}\eta_k$ and
+extracting the final, approximately optimal policy $\pi_k=\tilde{\mathcal{G}}(\eta_k)$ where $\tilde{\mathcal{G}}$ is the policy derived from greedy rule.
+Finally, it can be shown that $\pi_k$ satisfies following convergent properties on the expected shortfall and the overall $\text{CVaR}$ objective
+of the optimal policy control problem on the $k$th iteration.
+
+* Convergence of expected shortfall
+  * For all states $x$, target $b$, and actions $a$: $\mathbb{E}[[b-G^{\pi_k}(x,b,a)]^+] \leq \min_\pi \mathbb{E}[[b-G^\pi(X_0,b,a)]^+]+\frac{\gamma^k(V_\text{MAX}-V_\text{MIN})}{1-\gamma}$
+* Convergence of the overall $\text{CVaR}$ objective
+  * For some suitable choice of $b_0$, $J_\text{CVaR}(\pi_k,b_0)\geq \max_b\max_\pi J_\text{CVaR}(\pi,b) - \frac{\gamma^k(V_\text{MAX}-V_\text{MIN})}{\tau(1-\gamma)}$
+
+For both of the above convergence equation, the first term on the RHS is just the theoretically optimal and the more concrete, workable error term
+are all on the second term. Notice as $k\to\infty$ the error $\varepsilon\to 0$. Remember, $\gamma\in(0,1)$.
+
+### Statistical Functionals
+
+Naturally, when we work with the higher-dimensional distributions instead of the standard expectation, what other functions of the distributions
+can be used to work within the distributional RL framework? We have seen $\mathbb{E}$ is just a specific kind of distributional RL, and so
+as $\text{CVaR}$ and other risk measures $\rho$. All of these attempts to quantify the distribution of return into a single number
+despite the purpose of distributional RL is to work with the distributions themselves
+because it is intuitive to think about the objective in scalar terms, although we are no longer limited to the expectation.
+Are there any other functions that takes the distributions (e.g., $\eta$) and attempt to quantify it as an objective to be optimized?
+
+A statistical functional $\psi:\mathscr{P}_\psi(\mathbb{R})\to\mathbb{R}$ abstracts the notion of any mapping that takes a distribution
+and outputs a scalar description of the distribution (e.g., average/mean/expectation, variance, median, etc.)
+And yes, we have Statistical Functional Dynamic Programming (SFDP) as a construction to also show the convergence of $\psi$-based RL.
+However, we can only show SFDP converges only when it is "Bellman closed", "imputation strategy is exact", and $\psi$ is Wasserstein continuous.
+We show this for the sake of completion, but we won't discuss the details here as it's
+not integral to understand the point of distributional RL overall.
+
+## General-sum Multi-agent RL (MARL)
+
+*Source: [Multi-Agent Reinforcement Learning: A Selective Overview of Theories and Algorithms (2021)](https://arxiv.org/pdf/1911.10635)*
+
+Remember, we are not trying to model the entire market dynamics, but rather trying to find theories and models that not only better
+explain the dynamics but are capable to produce better returns than *existing* solutions. General-sum MARL should inject
+exciting new insights to develop or apply better algorithms in our case. We will not look into
+cooperative MARL (unbounded sum) nor competitive MARL (zero/constant-sum) per the following note.
+
+::: {.callout-note collapse="false"}
+# Misconception: Zero-sum environment does not mean zero-sum games
+
+Suppose $R_1,R_2,\cdots,R_n$ represents each of the $n$ agents' rewards.
+
+A competitive $n=2$ game is trivially formulated as $R_1+R_2=0 \implies R_1=-R_2$. Optimizing in this game
+just results in maximizing $R_1$ and minimizing $R_2$ (i.e., maximizing $-R_2$). 2 players competing
+for a limited resource/reward/return/utility (i.e., zero-sum/constant-sum).
+
+$$
+\max_{\pi_1} \mathbb{E}[R_1], \max_{\pi_2} \mathbb{E}[R_2] \implies \max_{\pi_1}\min_{\pi_2}\mathbb{E}[R]
+$$
+
+Remember, we assume all $n$ players have a shared reward structure.
+
+
+What about competitive $n>2$ game? These are commonly modelled as zero-sum games. While an $n$-player
+poker game and $n$-traders trading at an exchange are all examples of zero-sum environment, we will
+quickly see how it starts to break down game-theoretically speaking. Let us consider $n=3$. We have
+$R_1+R_2+R_3=0 \implies R_1=-R_2-R_3, R_2=-R_1-R_3, R_3=-R_1-R_2$. If all three are to be simultaneously
+maximized, how do we optimize it?
+
+
+Like this?
+$$
+\max_{\pi_1}\min_{\pi_2}\text{maxmin??}_{\pi_3}\mathbb{E}[R]
+$$
+
+It quickly devolves into a mess with unclear optimization goals and proven to be PPAD-complete.
+
+So what does it mean to be in a *fully* competitive setting and how does it diverge to what zero-sum environment mean?
+Zero-sum environment just means zero-sum, but it does not limit the formation of coalition, which contradicts
+what it means for a game to be fully competitive. A coalition naturally occurs even for 3-players, where 1-player wins
+and 2-player naturally form a group to share the losses, either inadverdently or intentionally.
+While there's probably more to look into $n>2$ fully competitive game, we will focus only on
+large $n$ mixed setting MARL, where it is neither fully cooperative nor fully competitive (e.g., teams).
+:::
+
+### Markov games (MG)
+
+*a.k.a. Stochastic games*
+
+In direct generalization of MDP, Markov games are defined as $(\mathcal{N}, \mathcal{S}, \{\mathcal{A}^i\}, \mathcal{P}, \{\mathcal{R}^i\}, \gamma)$
+where each $i$th agent of $\mathcal{N}$ has their own actions and their own reward functions while
+all part of the same environment (i.e., state space). For every $i$th agent given a joint policy $\pi(a|s):=\prod \pi^i(a^i|s)$,
+we simulatenously obtain each agent's value.
+
+$$
+V^i_{\pi^i,\pi^{-i}}(s) := \mathbb{E}\bigg[\sum_{t\geq 0} \gamma^t R^i \bigg| a_t^i \sim \pi^i(\cdot|s_t), s_0 = s \bigg]
+$$
+
+where $-i$ is all the agents in $\mathcal{N}$ except the $i$th agent.
+
+A big difference between MDP is now the optimal performance of the $i$th agent has to also include
+the choices made by other agents $-i$ in its environment.
+
+Now, why Markov Games? Because it (and other game models) allows us to define solutions we are interested in
+and analyze various properties of MARL (e.g., existence of convergence, uniqueness of convergence, convergence complexity, etc...).
+In this case, a popular solution concept we are interested in is Nash equilibrium (NE). For all agents $i$,
+
+$$
+V^i_{\pi^{i,*},\pi^{-i,*}}(s) \geq V^i_{\pi^i, \pi^{-i,*}}(s)
+$$
+
+Under NE at equilibrium point of $\pi^*$, for each agent $i\in\mathcal{N}$ and all of it's states $s\in\mathcal{S}$, any deviation
+in its policy ($\pi^i$) will result in smaller value for any states for all agents assuming $\pi^{{-i},*}$
+is optimal. In other words, all of the agents has no incentive to deviate their policy. This means
+in-production, each agent will follow its own NE-optimal policy that tries to maximize profits and minimize losses
+fully knowing other agents are also trying to maximize profits and minimize losses against them.
+
+For the sake of completion, Normal-form games (NFGs) is another well-known kind of game within MG
+to work with simpler models. Notably, 2-player NFGs can be represented as matrix and solved via
+linear algebra (e.g., linear programming) to find the Nash equilibrium.
+
+### Extensive-form games (EFG)
+
+We will not delve into EFG too thoroughly since not much theoretical research has been done on
+EFG for general-sum setting (let alone MARL). *(I don't know why? And lowkey this is already on the edge of my interest.)*
+Partially observerable Markov/Stochastic game (POSG) has been proposed, but it is even theoretically proven
+to be strictly more intractable, while EFG at least admits polynomial-time convergence (class P) under "mild conditions."
+Yes, EFG is a way to model partial observations (e.g., poker) in game theoretic way, but it seems POSG
+is more popular in-relation to MARL for some various reasons. *(Perhaps its because EFG's restriction
+to finite state space, which means the game model must be discrete.)*
+
+Tangent: In RL, and especially MARL,
+we have talked about complexity and convergence issues all the time, but why (un)supervised ML are not plagued with these issues?
+Recall, when there are multiple agents training against/with each other, it creates a moving target in the environment that causes
+the gradient-based optimization to take a longer time to reach a solution. Sometimes, there might not even be a fixed-point convergence
+or it reaches a state where the gradients loops back each other (i.e., intractable and *vague description of* solutions). This is
+just one kind of problem and MARL is plagued with many other problems. Who knew trying to model a society can be that hard?
+
+EFG is defined by $(\mathcal{N}\cup\{c\},\mathcal{H},\mathcal{Z},\mathcal{A},\{\mathcal{R}^i\},\tau,\pi^c,\mathcal{S})$.
+Check §2.2.2.
+
+### Other game properties
+
+MG and EFG (?) are the two dominant frameworks in modelling MARL; these two frameworks
+are both implemented as a MARL (and its corresponding learning algorithms). The rest of the game models
+are more niche with their own interesting theoretical properties that augments the aformentioned two: Stackelberg,
+Linear-quadratic (LQ), Morse-Smale, and Hamiltonian (requires further reading.)
+
+
+<!-- ---listed below. -->
+<!---->
+<!-- **Stackelberg games.** -->
+<!---->
+<!-- **Linear-quadratic (LQ) games.** -->
+<!-- A specific MG with quadratic reward (w.r.t. states and actions) and linear dynamics. Its simplicity -->
+<!-- yet properties that breaks intuition of MG (despite being a MG) holds value for theoretical analysis, -->
+<!-- especially in the context of learning algorithms. -->
+<!---->
+<!-- **Morse-Smale (continuous) games.** -->
+<!-- In policy-gradient learning methods, the gradient dynamics follows the game dynamics that allows the use -->
+<!-- of dynamical system theory. -->
+<!---->
+<!-- **Hamiltonian (continuous) games.** -->
+
+### Mean-field games (MFG) and mean-field MARL
+*Source: [Mean Field Multi-Agent Reinforcement Learning (2020)](https://arxiv.org/pdf/1802.05438)*
+
+The motivation for MARL is for some environment (e.g., market dynamics) the non-stationarity can be completely explained
+by other agents (e.g., market participants). However, this requires omdelling interactions between each agents pair-wise
+via joint-action space, resulting in non-polynomial (i.e., exponential $|\mathcal{A}|^N$) scaling for $N$ many agents. MFG is an
+approximation that allows linear scaling at $2|\mathcal{A}|$ by aggregating all external agents' effects as an average
+term: $\mu^i_t$. Basically, we would be training $n$ single-agent RL with an extra $\mu^i_t$ parameter for the Q-value to
+incorporate the overall effects from other agents in the environment.
+
+**Mean field approximation.** Suppose the pairwise Q-value $Q^j(s,a^j,a^k)$ is twice-differentiable w.r.t. action $a^k$ where $\mathbf{a}=\begin{bmatrix}a_1 & a_2 & \cdots & a_N \end{bmatrix}^\top$.
+Additionally, $a^k=\mu^j+\delta a^{j,k}$ where $\mu^j=\frac{1}{N}\sum_{k=1}^n a^k$.
+$$
+\begin{align}
+Q^j(s,\mathbf{a})
+&\triangleq \frac{1}{N} \sum_{k=1}^N Q^j (s, a^j, a^k) \\
+&= \frac{1}{N} \sum_{k=1}^N \bigg(Q^j (s, a^j, \mu^j) + \nabla_{\mu^j}Q^j(s, a^j, \mu^j)\delta a^{j,k} + \frac{1}{2}\delta a^{j,k} \cdot \nabla^2_{a_*^{j,k}}(s,a^j,a_*^{j,k}) \cdot \delta a^{j,k}\bigg) \\
+&= Q^j (s, a^j, \mu^j) +  \nabla_{\mu^j}Q^j(s, a^j, \mu^j) \bigg( \frac{1}{N} \sum_{k=1}^N \delta a^{j,k} \bigg) + \frac{1}{N}\sum_{k=1}^N R^j_{s,a^j}(a^k)  \\
+&\approx Q^j (s, a^j, \mu^j) \\
+\end{align}
+$$
+In the first equality, we suppose the Q-function can be approximated via pair-wise factorization.
+In the second equality, we use 1st order Taylor series with Lagrange remainder $R^j_{s,a^j}$ where $\forall i, a_*^{j,k}[i] \in (\mu^j[i], a^k[i])$.
+At the third equality, the 1st-order term disappears due to $\sum_k\delta a^{j,k}=0$. Finally, the second-order
+remainder term $R$ can also be dropped since it's usually many small fluctations near zero that cancels each correlation out between every $a^j$ and $a^k$ pair.
+However, this second-order remainder approximation remains to be seen if it holds in our case.
+
+**Nash equilibrium convergence.**
+
+Theorem 1 from the source proves the existence of convergence for MFG towards a mean field equilibrium,
+where every agents' policy $\pi^i$ is Nash-optimal. We won't directly look at the proof since it requires
+concepts of filtration and filtered probability space for stochastic process (requires further reading.)
+However, we can look at what properties are required to satisfy the convergence:
+
+1. Every action-value pair is visited infinitely often and the reward is bounded (i.e., no infinite rewards for a given state-action pair.)
+2. Agent's policy is GLIE (greedy at the limit with infinite exploration.)
+    * Since we need every state-action pair to be visited infinitely often but also require the policy to be greedy eventually. Unless the
+greedy policy also visits every state-action pair, this condition would still, regardless, be satisfied asymptotically ($t\to\infty$).
+3. At every time $t$, a Nash equilibrium exists (as Nash-optimal policy $\pi_*$) as a global optimum or as a saddle point.
+    * Empirically, this is not necessary for learning algorithms to converge.
+4. Learning rate $\alpha_t(x)$: How much to keep the old Q-value versus replacing it with the new Q-value from TD.
+    * $0\leq \alpha_t(x) \leq 1$
+    * $\sum a_t(x)=\infty$
+    * $\sum a_t^2(x)<\infty$
+        * An example that satisfies both constraints: Harmonic series.
+5. Have finite states (e.g., no continuous states)
+
+In practice, just have a good learner that explores all options that eventually takes a greedy policy.
+Popular function approximators like neural networks have self-regularizing properties that should be able
+to handle "continuous" states---digitally. And, don't give a state-action pair infinite reward.
+
+Additional directions of reading near-term:
+
+* partial observability (POMF): *[Partially Observable Mean Field Reinforcement Learning (2021)](https://arxiv.org/pdf/2012.15791)*
+* applications in order book simulation and optimal execution: *[Multi-Agent Reinforcement Learning in a Realistic Limit Order Book Market Simulation (2020)](https://arxiv.org/pdf/2006.05574)*
+
+<!-- ## Continual RL (CRL) -->
+<!---->
+<!-- *Survey: [Towards Continual Reinforcement Learning: A Review and Perspectives (2022)](https://arxiv.org/pdf/2012.13490) | [A Survey of Continual Reinforcement Learning (2026)](https://arxiv.org/pdf/2506.21872)* -->
+<!---->
+<!---->
+<!-- ::: {.callout-note collapse="true"} -->
+<!-- # Raw Notes -->
+<!---->
+<!-- Adjacent subjects: -->
+<!---->
+<!-- * Domain adaptation, transfer in RL, **meta-training/testing/RL**, multi-task RL -->
+<!-- * Representation learning (e.g., compact latent spaces), generalization in RL (RL has an overfitting problem) -->
+<!--   * This is problematic especially in non-stationary MDP (When applying RL algorithms to non-stationary MDP, they tend to be myopic.) -->
+<!---->
+<!-- Non-stationary views: -->
+<!---->
+<!-- * Intrinsically non-stantionary MDPs -->
+<!-- * Partially-observable MDPs (non-stationarity strictly to do unaccounted observations) -->
+<!--   * **MARL** -->
+<!---->
+<!-- Common problems in Continual RL (Lifelong RL): -->
+<!---->
+<!-- * Retrieving relevant info from massive online data stream -->
+<!--   * Rapid adaptation to new tasks -->
+<!-- * Limited/constrained memory (or history) -->
+<!--   * Credit-assignment problem (of history) -->
+<!-- * Quick adaptation (re-learning previously forgotten learned behaviors) -->
+<!-- * Stability-plasticity dilemma & catastrophic forgetting -->
+<!--   * Problematic in supervised learning & episodic RL -->
+<!---->
+<!-- There's also a strong connection between continual RL and pyschology/neuroscience. -->
+<!---->
+<!-- CRL is all about learning a persistent agent on new, time-variant MDP with emphasis on not needing to -->
+<!-- re-train the agent just because it is time-variant (non-stationary). -->
+<!---->
+<!-- + Catastrophic forgetting & knowledge transfer (across time) -->
+<!--   + Quick adaptation -->
+<!-- + Stability-plasticity dilemma -->
+<!-- + Scalability: memory, computation, capacity on tasks -->
+<!-- + Balance between stability, plasticity, scalability -->
+<!---->
+<!-- CRL four main scenarios: -->
+<!-- * Lifelong adaptation -->
+<!-- * Non-stationarity learning -->
+<!-- * Task incremental learning -->
+<!-- * Task-agnostic learning -->
+<!---->
+<!-- It feels like something like the 2D matrix of transformers with quadratic scaling could solve catestrophic -->
+<!-- forgetting which as a big problem pre-GPT era. Honestly, the whole thing feels like it can be solved -->
+<!-- with a big foundation model and some engineering. -->
+<!---->
+<!-- ::: -->
+<!---->
+<!---->
+<!-- ## Meta RL -->
+<!---->
+<!-- *Survey: [A Survey of Meta-Reinforcement Learning](https://arxiv.org/pdf/2301.08028v3)* -->
+<!---->
+<!-- Similiar to continual RL. -->
+<!---->
+<!-- ## Multi-agent RL (MARL) & Markov Games -->
+<!---->
+<!-- *Survey: [Multi-Agent Reinforcement Learning: A Selective Overview of Theories and Algorithms](https://arxiv.org/pdf/1911.10635)* -->
+<!---->
+<!-- ## Distributional RL -->
+<!---->
+<!-- ## CMDP & Risk-constrained RL -->
+
+<!-- # Sample Cases of Non-Stationary Market Dynamics -->
+<!---->
+<!-- These are some of ideas that I think that are important to understand the non-stationarity of -->
+<!-- market dynamics[^z11] and can also be explicitly described. This is incomplete without realizing -->
+<!-- there are potentially many implicit dynamics that can only be understood through one's own experience -->
+<!-- with the market like intuition (??). -->
+<!---->
+<!-- [^z11]: It could be possible the non-stationarity can be modelled by a stationary distribution (i.e., 1st-order non-stationarity). -->
+<!---->
+<!-- ## Information speed & correlation -->
+<!---->
+<!-- earnings are usually aftermarket, but things like breaking news, whats the time travalled -->
+<!-- when it was first first reported and when the stock market reacted. -->
+<!---->
+<!-- de-tuning from Trump's speech. -->
+<!---->
+<!-- ## Periodic Effects (Pyschology) -->
+<!---->
+<!-- weekly effects (military actions??), daily effects (earnings), annual effects (bear market, economics) -->
+
+# Applications
+
+## Portfolio Management
+
+*Baseline Paper (re-implemented[^ogre1]): "DDPG-MPT" [Jang, et al. (2023)](https://www.sciencedirect.com/science/article/abs/pii/S095741742300057X)*
+
+*Data: FMP 5-minute interval index price (GSPC and others) over a 5-year period*
+
+Despite the high citation of this source, it has some questionable formatting and is also closed-source (i.e., poorly written).
+Regardless, this will be our first end-to-end trial run from modelling an end-to-end RL system, collecting data, and evaluating (e.g., backtesting).
+Loosely following the paper[^ogre5], the general specification of our pipeline is as follow:
+
+1. Closing price & technical indicators
+    * $\mathbf{V}_t^i = \begin{bmatrix} \mathbf{V}_t^\text{C} & \mathbf{V}_t^\text{MA} & \mathbf{V}_t^\text{RSI} & \mathbf{V}_t^\text{MACD} \end{bmatrix}_i \in \mathbb{R}^{4\times n \times m}$
+    * *Via [TA-Lib](https://github.com/ta-lib/ta-lib-python)*
+    * MACD is just difference between two EMAs at different lookback periods
+    * RSI just computes the overall effect of aggregated up movements separately from the down movements
+2. Rolling correlation features
+    * $\textbf{Cor}_t^i = \begin{bmatrix} \textbf{Cor}_t^\text{C} & \textbf{Cor}_t^\text{MA} & \textbf{Cor}_t^\text{RSI} & \textbf{Cor}_t^\text{MACD} \end{bmatrix}_i \in \mathbb{R}^{4\times n \times n}$
+3. Key contributions in the source's actor (e.g., policy) model $\mu$
+    * Fused "multi-modal" tensor: $\mathbf{F}^{i,n}_t = \mathbf{V}^{i,n}_t [\textbf{Cor}_t^{i,n}]^\top \in \mathbb{R}^{m\times n}$
+      * $\mathbf{V}^{i,n}_t \in \mathbb{R}^{m\times 1}$
+      * $[\textbf{Cor}_t^{i,n}]^\top \in \mathbb{R}^{1\times n}$
+    * $\mathbf{G}_t = \text{Conv3D}(\mathbf{F}_t) \in \mathbb{R}^{32\times n \times (m-2) \times n}$
+    * Tucker decomposition: $G_t \approx \mathcal{T} \times_1 U_1 \times_2 U_2 \times_3 U_3 \times_4 U_4$
+      * Extract $\mathcal{T}\in \mathbb{R}^{R_1\times R_2\times R_3\times R_4}$
+      * *Via [tensorly](https://github.com/tensorly/tensorly)*
+4. DDPG (*Based on [CleanRL](https://github.com/vwxyzjn/cleanrl)*)
+    * $\mathcal{S}:=\mathcal{A} \times \mathcal{V} \times \mathcal{C} = \mathbb{R}^{n+1} \times \mathbb{R}^{4\times n\times m} \times \mathbb{R}^{4 \times n \times n}$
+      * $\mathcal{A}$ is the action space represented as the current, normalized weights on all $n$ assets and cash
+      * $\mathcal{V}$ is the value space based on $\mathbf{V}_t$ for each technical indicators (TI) and the closing price (not state value $V$ for model-based RL)
+      * $\mathcal{C}$ is the correlation space based on $\textbf{Cor}_t$ for each TI and the closing price
+    * $\mathcal{A}:=\mathbb{R}^{n+1}$ for the new weights (e.g., if the weights increase for a certain asset, we buy more of that asset)
+    * $\displaystyle r_t=\ln\frac{v_{t}}{v_{t-1}}+c\sum_{i=1}^{n+1} \max{(w_{i,t-1}-w_{i,t}, 0)}\cdot v_{t-1}$
+      * $v_t = \mathbf{w}_t^\top \cdot \mathbf{p}_t$
+5. Experiments & Evaluations
+    * Hyperparam tuning: [optuna](https://github.com/optuna/optuna)
+    * Comprehensive backtestester (comprehensive metrics): [quantstats](https://github.com/ranaroussi/quantstats)
+    * Another comprehensive backtester (interactivity): [vectorbt](https://github.com/polakowo/vectorbt)
+
+
+
+[^ogre5]: Honestly, the more I read the source the more I'm mildly infuriated how a paper cited this many time can be this poorly written. Someone
+please englighten me what am I missing here.
+
+<!-- Process visualized:
+
+1. Animated asset allocation pie chart
+2. Top 10 correlation matrix animated with stock price shown on the side of their respective ticker
+3. Animated the % return over time
+4. Animate top 10 changes in delta ratios for re-allocating asset weights as a dynamic list
+
+Backtesting:
+
+1. Backtesting over the approximate SPY ETF with Sharpe ratios, MDD, fAPV, and other metrics
+2. with a sample return trajectory visualized -->
+
+<!-- ::: {.callout-note} -->
+<!-- # Misc. -->
+<!---->
+<!-- It will be interesting if I do a paper monitoring on the portfolio (~one month) based on S&P 500 and do -->
+<!-- a follow-up. -->
+<!-- ::: -->
+<!---->
+
+
+[TL;FW]{.tlnd}
+
+## Market Making
+
+*Baseline Paper (re-implemented): "IMM" [Niu, et al. (2023)](https://www.ijcai.org/proceedings/2024/0663.pdf)*
+
+*Data: [LOBSTER sample](https://php.lobsterdata.com/info/DataSamples.php)*
+
+Because of vague descriptions of the exact input features from the source (intentionally?), we decided to
+redefine what they are and train them on assets that have more accessible data (e.g., common stocks).
+It would be interesting to do some ablation study on their components again to see how resilient their
+framework is.
+
+Defining our own state space  $\mathbf{s}_t = (\mathbf{s}^m_t,\mathbf{s}^s_t,\mathbf{s}^p_t)$ for our MDP:
+
+* Private (trader) variables $\mathbf{s}^p_t$
+  * Net inventory: $z_t$
+  * Queue position per level $i$: $q^i_t$
+  * Agent volumes per level $i$: $v^i_t$
+  * Time remaining (normalized): $\tau_t$
+    * Episode length
+    * Day length (seems to be very common for most MMs to liquidate EOD and avoid holding overnight)
+  * Realized PnL (normalized): $\Phi_t$
+  * Unrealized PnL: $\Psi_t$
+  * Last filled bid volume: $b_t$
+  * Last filled ask volume: $a_t$
+  * Reference price staleness: $d=|\tilde{p}^\text{ref}_t - p^\text{ref}_t|$
+* (Latent) market variables $\mathbf{s}^m_t$ ($F$ features and $L$ ticks)
+  * Derived from $\text{TCSA}(\mathbf{x}) \in \mathbb{R}^{F'}$
+  * Noisy market data $\mathbf{x} \in \mathbb{R}^{F\times L}$
+    * LOB snapshot: 10-depth LOB (prices and sizes at each level for bid & ask sides)
+    * 1/5/10-min lookback: 10-depth LOB at closing, mid-price OHLC, number of transactions, total volume, order flow (buy - sell volumes), VWAP
+* (Predictive) signal variables $\mathbf{s}^s_t$
+  * $\begin{bmatrix} y^{20} & y^{120} & y^{240} & y^{600} \end{bmatrix} = \text{SL}(\mathbf{x})$
+  * Each $y^h\in \{-1,0,1\}$ refers to a simple, (ordinal) categorical prediction of the future price movement given time period $h$
+  * Labels are merely future states (i.e., predictive model) of the same input stream
+    * $y^h=\begin{cases} +1 & \frac{p_{t+h}-p_t}{p_t} > \varepsilon \\ -1 &  \frac{p_{t+h}-p_t}{p_t} < -\varepsilon  \\ 0 & \text{otherwise} \end{cases}$
+    * Where epsilon is the one-sided spread (i.e., half of the spread which is double-sided) averaged to the period $h$
+
+
+<!-- Process visualized:
+
+1. Animated LOB environment with the current auto MM's placed order with market order flow visualized (MO buy/sell)
+2. Currently predicted signal variables from the SL
+
+Backtesting:
+
+1. Tabular metrics: EPnL, MAP, PnLMAP, #T, SR
+2. inventory process
+3. sample trajectory of the return -->
+
+[TL;FW]{.tlnd}
+
+## Options Hedging
+
+*Baseline Paper (re-implemented): "D4PG-QR" [Cao, et al. (2022)](https://arxiv.org/pdf/2205.05614)*
+
+*Data: model simulation via [SABR](https://www.deriscope.com/docs/Hagan_2002.pdf)/GBM*
+
+Basically, D4PG is distributed and distributional (categorical-based C51) DDPG applied to robotics when simulation is slow.
+The source just strip the distributed portion since the simulation is fast and replaced the categorical-based distributional
+representation with quantiles---hence, quantile regression (-QR). (If anyone is wondering, D4PG existed before any distributional DDPG did, but distributional DQN did exist.)
+
+Also, before commenting how we are emphasizing too much on the methodology, it is fun and interesting
+to see how various components are integrated together to improve performance while the point of this paper
+is to clearly show how hedging against vega and gamma can be exploited to maximize return when delta is
+heavily constrained either from federal regulation or internal institutional rules.
+
+As with any papers regarding financial derivatives (case in point: options), hedging is an important topic and risk management even more so.
+A common risk objective is VaR (value at risk) and CVaR (conditional value at risk) which is conveniently defined on the CDF (i.e., percentiles/quantiles).
+And guess what, distributional RL has just the right, precise tool for this: quantile representation for the distributionals. However,
+to understand how to natively manipulate quantiles, we either have to defer back to reading the book or look at the QR-DQN.
+Due to limited time, this will be sidelined for further reading.
+
+[^ogre1]: Re-implemented and re-trained models introduces a lot of potential inconsistencies to the original implementation and serves more as a personal learning process.
+
+<!-- Process visualized:
+
+1.
+
+Backtesting:
+
+1.
+ -->
+<!---->
+<!-- ::: {.callout-note} -->
+<!-- # Misc. -->
+<!---->
+<!-- ::: -->
+<!---->
+
+[TL;FW]{.tlnd}
+
+## Future Work [TL;FW]{.tlnd}
+
+The scope for this blog/note was way too wide. Individual experiments and conceptual visualization
+will have to be done at a later time.
+
+~~It will be interesting to do a follow-up on paper monitoring on the portfolio optimization for about a month.
+Other than that, more realistic backtesting and paper monitoring on other two would also be interesting
+instead of just focusing on model development and training. In practice, it would also be interesting
+to evaluate how well custom end-to-end RL models work against public SL-based methods.~~
+
+
+

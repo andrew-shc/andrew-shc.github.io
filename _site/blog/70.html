@@ -258,7 +258,16 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#clouds-irl" id="toc-clouds-irl" class="nav-link active" data-scroll-target="#clouds-irl">Clouds IRL</a></li>
+  <li><a href="#simulating-clouds-2d" id="toc-simulating-clouds-2d" class="nav-link" data-scroll-target="#simulating-clouds-2d">Simulating Clouds (2D)</a></li>
+  <li><a href="#simulating-clouds" id="toc-simulating-clouds" class="nav-link" data-scroll-target="#simulating-clouds">Simulating Clouds</a></li>
+  <li><a href="#rendering-clouds" id="toc-rendering-clouds" class="nav-link" data-scroll-target="#rendering-clouds">Rendering Clouds</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -289,7 +298,50 @@ ul.task-list li input[type="checkbox"] {
 
 
 <!-- [TL;ND]{.tlnd} -->
-<p>TBD</p>
+<!--
+
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+
+Motto for this blog: DO, DONT TELL! (BC TOO WORDY)
+
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+
+ -->
+<p>Two aspects in rendering realistic clouds:</p>
+<ul>
+<li>Effective sampling of light paths through the participating media (i.e., cloud)</li>
+<li>Realistic (physically-correct?) simulation of the participating media’s geometry, density, etc.</li>
+</ul>
+<p>There’s many online tutorial that <em>emulates</em> the realism of the cloud (e.g., Perlin noise, Worley noise), but there’s few (none?) that attempts to simulate cloud <em>more</em> realistically. This blog will primarily be driven on finding THE realistic process that simulates cloud such that it is visually correct to clouds you see in day-to-day life. We will specifically look into altocumulus clouds in the context of mackerel sky.</p>
+<!-- Like who wants to download a model that doesn't even respond to user's assigned environment or interactions? -->
+<p>Altocumulus cloud rendering pipeline: 1. Simulation of cloud dynamics 2. Obtaining the density field 3. Volumetric path tracing through the heterogenous medium</p>
+<section id="clouds-irl" class="level1">
+<h1>Clouds IRL</h1>
+<!--
+notes from the book
+
+low clouds either too boring (stratus) or... too boring (cumulus, anvils) as in seen too much
+high clouds feel too distant (cirrus)
+middle clouds balance them appearance-wise and very memorable
+
+1.2.3 middle clouds (pg. 11)
+
+ -->
+</section>
+<section id="simulating-clouds-2d" class="level1">
+<h1>Simulating Clouds (2D)</h1>
+</section>
+<section id="simulating-clouds" class="level1">
+<h1>Simulating Clouds</h1>
+</section>
+<section id="rendering-clouds" class="level1">
+<h1>Rendering Clouds</h1>
 
 
 <script type="ojs-module-contents">
@@ -320,6 +372,7 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
 
 </main> <!-- /main -->
 <script type="ojs-module-contents">
