@@ -1,0 +1,25 @@
+---
+title: "???"
+subtitle: "???"
+image: ???
+date: ???
+# date-modified: last-modified
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+
+# Beginning of one of many great notes
+

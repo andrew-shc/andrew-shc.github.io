@@ -1,0 +1,41 @@
+<button class="t86-switch" id="t86-switch" aria-label="Toggle dark mode">
+    <div class="t86-plate">
+        <div class="t86-rocker">
+            <div class="t86-nub"></div>
+            <svg class="t86-indicator" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+                <circle class="t86-led" cx="10" cy="10" r="4.5"/>
+            </svg>
+        </div>
+    </div>
+</button>
+<script>
+(function () {
+    var btn = document.getElementById('t86-switch');
+
+    function isDark() {
+        var s = localStorage.getItem('quarto-color-scheme');
+        return s === 'alternate' ||
+               (!s && !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+
+    function sync() { btn.classList.toggle('t86-dark', isDark()); }
+
+    btn.addEventListener('click', function () {
+        try { window.quartoToggleColorScheme(); } catch (e) {}
+        setTimeout(sync, 30);
+    });
+
+    /* Initial sync after Quarto's own theme scripts have settled */
+    setTimeout(sync, 0);
+
+    /* Stay in sync with OS preference changes */
+    if (window.matchMedia)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', sync);
+
+    /* Watch Quarto's toggle in case it changes independently */
+    setTimeout(function () {
+        var qt = document.querySelector('.quarto-color-scheme-toggle');
+        if (qt) new MutationObserver(sync).observe(qt, { attributes: true });
+    }, 200);
+})();
+</script>

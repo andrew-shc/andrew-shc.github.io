@@ -1,0 +1,21 @@
+---
+listing:
+  contents: "20notes/*.qmd"
+  feed: true
+  sort: "date desc"
+  type: grid
+  categories: false
+  sort-ui: true
+  filter-ui: false
+  image-placeholder: img/image-placeholder.png
+  fields: [image, date]
+page-layout: full
+title-block-banner: true
+
+format:
+  html:
+    theme:
+      - iframe_match.scss
+    css: _vars.css
+    include-in-header: preprocessing.html
+---

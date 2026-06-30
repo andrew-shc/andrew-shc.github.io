@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-11-13">
+
+<title>Statistical Learning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-30fc45633b0910a22497ea642fc28e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../math-styling.css">
+</head>
+
+<body class="floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Statistical Learning</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#learners" id="toc-learners" class="nav-link" data-scroll-target="#learners">Learners</a>
+  <ul class="collapse">
+  <li><a href="#maximum-likeilhood-estimation-mle" id="toc-maximum-likeilhood-estimation-mle" class="nav-link" data-scroll-target="#maximum-likeilhood-estimation-mle">Maximum Likeilhood Estimation (MLE)</a></li>
+  <li><a href="#maximum-a-posteriori-map-estimation" id="toc-maximum-a-posteriori-map-estimation" class="nav-link" data-scroll-target="#maximum-a-posteriori-map-estimation">Maximum a Posteriori (MAP) Estimation</a></li>
+  <li><a href="#bayesian-inference" id="toc-bayesian-inference" class="nav-link" data-scroll-target="#bayesian-inference">Bayesian Inference</a></li>
+  <li><a href="#others" id="toc-others" class="nav-link" data-scroll-target="#others">Others</a></li>
+  </ul></li>
+  <li><a href="#example-mle-for-multi-label-classification" id="toc-example-mle-for-multi-label-classification" class="nav-link" data-scroll-target="#example-mle-for-multi-label-classification">Example: MLE for multi-label classification</a>
+  <ul class="collapse">
+  <li><a href="#analytical-estimation-of-theta" id="toc-analytical-estimation-of-theta" class="nav-link" data-scroll-target="#analytical-estimation-of-theta">Analytical Estimation of <span class="math inline">\(\theta\)</span></a></li>
+  <li><a href="#gradient-descent-estimation-of-theta" id="toc-gradient-descent-estimation-of-theta" class="nav-link" data-scroll-target="#gradient-descent-estimation-of-theta">Gradient Descent Estimation of <span class="math inline">\(\theta\)</span></a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Statistical Learning</h1>
+<p class="subtitle lead">A Review on Computer Vision Fundamentals</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 13, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1 page-columns page-full">
+<h1>Introduction</h1>
+<p>You have probably seen this thing floating around in several machine learning courses: <span class="math inline">\(P(y|x,\theta)\)</span>, <span class="math inline">\(P(\theta|x,y)\)</span>, or even the term MAP and MLE. If you haven’t yet, you will probably start seeing them after. These concepts comes from statistics where they’re called statistical learning, parameter estimation, probabilistic inference, or one of their many synonyms. But what are they? How do they relate to vision? And why is it useful to think about them?</p>
+<p>Let us start with a toy example. We want to design an autonomous system to tell when the car should go or stop, depending on the traffic light. Our dataset are pictures of traffic lights and we want our model <span class="math inline">\(M(\theta)\)</span> to classify whether an image is <span class="math inline">\(\text{GO}\)</span> or <span class="math inline">\(\text{STOP}\)</span> parameterized by <span class="math inline">\(\theta\)</span>. Using one-hot encoding, we let <span class="math inline">\(\mathbf{y}_i:=\begin{bmatrix} 1 &amp; 0 \end{bmatrix}^\top\)</span> for <span class="math inline">\(\text{GO}\)</span> and <span class="math inline">\(\mathbf{y}_i:=\begin{bmatrix} 0 &amp; 1 \end{bmatrix}^\top\)</span> for <span class="math inline">\(\text{STOP}\)</span>. Let red and yellow light be <span class="math inline">\(\text{STOP}\)</span> and green light be <span class="math inline">\(\text{GO}\)</span> for our intents and purposes.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="../img/blog/20_trafficlight.png" class="img-fluid figure-img" width="500"></p>
+<figcaption><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></figcaption>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Image copied from <a href="https://github.com/Alyxion/Udacity_SelfDrivingCarEngineerNd">here</a></p></div></div></figure>
+</div>
+<p>To simplify our case even more, let us abstract away the high-dimensional input of an image and let <span class="math inline">\(\mathbf{x}_i:=\begin{bmatrix} x_r &amp; x_y &amp; x_g \end{bmatrix}^\top\)</span>, where each component <span class="math inline">\(\in[0,1]\)</span> corresponds to a snapshot of the illumination intensity of red <span class="math inline">\(x_r\)</span>, yellow <span class="math inline">\(x_y\)</span>, and the green <span class="math inline">\(x_g\)</span> bulb of a traffic light. So, we can visualize our data as…</p>
+<div>
+<div id="pyodide-1" class="exercise-cell">
+
+</div>
+<script type="pyodide-1-contents">
+eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbmltcG9ydCBudW1weSBhcyBucFxuZnJvbSBtYXRwbG90bGliIGltcG9ydCBweXBsb3QgYXMgcGx0XG5mcm9tIG1wbF90b29sa2l0cy5tcGxvdDNkIGltcG9ydCBBeGVzM0RcblxuXG5kZWYgX3N5bW1ldHJpemUoTSk6XG4gICAgcmV0dXJuIDAuNSAqIChNICsgTS5UKVxuXG5kZWYgX21ha2Vfc3BkKE0sIGVwcz0xZS01KTpcbiAgICBNID0gX3N5bW1ldHJpemUoTSlcbiAgICB3LCBWID0gbnAubGluYWxnLmVpZ2goTSkgICMgT0sgdG8gdXNlIG51bXB5IGhlcmU7IHdlIGRvbid0IGJhY2twcm9wIHRocm91Z2ggdGhpcyBwcm9qZWN0aW9uXG4gICAgdyA9IG5wLm1heGltdW0odywgZXBzKVxuICAgIHJldHVybiAoViAqIHcpIEAgVi5UXG5cblxuZGVmIHBsb3RfM2RfdHJhZmZpY19kYXRhKHhfZGF0YSwgeV9kYXRhLCBzYW1wbGVzX2dvPU5vbmUsIHNhbXBsZXNfc3RvcD1Ob25lLFxuICAgICAgICAgICAgdGl0bGU9Tm9uZSwgZmlnc2l6ZT0oMTAsOCksIGF4PU5vbmUpOlxuICBpZiBheCBpcyBOb25lOlxuICAgIGZpZyA9IHBsdC5maWd1cmUoZmlnc2l6ZT1maWdzaXplKVxuICAgIGF4ID0gZmlnLmFkZF9zdWJwbG90KDExMSwgcHJvamVjdGlvbj0nM2QnKVxuICBlbHNlOlxuICAgIGZpZyA9IGF4LmZpZ3VyZVxuICBzdG9wX21hc2sgPSB5X2RhdGFbOiwgMV0gPT0gMVxuICBnb19tYXNrID0geV9kYXRhWzosIDBdID09IDFcbiAgYXguc2NhdHRlcih4X2RhdGFbc3RvcF9tYXNrLDBdLCB4X2RhdGFbc3RvcF9tYXNrLDFdLCB4X2RhdGFbc3RvcF9tYXNrLDJdLCBjPSdyZWQnLCBtYXJrZXI9J28nLCBzPTUwLCBhbHBoYT0xLjAsIGxhYmVsPSdwKHk9U1RPUHx4KScpXG4gIGF4LnNjYXR0ZXIoeF9kYXRhW2dvX21hc2ssMF0sIHhfZGF0YVtnb19tYXNrLDFdLCB4X2RhdGFbZ29fbWFzaywyXSwgYz0nZ3JlZW4nLCBtYXJrZXI9J14nLCBzPTUwLCBhbHBoYT0xLjAsIGxhYmVsPSdwKHk9R098eCknKVxuICBpZiBzYW1wbGVzX3N0b3AgaXMgbm90IE5vbmU6XG4gICAgYXguc2NhdHRlcihzYW1wbGVzX3N0b3BbOiwwXSwgc2FtcGxlc19zdG9wWzosMV0sIHNhbXBsZXNfc3RvcFs6LDJdLCBjPSdibHVlJywgbWFya2VyPSdvJywgcz0zMCwgYWxwaGE9MS4wLCBsYWJlbD0ncCh5PVNUT1B8eCzOuCknKVxuICBpZiBzYW1wbGVzX2dvIGlzIG5vdCBOb25lOlxuICAgIGF4LnNjYXR0ZXIoc2FtcGxlc19nb1s6LDBdLCBzYW1wbGVzX2dvWzosMV0sIHNhbXBsZXNfZ29bOiwyXSwgYz0ncHVycGxlJywgbWFya2VyPSdeJywgcz0zMCwgYWxwaGE9MS4wLCBsYWJlbD0ncCh5PUdPfHgszrgpJylcbiAgYXguc2V0KHhsYWJlbD0nUmVkIEludGVuc2l0eScsIHlsYWJlbD0nWWVsbG93IEludGVuc2l0eScsIHpsYWJlbD0nR3JlZW4gSW50ZW5zaXR5JywgdGl0bGU9dGl0bGUsXG4gICAgICAgeGxpbT1bLTAuNSwxLjVdLCB5bGltPVstMC41LDEuNV0sIHpsaW09Wy0wLjUsMS41XSlcblxuICBheC52aWV3X2luaXQoZWxldj0yMCwgYXppbT00NSlcbiAgYXgubGVnZW5kKGZvbnRzaXplPTksIGxvYz0ndXBwZXIgbGVmdCcsIGZyYW1lYWxwaGE9MC45KVxuICBwbHQudGlnaHRfbGF5b3V0KClcblxuICByZXR1cm4gZmlnLCBheFxuXG5OX3JlZCA9IDEwMFxuTl95ZWxsb3cgPSAzMFxuTl9ncmVlbiA9IDE1MFxuXG5tZWFuID0gMVxuc3RkX2RldiA9IDAuMiAgIyBhZGp1c3Qgc3ByZWFkIGFzIG5lZWRlZFxuY292X21hdHJpeCA9IG5wLmV5ZSgzKSAqIChzdGRfZGV2ICoqIDIpXG5cbnhfcmVkID0gbnAucmFuZG9tLm11bHRpdmFyaWF0ZV9ub3JtYWwobnAuYXJyYXkoWzEsIDAsIDBdKSwgY292X21hdHJpeCwgTl9yZWQpXG54X3llbGxvdyA9IG5wLnJhbmRvbS5tdWx0aXZhcmlhdGVfbm9ybWFsKG5wLmFycmF5KFswLCAxLCAwXSksIGNvdl9tYXRyaXgsIE5feWVsbG93KVxueF9ncmVlbiA9IG5wLnJhbmRvbS5tdWx0aXZhcmlhdGVfbm9ybWFsKG5wLmFycmF5KFswLCAwLCAxXSksIGNvdl9tYXRyaXgsIE5fZ3JlZW4pXG55X3JlZCA9IG5wLmNvbmNhdChcbiAgW1xuICAgIG5wLnplcm9zKChOX3JlZCwgMSkpLFxuICAgIG5wLm9uZXMoKE5fcmVkLCAxKSksXG4gIF0sXG4gIGF4aXM9MVxuKVxueV95ZWxsb3cgPSBucC5jb25jYXQoXG4gIFtcbiAgICBucC56ZXJvcygoTl95ZWxsb3csIDEpKSxcbiAgICBucC5vbmVzKChOX3llbGxvdywgMSkpLFxuICBdLFxuICBheGlzPTFcbilcbnlfZ3JlZW4gPSBucC5jb25jYXQoXG4gIFtcbiAgICBucC5vbmVzKChOX2dyZWVuLCAxKSksXG4gICAgbnAuemVyb3MoKE5fZ3JlZW4sIDEpKSxcbiAgXSxcbiAgYXhpcz0xXG4pXG5cbnggPSBucC5jb25jYXQoW3hfcmVkLCB4X3llbGxvdywgeF9ncmVlbl0sIGF4aXM9MClcbnggPSBucC5jbGlwKHgsIDAsIDEpXG55ID0gbnAuY29uY2F0KFt5X3JlZCwgeV95ZWxsb3csIHlfZ3JlZW5dLCBheGlzPTApXG5cbiMgTiB4IDMgKGlsbHVtLiBpbnRlbnNpdHkpID09PlxuIyBOIHggMSB4IDMgKHRoZSB0aHJlZSBidWxicyBvZiBhIHRyYWZmaWMgbGlnaHQpIHggMyAoUkdCKVxudHJhbnNmb3JtcyA9IG5wLmFycmF5KFtcbiAgICBbMSwgMCwgMF0sXG4gICAgWzEsIDEsIDBdLFxuICAgIFswLCAxLCAwXVxuXSlcbnhfcmVuZGVyID0gbnAucmVwZWF0KHhbOiwgTm9uZSwgOiwgTm9uZV0sIDMsIGF4aXM9MykgICogdHJhbnNmb3Jtc1tucC5uZXdheGlzLCBucC5uZXdheGlzLCA6LCA6XVxueF9yZW5kZXIgPSBucC5zd2FwYXhlcyh4X3JlbmRlciwgMSwgMikifQ==
+</script>
+</div>
+<div>
+<div id="pyodide-2" class="exercise-cell">
+
+</div>
+<script type="pyodide-2-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZnJvbSBtYXRwbG90bGliIGltcG9ydCBweXBsb3QgYXMgcGx0XG5cbmZpZywgYXhlcyA9IHBsdC5zdWJwbG90cygxLCAzLCBmaWdzaXplPSg3LCA0KSwgc2hhcmV5PVRydWUpXG5cbnByaW50KHhfcmVuZGVyLnNoYXBlKSAgIyBmb3IgcmVuZGVyaW5nIHRoaXMgcGxvdCAoTiB4IDMgeCAxIHggMylcbnByaW50KHguc2hhcGUpICAjIGZvciBkYXRhIChOIHggMylcbmF4ZXNbMF0uaW1zaG93KHhfcmVuZGVyWzBdLCBpbnRlcnBvbGF0aW9uPVwibmVhcmVzdFwiKVxuYXhlc1sxXS5pbXNob3coeF9yZW5kZXJbMjAwXSwgaW50ZXJwb2xhdGlvbj1cIm5lYXJlc3RcIilcbmF4ZXNbMl0uaW1zaG93KHhfcmVuZGVyWzEwMF0sIGludGVycG9sYXRpb249XCJuZWFyZXN0XCIpXG5heGVzWzBdLnNldF90aXRsZSgnU1RPUCcsIGZvbnRzaXplPTI0KVxuYXhlc1sxXS5zZXRfdGl0bGUoJ0dPJywgZm9udHNpemU9MjQpXG5heGVzWzJdLnNldF90aXRsZSgnU1RPUCcsIGZvbnRzaXplPTI0KVxuYXhlc1swXS5heGlzKCdvZmYnKVxuYXhlc1sxXS5heGlzKCdvZmYnKVxuYXhlc1syXS5heGlzKCdvZmYnKVxucGx0LnRpZ2h0X2xheW91dCgpXG5wbHQuc2hvdygpIn0=
+</script>
+</div>
+<p>Now that we have introduced our scenario, let us get into the main idea of this blog.</p>
+</section>
+<section id="learners" class="level1 page-columns page-full">
+<h1>Learners</h1>
+<p>For any ML-based vision models (really any vision models you come across now,) we have a learner and a model, as explained in <span class="citation" data-cites="foundationsCVbook">Torralba, Isola, and Freeman (<a href="#ref-foundationsCVbook" role="doc-biblioref">2024, chap. 9</a>)</span>. A model can be neural networks, transformers, etc… but we will do something simpler. But first, what kind of learner are we trying to model here? Is it supervised, self-supervised, unsupervised, or reinforcement learning? Is it a generative or discriminative learning? <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="ref-foundationsCVbook" class="csl-entry" role="listitem">
+Torralba, A., P. Isola, and W. T. Freeman. 2024. <em>Foundations of Computer Vision</em>. Adaptive Computation and Machine Learning Series. MIT Press. <a href="https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/">https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/</a>.
+</div><div id="fn2"><p><sup>2</sup>&nbsp;After the generative model boom, this distinction has become more important. Generative model has long existed in statistics, and has only been recently (within 5 years) exposed to the vision community at a scale.</p></div><div id="fn3"><p><sup>3</sup>&nbsp;Since there are only two categories, we can simplify it to a binary classification; however, multi-class classification generalizes to any <span class="math inline">\(K\)</span> categories, it will be more easier to visualize how it works. Single-label just means the categories are mutually exclusive, and the model should expect to output a single category per input sample (i.e., image).</p></div></div><p>Since we already have a pretty clear <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span>, it probably means we are working under a supervised learning regime. We want our model to predict <span class="math inline">\(\mathbf{y}\)</span>, so it would also be under supervised discriminative learning regime. Since our labels for <span class="math inline">\(\mathbf{y}\)</span> are categorical, we will specifically be working with multi-class (single-label) classifiers <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>Before continuiting, please refer to <span class="citation" data-cites="mlprobabilistic">Murphy (<a href="#ref-mlprobabilistic" role="doc-biblioref">2012, chap. 3.2</a>)</span> to know more about Bayes’ theorem and how likelihoods, posteriors, priors, and evidence all have special meaning and nuances despite them denoted as <span class="math inline">\(p\)</span> for probabilities.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-mlprobabilistic" class="csl-entry" role="listitem">
+Murphy, Kevin P. 2012. <em>Machine Learning: A Probabilistic Perspective</em>. The MIT Press.
+</div><div id="ref-princeCVMLI2012" class="csl-entry" role="listitem">
+Prince, S. J. D. 2012. <em><span class="nocase">Computer Vision: Models Learning and Inference</span></em>. <span>Cambridge University Press</span>.
+</div><div id="fn4"><p><sup>4</sup>&nbsp;If you known gradient descent and the notion of “loss” in ML/vision, the following three approaches are a generalization to them. These general form allows us to see learning at a bigger picture, though we won’t be discussing this here.</p></div></div><p>According to <span class="citation" data-cites="princeCVMLI2012">S. J. D. Prince (<a href="#ref-princeCVMLI2012" role="doc-biblioref">2012, chap. 4</a>)</span>, there are three classical approaches for supervised discriminative learning<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
+<section id="maximum-likeilhood-estimation-mle" class="level2">
+<h2 class="anchored" data-anchor-id="maximum-likeilhood-estimation-mle">Maximum Likeilhood Estimation (MLE)</h2>
+<p><span class="math inline">\(\hat{\theta}=\arg\max_{\theta}p(\mathbf{y}|\mathbf{x},\theta)\)</span></p>
+<p>Remember, <span class="math inline">\(\mathbf{y}\)</span> and <span class="math inline">\(\mathbf{x}\)</span> are our training data and cannot be changed. The only thing we can (and should) change is the model parameter <span class="math inline">\(\theta\)</span>. So, this is basically saying what value of <span class="math inline">\(\theta\)</span> can maximize the probability of the correct label <span class="math inline">\(\mathbf{y}\)</span> from its corresponding input <span class="math inline">\(\mathbf{x}\)</span> for all samples (i.e., data points). The <span class="math inline">\(p(\mathbf{y}|\mathbf{x},\theta)\)</span> is known as the likelihood of <span class="math inline">\(\theta\)</span>. We will define what <span class="math inline">\(\theta\)</span> is later, but basically it is an abstract representation of model’s parameter, representing choices of hypothesis that best explains data relationship.</p>
+</section>
+<section id="maximum-a-posteriori-map-estimation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="maximum-a-posteriori-map-estimation">Maximum a Posteriori (MAP) Estimation</h2>
+<p><span class="math inline">\(\hat{\theta}=\arg\max_{\theta}p(\theta|\mathbf{x},\mathbf{y})=\arg\max_{\theta}\frac{p(\mathbf{y}|\mathbf{x},\theta)p(\theta)}{p(\mathbf{x},\mathbf{y})}\propto \arg\max_{\theta}p(\mathbf{y}|\mathbf{x},\theta)p(\theta)\)</span></p>
+<p>This is saying which parameter <span class="math inline">\(\theta\)</span> for our model (i.e., weights) has the highest probability that explains the data relationship between <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span>. In other words, this maximizes the posterior distribution <span class="math inline">\(P(\theta|\mathbf{x},\mathbf{y})\)</span> (i.e., the posterior of <span class="math inline">\(\theta\)</span>). We then use the Bayes’ theorem <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> to get back our likelihood again with an additional prior <span class="math inline">\(p(\theta)\)</span> <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> with a constant factor <span class="math inline">\(\frac{1}{p(\mathbf{x},\mathbf{y})}\)</span> which can be ignored <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;A commonly used special operation in statistics/probabilities. Check <a href="https://en.wikipedia.org/wiki/Bayes%27_theorem">here</a></p></div><div id="fn6"><p><sup>6</sup>&nbsp;There’s many ways to think about prior <span class="math inline">\(p(\theta)\)</span>. You think of it as a weighting factor of the likelihood that says how likely that <em>likeli</em>hood is given the selected <span class="math inline">\(\theta\)</span>. Or, as a balance between data-driven likelihood and previously known (i.e., “prior”) knowledge on how <span class="math inline">\(\theta\)</span> should behave (e.g., <span class="math inline">\(\theta\)</span> is likely to be 67 for some reason). Or, as a regularizer where we follow Occam’s razor that the weights should be simple.</p></div><div id="fn7"><p><sup>7</sup>&nbsp;This is a probability over the training data <span class="math inline">\(\mathbf{y}\)</span> and <span class="math inline">\(\mathbf{x}\)</span>. It’s not going to change throughout the maximization process of <span class="math inline">\(\theta\)</span>.</p></div></div></section>
+<section id="bayesian-inference" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="bayesian-inference">Bayesian Inference</h2>
+<p><span class="math inline">\(p(y^*|x^*,\mathbf{x},\mathbf{y})=\int p(y^*|x^*,\theta)p(\theta|\mathbf{x},\mathbf{y})d\theta\)</span></p>
+<p>Instead of estimating a specific parameter <span class="math inline">\(\theta\)</span> (i.e., point estimate), we interpret the model’s parameters <span class="math inline">\(\theta\)</span> as probabilistic <a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. Notice we are not maximizing anything or even calculating <span class="math inline">\(\theta\)</span> itself, but directly predicting our unseen data point <span class="math inline">\(y^*\)</span> given <span class="math inline">\(x^*\)</span>. In fact, this is a summation of each prediction <span class="math inline">\(p(y^*|x^*,\theta)\)</span> from all possible parameter <span class="math inline">\(\theta\)</span> weighted by the posterior for each <span class="math inline">\(\theta\)</span>. The integral can sometimes be computed analytically given a good conjugate prior <a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>, but most of the time, it is approximated by sampling (i.e., Monte-Carlo).</p>
+<div class="no-row-height column-margin column-container"><div id="fn8"><p><sup>8</sup>&nbsp;In statistics, there are two interpretations: <a href="https://en.wikipedia.org/wiki/Frequentist_probability">frequentist</a> (there’s a single true value and the randomness is strictly from sampling error like MLE/MAP) and <a href="https://en.wikipedia.org/wiki/Bayesian_probability">Bayesian</a> (there are no true value and the probability is intrinsic).</p></div><div id="fn9"><p><sup>9</sup>&nbsp;A special prior when combined with its corresponding likelihood produces a nice-to-work-with analytical posterior (remember, we are integrating the posterior, which is nasty most of the time). For example, the Gaussian distribution <span class="math inline">\(\mathcal{N}(\mu,\sigma^2)\)</span>’s conjugate prior is Normal-inverse gamma. Check <a href="https://en.wikipedia.org/wiki/Conjugate_prior">here</a>.</p></div></div></section>
+<section id="others" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="others">Others</h2>
+<p>For generative or unsupervised models, we don’t necessarily have a label <span class="math inline">\(\mathbf{y}\)</span>. What we do instead is have the model learn the data distribution of the input <span class="math inline">\(\mathbf{x}\)</span> itself, resulting in posteriors with <span class="math inline">\(p(\theta|\mathbf{x})\)</span> instead of <span class="math inline">\(p(\theta|\mathbf{x},\mathbf{y})\)</span>, or likelihood of <span class="math inline">\(p(\mathbf{x}|\theta)\)</span> instead of <span class="math inline">\(p(\mathbf{y}|\mathbf{x},\theta)\)</span>. Sometimes, they also have the latent distribution <span class="math inline">\(\mathbf{z}\)</span> as a more efficient, intermediate way to have the model learn the distribution. For example, VAEs <span class="citation" data-cites="prince2023understanding">Simon J. D. Prince (<a href="#ref-prince2023understanding" role="doc-biblioref">2023, chap. 17.3</a>)</span> and diffusions <span class="citation" data-cites="prince2023understanding">Simon J. D. Prince (<a href="#ref-prince2023understanding" role="doc-biblioref">2023, chap. 18.4</a>)</span> are learned via MLE with <span class="math inline">\(p(\mathbf{x}|\theta)\)</span> as the likelihood. In some cases, we do a maximization and a minimization of two different sets of parameters <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span> like in GANs <span class="citation" data-cites="prince2023understanding">Simon J. D. Prince (<a href="#ref-prince2023understanding" role="doc-biblioref">2023, chap. 15.1.1</a>)</span>. Or, in Deep RL, we maximize the policy <span class="citation" data-cites="prince2023understanding">Simon J. D. Prince (<a href="#ref-prince2023understanding" role="doc-biblioref">2023, chap. 19.3</a>)</span>.</p>
+<div class="no-row-height column-margin column-container"></div><p>For the purpose of learning (i.e., you learning this), we will stick with much more simpler MLE under supervised discriminative learning. Now enough with the theory and see some visuals from our example scenario.</p>
+</section>
+</section>
+<section id="example-mle-for-multi-label-classification" class="level1 page-columns page-full">
+<h1>Example: MLE for multi-label classification</h1>
+<p>Let us first visualize our data.</p>
+<div>
+<div id="pyodide-3" class="exercise-cell">
+
+</div>
+<script type="pyodide-3-contents">
+eyJhdHRyIjp7ImVjaG8iOmZhbHNlLCJlZGl0IjpmYWxzZSwiZXZhbCI6dHJ1ZX0sImNvZGUiOiJcbnByaW50KFwieCBkaW1lbnNpb246XCIsIHguc2hhcGUpICAjIE4geCAzXG5wcmludChcInkgZGltZW5zaW9uOlwiLCB5LnNoYXBlKSAgIyBOIHggMlxuXG4jIENyZWF0ZSBtYXNrcyBmb3IgR08vU1RPUCBjbGFzc2VzIChyZXVzZWQgdGhyb3VnaG91dClcbnN0b3BfbWFzayA9IHlbOiwgMV0gPT0gMVxuZ29fbWFzayA9IHlbOiwgMF0gPT0gMVxuXG4jIFVzZSBtb2R1bGFyIHBsb3R0aW5nIGZ1bmN0aW9uXG5maWcsIGF4ID0gcGxvdF8zZF90cmFmZmljX2RhdGEoeCwgeSlcbnBsdC5zaG93KCkifQ==
+</script>
+</div>
+<p>Our likelihood <span class="math inline">\(p(\mathbf{y}|\mathbf{x},\theta)\)</span> will follow a categorical distribution where <span class="math inline">\(p(\mathbf{y}_i=\mathbf{k}|\mathbf{x}_i,\theta)\)</span> denotes the likelihood for each data sample <span class="math inline">\(i\)</span> and <span class="math inline">\(\mathbf{k}\in K=\{\text{STOP},\text{GO}\}\)</span>, where <span class="math inline">\(K\)</span> can be thought of as a set of all one-hot-encoded categories. <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn10"><p><sup>10</sup>&nbsp;Think of it like a vector-valued likelihood where <span class="math inline">\(p(\mathbf{y}_i|\mathbf{x}_i,\theta)=\begin{bmatrix} p(\mathbf{y}_i= &amp; \text{GO} &amp; |\mathbf{x}_i,\theta) \\ p(\mathbf{y}_i= &amp; \text{STOP} &amp; |\mathbf{x}_i,\theta) \end{bmatrix}\)</span></p></div></div><p>Now, to choose a model, we will use multivariate Gaussian distribution to represent each categories. Remember, the model we choose are arbitrary and mostly follows what we think is the best for the given situation. We might choose logistic regression for a binary classification (which is still slightly different from two-label classification) to decide whether an image of a light is <span class="math inline">\(\text{GO}\)</span> or <span class="math inline">\(\text{STOP}\)</span>. Or, we can follow one of the more later trends and use neural networks on everything. But overall, it doesn’t change the overall theory of learning and the underlying optimization and criterion/loss, so we pick the simpler option: multivariate Gaussian distribution.</p>
+<p>Recall, a univariate Gaussian <span class="math inline">\(\mathcal{N}(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}=\frac{1}{\sqrt{(2\pi)^1\sigma^2}}e^{-\frac{1}{2}(x-\mu)(\sigma^2)^{-1}(x-\mu)}\)</span>. However, our input is 3D, so we have to use 3D multivariate Gaussian <span class="math inline">\(\mathcal{N}_3(\mathbf{x}|\mathbf{\mu}, \Sigma)=\frac{1}{\sqrt{(2\pi)^3|\Sigma|}}e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})}\)</span><a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>. In other words, we let <span class="math inline">\(p(\mathbf{x}_i|\mathbf{y}_i=\mathbf{k},\theta):=\mathcal{N}_3(\mathbf{x}_i|\mathbf{\mu}_\mathbf{k}, \Sigma_\mathbf{k})\)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn11"><p><sup>11</sup>&nbsp;For more info on multivariate Gaussian and the covariance matrix <span class="math inline">\(\Sigma\)</span>, check <span class="citation" data-cites="prince2023understanding">Simon J. D. Prince (<a href="#ref-prince2023understanding" role="doc-biblioref">2023</a>, Appendix C.3.2)</span></p><div id="ref-prince2023understanding" class="csl-entry" role="listitem">
+Prince, Simon J. D. 2023. <em>Understanding Deep Learning</em>. The MIT Press. <a href="http://udlbook.com">http://udlbook.com</a>.
+</div></div></div><p>Now let’s go check what’s the initial default distribution the model has started with.</p>
+<div>
+<div id="pyodide-4" class="exercise-cell">
+
+</div>
+<script type="pyodide-4-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBwYXJhbWV0ZXJzXG50aGV0YSA9IFtcbiAgbnAuYXJyYXkoWzAuMCwgMC4wLCAwLjBdKSwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgbXVfR09cbiAgbnAuZXllKDMpLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgc2lnbWFfR09cbiAgbnAuYXJyYXkoW05fZ3JlZW4gLyAoTl9ncmVlbitOX3JlZCtOX3llbGxvdyldKSwgICAgICAgICAgICMgcGhpX0dPXG4gIG5wLmFycmF5KFswLjAsIDAuMCwgMC4wXSksICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIG11X1NUT1BcbiAgbnAuZXllKDMpLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgc2lnbWFfU1RPUFxuICBucC5hcnJheShbKE5fcmVkK05feWVsbG93KSAvIChOX2dyZWVuK05fcmVkK05feWVsbG93KV0pLCAgIyBwaGlfU1RPUFxuXVxuXG5zYW1wbGVzX2dvID0gbnAucmFuZG9tLm11bHRpdmFyaWF0ZV9ub3JtYWwodGhldGFbMF0sIHRoZXRhWzFdLCBOX2dyZWVuKVxuc2FtcGxlc19zdG9wID0gbnAucmFuZG9tLm11bHRpdmFyaWF0ZV9ub3JtYWwodGhldGFbM10sIHRoZXRhWzRdLCBOX3JlZCtOX3llbGxvdylcblxuZmlnLCBheCA9IHBsb3RfM2RfdHJhZmZpY19kYXRhKFxuICB4LCB5LCBcbiAgc2FtcGxlc19nbz1zYW1wbGVzX2dvLFxuICBzYW1wbGVzX3N0b3A9c2FtcGxlc19zdG9wXG4pXG5wbHQuc2hvdygpIn0=
+</script>
+</div>
+<p>Basically, we want these distributions to match (so the model is able to classify correctly), which currently it is not.</p>
+<p>Given <span class="math inline">\(\theta=\{\mu_\text{GO}, \Sigma_\text{GO}, \phi_\text{GO}, \mu_\text{STOP}, \Sigma_\text{STOP}, \phi_\text{STOP}\}\)</span><a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>, we can finally define our MLE exactly as <span class="math display">\[
+\begin{align}
+\arg\max_\theta \frac{1}{n}\sum^n_{i=1} p(\mathbf{y}_i=\mathbf{k}|\mathbf{x}_i,\theta) &amp;= \arg\max_\theta  \frac{1}{n}\sum^n_{i=1} \frac{p(\mathbf{y}_i=\mathbf{k},\mathbf{x}_i|\theta)}{p(\mathbf{x}_i|\theta)} \\
+     &amp;= \arg\max_\theta  \frac{1}{n}\sum^n_{i=1} \frac{p(\mathbf{x}_i|\mathbf{y}_i=\mathbf{k},\theta)p(\mathbf{y}_i=\mathbf{k}|\theta)}{\sum_{\mathbf{j}\in K} p(\mathbf{x}_i|\mathbf{y}_i=\mathbf{j},\theta)p(\mathbf{y}_i=\mathbf{j}|\theta)} \\
+     &amp;= \arg\max_\theta  \frac{1}{n}\sum^n_{i=1} \frac{\mathcal{N}_3(\mathbf{x}_i|\mathbf{\mu}_\mathbf{k}, \Sigma_\mathbf{k}) p(\mathbf{y}_i=\mathbf{k}|\theta)}{\sum_{\mathbf{j}\in K} \mathcal{N}_3(\mathbf{x}_i|\mathbf{\mu}_\mathbf{j}, \Sigma_\mathbf{j})p(\mathbf{y}_i=\mathbf{j}|\theta)}
+\end{align}
+\]</span> <a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn12"><p><sup>12</sup>&nbsp;For each one-hot-encoded category <span class="math inline">\(\mathbf{k}\in K\)</span>, <span class="math inline">\(\mu_\mathbf{k}\)</span> and <span class="math inline">\(\Sigma_\mathbf{k}\)</span> represents the model’s parameter for each of the categories’ Normal distribution (mean and variance, respectively). <span class="math inline">\(\phi_\mathbf{k}\)</span> represents the ratio/weighting of each category <span class="math inline">\(\mathbf{k}\)</span>. So, <span class="math inline">\(p(\mathbf{y}_i=\mathbf{k}|\theta)=\phi_\mathbf{k}\)</span></p></div><div id="fn13"><p><sup>13</sup>&nbsp;<span class="math display">\[
+\begin{align}
+p(a,b|c) &amp;= \frac{p(a,b,c)}{p(c)} \\
+  &amp;= \frac{p(a,b,c)p(b,c)}{p(c)p(b,c)} = \frac{p(a,b,c)}{p(b,c)}\frac{p(b,c)}{p(c)} \\
+  &amp;= p(a|b,c)p(b|c)
+\end{align}\]</span></p></div><div id="fn14"><p><sup>14</sup>&nbsp;The GDA/QDA, despite its name, actually has to go through a generative hoop for the derivation, since we are actually modelling our input <span class="math inline">\(\mathbf{x}_i\)</span> as some distribution which we can technically <em>re-sample from again</em> to <em>generate</em> a new sample of the similiar distribution to <span class="math inline">\(\mathbf{x}_i\)</span>.</p></div></div><p>In fact, learning a model where we assume the <span class="math inline">\(\mathbf{x}\)</span>’s in each category of the categorical distribution <span class="math inline">\(\mathbf{y}\)</span> as a Gaussian is known as Gaussian Discriminative Analysis (GDA) or Quadratic Discriminative Analysis (QDA) which can you read more <a href="https://kuleshov-group.github.io/aml-book/contents/lecture7-gaussian-discriminant-analysis.html#gaussian-discriminant-analysis">here</a>. Additionally, this is very close to the most well-known model/learner out there: Naïve Bayes. Naïve Bayes assumes each input data point <span class="math inline">\(\mathbf{x}_i\)</span> are independent of each other, but GDA/QDA assumes each input data point <span class="math inline">\(\mathbf{x}_i\)</span> follow a Gaussian distribution as mentioned before. <a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a></p>
+<section id="analytical-estimation-of-theta" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="analytical-estimation-of-theta">Analytical Estimation of <span class="math inline">\(\theta\)</span></h2>
+<p>Since GDA/QDA are clean to work with, they have an analytical method to compute the optimal parameter <span class="math inline">\(\theta\)</span> given the data <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span>. We basically compute the derivative of the log-likelihood with respect to each parameters to obtain the following <a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn15"><p><sup>15</sup>&nbsp;Check the derivations <a href="https://kuleshov-group.github.io/aml-book/contents/lecture7-gaussian-discriminant-analysis.html#optimizing-the-log-likelihood">here</a></p></div></div><p>We find that <span class="math inline">\(\phi_k=\frac{n_\mathbf{k}}{n}\)</span> where <span class="math inline">\(n\)</span> is the total number of samples/data while <span class="math inline">\(n_\mathbf{k}\)</span> is the number of samples with <span class="math inline">\(\mathbf{y}_i=\mathbf{k}\)</span>.</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbf{\mu}_\mathbf{k} &amp;= \frac{\sum_{i \text{  s.t.  } \mathbf{y}_i=\mathbf{k}} \mathbf{x}_i}{n_\mathbf{k}} \\
+\Sigma_\mathbf{k} &amp;= \frac{\sum_{i \text{  s.t.  } \mathbf{y}_i=\mathbf{k}} (\mathbf{x}_i-\mathbf{\mu}_\mathbf{k})(\mathbf{x}_i-\mathbf{\mu}_\mathbf{k})^\top}{n_\mathbf{k}} \\
+\end{align}
+\]</span></p>
+<div>
+<div id="pyodide-5" class="exercise-cell">
+
+</div>
+<script type="pyodide-5-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZ29fbWFza19pZHggPSB5WzosIDBdID09IDFcbnN0b3BfbWFza19pZHggPSB5WzosIDFdID09IDFcblxueF9nbyA9IHhbZ29fbWFza19pZHhdXG54X3N0b3AgPSB4W3N0b3BfbWFza19pZHhdXG5uX2dvID0geF9nby5zaGFwZVswXVxubl9zdG9wID0geF9zdG9wLnNoYXBlWzBdXG5cbm11X2dvID0gbnAuc3VtKHhfZ28sIGF4aXM9MCkgLyBuX2dvXG5tdV9zdG9wID0gbnAuc3VtKHhfc3RvcCwgYXhpcz0wKSAvIG5fc3RvcFxuXG5kaWZmX2dvID0geF9nbyAtIG11X2dvXG5kaWZmX3N0b3AgPSB4X3N0b3AgLSBtdV9zdG9wXG4jIHRoZSB0cmFuc3Bvc2UgYXJlIGZsaXBwZWQgc2luY2Ugd2UgYXJlIHVzaW5nIHJvdyB2ZWN0b3JzXG4jIGhlcmUgKGNvbW1vbiBpbiBjb2RlKSBpbnN0ZWFkIG9mIGNvbC4gdmVjdG9yc1xuIyAoY29tbW9uIGluIHRleHQgZm9ybSlcbnNpZ21hX2dvID0gKGRpZmZfZ28uVCBAIGRpZmZfZ28pIC8gbl9nb1xuc2lnbWFfc3RvcCA9IChkaWZmX3N0b3AuVCBAIGRpZmZfc3RvcCkgLyBuX3N0b3BcblxuIyB1c2VkIG9ubHkgd2hlbiBjb21wdXRpbmcgdGhlIHByZWRpY3Rpb25cbiMgKGkuZS4sIHRoZSBmaW5hbCBjbGFzc2lmaWNhdGlvbiBwcm9iYWJpbGl0eSBvZiB0aGUgaW1hZ2VzKVxucGhpX2dvID0gbl9nbyAvIChuX2dvICsgbl9zdG9wKVxucGhpX3N0b3AgPSBuX3N0b3AgLyAobl9nbyArIG5fc3RvcClcblxudGhldGEgPSBbbXVfZ28sIHNpZ21hX2dvLCBwaGlfZ28sIG11X3N0b3AsIHNpZ21hX3N0b3AsIHBoaV9zdG9wXVxuXG5zYW1wbGVzX2dvID0gbnAucmFuZG9tLm11bHRpdmFyaWF0ZV9ub3JtYWwoXG4gIHRoZXRhWzBdLCB0aGV0YVsxXSwgTl9ncmVlblxuKVxuc2FtcGxlc19zdG9wID0gbnAucmFuZG9tLm11bHRpdmFyaWF0ZV9ub3JtYWwoXG4gIHRoZXRhWzNdLCB0aGV0YVs0XSwgTl9yZWQrTl95ZWxsb3dcbilcblxuZmlnLCBheCA9IHBsb3RfM2RfdHJhZmZpY19kYXRhKFxuICB4LCB5LFxuICBzYW1wbGVzX2dvPXNhbXBsZXNfZ28sXG4gIHNhbXBsZXNfc3RvcD1zYW1wbGVzX3N0b3AsXG4pXG5wbHQuc2hvdygpIn0=
+</script>
+</div>
+</section>
+<section id="gradient-descent-estimation-of-theta" class="level2">
+<h2 class="anchored" data-anchor-id="gradient-descent-estimation-of-theta">Gradient Descent Estimation of <span class="math inline">\(\theta\)</span></h2>
+<p>Since we are using QDAs/GDAs, we have analytical solution available us (and we should use it in practice if QDAs/GDAs is what we really want). But most ML models, especially in vision, uses more complicated formulations like neural networks, we have to resort using numerical optimizations like gradient descent (GD), stochastic gradient descent, and Adam. So let us see how we optimize model in the majority of the cases via GD over the negative log-likelihood (NLL), which is just the negation of the log of the likelihood <span class="math inline">\(\frac{1}{n}\sum^n_{i=1} p(\mathbf{y}_i=\mathbf{k}|\mathbf{x}_i,\theta)\)</span>, including the NLL of the Gaussian in <code>def neg_log_likelihood_gaussian</code>. Note, we omit <span class="math inline">\(\log\phi_\mathbf{k}\)</span> since we are not optimizing that.</p>
+<p>This will take about a few minutes. Make sure you run the previous cell.</p>
+<div>
+<div id="pyodide-6" class="exercise-cell">
+
+</div>
+<script type="pyodide-6-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1hbGlnbiI6ImNlbnRlciJ9LCJjb2RlIjoiXG5pbXBvcnQgYXV0b2dyYWQubnVtcHkgYXMgYW5wXG5mcm9tIGF1dG9ncmFkIGltcG9ydCBncmFkXG5pbXBvcnQgbnVtcHkgYXMgbnBcbmZyb20gbWF0cGxvdGxpYiBpbXBvcnQgcHlwbG90IGFzIHBsdFxuZnJvbSBtYXRwbG90bGliLmFuaW1hdGlvbiBpbXBvcnQgRnVuY0FuaW1hdGlvblxuZnJvbSBJUHl0aG9uLmRpc3BsYXkgaW1wb3J0IEhUTUxcblxuIyBwZXItY2xhc3MgbmVnYXRpdmUgbG9nLWxpa2VsaWhvb2QgZm9yIGEgZnVsbCBHYXVzc2lhblxuZGVmIG5lZ19sb2dfbGlrZWxpaG9vZF9nYXVzc2lhbihtdSwgc2lnbWEsIHhfY2xhc3MpOlxuICAgIG4sIGQgPSB4X2NsYXNzLnNoYXBlXG5cbiAgICAjIG9wdGlvbmFsIHJlZ3VsYXJpemVyIGZvciBzdGFiaWxpdHkgKGJ1dCB0aGF0IG1ha2VzIE1MRSBpbnRvIGEgTUFQKVxuICAgIHNpZ21hX3JlZyA9IHNpZ21hICMgKyAxZS00ICogYW5wLmV5ZShkKVxuICAgIHNpZ24sIGxvZ2RldCA9IGFucC5saW5hbGcuc2xvZ2RldChzaWdtYV9yZWcpICAgICMgc2hvdWxkIGJlICsxIGZvciBTUERcbiAgICBpbnZfc2lnbWEgPSBhbnAubGluYWxnLmludihzaWdtYV9yZWcpXG5cbiAgICBkaWZmID0geF9jbGFzcyAtIG11XG4gICAgIyBxdWFkcmF0aWMgdGVybSBwZXIgc2FtcGxlOiAoeC3OvCleVCDOo157LTF9ICh4Lc68KVxuICAgIHF1YWQgPSBhbnAuc3VtKGRpZmYgKiAoZGlmZiBAIGludl9zaWdtYSksIGF4aXM9MSlcblxuICAgICMgYXZlcmFnZSBOTExcbiAgICByZXR1cm4gMC41ICogKGQgKiBhbnAubG9nKDIqYW5wLnBpKSArIGxvZ2RldCkgKyAwLjUgKiBhbnAubWVhbihxdWFkKVxuXG54X2dvX2RhdGEgICA9IHhbZ29fbWFza11cbnhfc3RvcF9kYXRhID0geFtzdG9wX21hc2tdXG5cbiMgaW5pdGlhbGl6ZSB3aXRoIHplcm8gbWVhbiBhbmQgaWRlbnRpdHkgY292YXJpYW5jZXMgbWF0cml4ICh2YXJpYW5jZT0xKVxubnAucmFuZG9tLnNlZWQoNDIpXG5tdV9nb19nZCAgID0gbnAuemVyb3MoeC5zaGFwZVsxXSlcbm11X3N0b3BfZ2QgPSBucC56ZXJvcyh4LnNoYXBlWzFdKVxuc2lnbWFfZ29fZ2QgICA9IG5wLmV5ZSh4LnNoYXBlWzFdKVxuc2lnbWFfc3RvcF9nZCA9IG5wLmV5ZSh4LnNoYXBlWzFdKVxuXG4jIGNvbXB1dGUgdGhlIGdyYWRpZW50IG9mIHRoZSBmdW5jdGlvbiB3LnIudC4gcGFyYW1ldGVyIGluZGV4XG5ncmFkX211ICAgID0gZ3JhZChuZWdfbG9nX2xpa2VsaWhvb2RfZ2F1c3NpYW4sIDApXG5ncmFkX3NpZ21hID0gZ3JhZChuZWdfbG9nX2xpa2VsaWhvb2RfZ2F1c3NpYW4sIDEpXG5cbiMgb3B0aW1pemF0aW9uXG5hbmltYXRpb25fc25hcHNob3RzID0gW11cbmxyX211ID0gMC4xXG5scl9zaWdtYSA9IDAuMDVcbm51bV9pdGVyYXRpb25zID0gMTAwXG5jbGlwID0gMTAuMFxuXG5mb3IgaXQgaW4gcmFuZ2UobnVtX2l0ZXJhdGlvbnMgKyAxKTpcbiAgICAjIGNvdmFyaWFuY2UgbWF0cml4IHZlcnkgc2Vuc2l0aXZlIChuZWVkIHRvIGVtcGxveSBzY2hlZHVsZXIpXG4gICAgaWYgaXQgPT0gMjU6XG4gICAgICBscl9zaWdtYSA9IDAuMDVcbiAgICBlbGlmIGl0ID09IDUwOlxuICAgICAgbHJfc2lnbWEgPSAwLjAxXG4gICAgICBscl9tdSA9IDAuMDFcbiAgICBlbGlmIGl0ID09IDc1OlxuICAgICAgbHJfc2lnbWEgPSAwLjAwMVxuICBcbiAgICBpZiBpdCAlIDUgPT0gMDpcbiAgICAgICAgIyBjb21wdXRlIGxvc3MgYXMgaXNcbiAgICAgICAgbG9zc19nbyAgID0gbmVnX2xvZ19saWtlbGlob29kX2dhdXNzaWFuKG11X2dvX2dkLCAgIHNpZ21hX2dvX2dkLCAgIHhfZ29fZGF0YSlcbiAgICAgICAgbG9zc19zdG9wID0gbmVnX2xvZ19saWtlbGlob29kX2dhdXNzaWFuKG11X3N0b3BfZ2QsIHNpZ21hX3N0b3BfZ2QsIHhfc3RvcF9kYXRhKVxuICAgICAgICB0b3RhbCA9IGZsb2F0KGxvc3NfZ28gKyBsb3NzX3N0b3ApXG5cbiAgICAgICAgYW5pbWF0aW9uX3NuYXBzaG90cy5hcHBlbmQoe1xuICAgICAgICAgICAgJ2l0ZXInOiBpdCxcbiAgICAgICAgICAgICdtdV9nbyc6ICAgbXVfZ29fZ2QuY29weSgpLFxuICAgICAgICAgICAgJ211X3N0b3AnOiBtdV9zdG9wX2dkLmNvcHkoKSxcbiAgICAgICAgICAgICdzaWdtYV9nbyc6ICAgc2lnbWFfZ29fZ2QuY29weSgpLFxuICAgICAgICAgICAgJ3NpZ21hX3N0b3AnOiBzaWdtYV9zdG9wX2dkLmNvcHkoKSxcbiAgICAgICAgICAgICdsb3NzJzogdG90YWxcbiAgICAgICAgfSlcbiAgICAgICAgaWYgaXQgJSAyMCA9PSAwOlxuICAgICAgICAgICAgcHJpbnQoZlwiSXRlciB7aXQ6M2R9OiBMb3NzPXt0b3RhbDouNGZ9IHwgzrxfR089e211X2dvX2dkLnJvdW5kKDMpfSB8IM68X1NUT1A9e211X3N0b3BfZ2Qucm91bmQoMyl9XCIpXG5cbiAgICBpZiBpdCA9PSBudW1faXRlcmF0aW9uczpcbiAgICAgICAgYnJlYWtcblxuICAgICMgdXNlIHRoZSBjb21wdXRlZCBncmFkaWVudCBmdW5jdGlvblxuICAgIGdfbXVfZ28gICAgPSBncmFkX211KG11X2dvX2dkLCBzaWdtYV9nb19nZCwgeF9nb19kYXRhKVxuICAgIGdfc2lnbWFfZ28gPSBncmFkX3NpZ21hKG11X2dvX2dkLCBzaWdtYV9nb19nZCwgeF9nb19kYXRhKVxuICAgIGdfbXVfc3RvcCAgICA9IGdyYWRfbXUobXVfc3RvcF9nZCwgc2lnbWFfc3RvcF9nZCwgeF9zdG9wX2RhdGEpXG4gICAgZ19zaWdtYV9zdG9wID0gZ3JhZF9zaWdtYShtdV9zdG9wX2dkLCBzaWdtYV9zdG9wX2dkLCB4X3N0b3BfZGF0YSlcblxuICAgICMgZ3JhZGllbnQgY2xpcHBpbmcgZm9yIHN0YWJpbGl0eVxuICAgIGZvciBnIGluIChnX211X2dvLCBnX3NpZ21hX2dvLCBnX211X3N0b3AsIGdfc2lnbWFfc3RvcCk6XG4gICAgICAgIGduID0gbnAubGluYWxnLm5vcm0obnAucmF2ZWwobnAuYXJyYXkoZykpKVxuICAgICAgICBpZiBucC5pc2Zpbml0ZShnbikgYW5kIGduID4gY2xpcDpcbiAgICAgICAgICAgIGcgKj0gKGNsaXAgLyBnbilcblxuICAgICMgZ3JhZGllbnQgdXBkYXRlXG4gICAgbXVfZ29fZ2QgICA9IG11X2dvX2dkICAgLSBscl9tdSpnX211X2dvXG4gICAgbXVfc3RvcF9nZCA9IG11X3N0b3BfZ2QgLSBscl9tdSpnX211X3N0b3BcbiAgICBzaWdtYV9nb19nZCAgID0gc2lnbWFfZ29fZ2QgICAtIGxyX3NpZ21hKmdfc2lnbWFfZ29cbiAgICBzaWdtYV9zdG9wX2dkID0gc2lnbWFfc3RvcF9nZCAtIGxyX3NpZ21hKmdfc2lnbWFfc3RvcFxuXG4gICAgIyBrZWVwIM6jIHN5bW1ldHJpYyArIHBvc2l0aXZlIGRlZmluaXRlXG4gICAgc2lnbWFfZ29fZ2QgICA9IF9tYWtlX3NwZChzaWdtYV9nb19nZClcbiAgICBzaWdtYV9zdG9wX2dkID0gX21ha2Vfc3BkKHNpZ21hX3N0b3BfZ2QpXG5cbnByaW50KFwiXFxuRmluYWwgUmVzdWx0czpcIilcbnByaW50KFwiXFx0R3JhZGllbnQgRGVzY2VudDpcIilcbnByaW50KGZcIlxcdFxcdM68X0dPOiAgICAgICAgICAgICAgICAgICB7bXVfZ29fZ2Qucm91bmQoMyl9XCIpXG5wcmludChmXCJcXHRcXHTOvF9TVE9QOiAgICAgICAgICAgICAgICAge211X3N0b3BfZ2Qucm91bmQoMyl9XCIpXG5wcmludChmXCJcXHRcXHTOo19HTyBkaWFnIChpLmUuLCDPg8KyKTogICB7bnAuZGlhZyhzaWdtYV9nb19nZCkucm91bmQoMyl9XCIpXG5wcmludChmXCJcXHRcXHTOo19TVE9QIGRpYWcgKGkuZS4sIM+DwrIpOiB7bnAuZGlhZyhzaWdtYV9zdG9wX2dkKS5yb3VuZCgzKX1cIilcbnByaW50KFwiXFx0QW5hbHl0aWNhbDpcIilcbnByaW50KGZcIlxcdFxcdM68X0dPOiAgICAgICAgICAgICAgICAgICB7bXVfZ28ucm91bmQoMyl9XCIpXG5wcmludChmXCJcXHRcXHTOvF9TVE9QOiAgICAgICAgICAgICAgICAge211X3N0b3Aucm91bmQoMyl9XCIpXG5wcmludChmXCJcXHRcXHTOo19HTyBkaWFnIChpLmUuLCDPg8KyKTogICB7bnAuZGlhZyhzaWdtYV9nbykucm91bmQoMyl9XCIpXG5wcmludChmXCJcXHRcXHTOo19TVE9QIGRpYWcgKGkuZS4sIM+DwrIpOiB7bnAuZGlhZyhzaWdtYV9zdG9wKS5yb3VuZCgzKX1cIilcblxuZmlnID0gcGx0LmZpZ3VyZShmaWdzaXplPSg4LCA3KSlcbmF4ID0gZmlnLmFkZF9zdWJwbG90KDExMSwgcHJvamVjdGlvbj0nM2QnKVxuXG5kZWYgdXBkYXRlKGZyYW1lKTpcbiAgICBheC5jbGVhcigpXG4gICAgc25hcCA9IGFuaW1hdGlvbl9zbmFwc2hvdHNbZnJhbWVdXG5cbiAgICAjIEdlbmVyYXRlIGNvbnNpc3RlbnQgc2FtcGxlcyBmb3IgdGhpcyBmcmFtZVxuICAgIHJuZyA9IG5wLnJhbmRvbS5kZWZhdWx0X3JuZyhmcmFtZSlcbiAgICBuX3NhbXBsZXMgPSA1MFxuICAgIGdvX3MgICA9IHJuZy5tdWx0aXZhcmlhdGVfbm9ybWFsKHNuYXBbJ211X2dvJ10sICAgc25hcFsnc2lnbWFfZ28nXSwgICBuX3NhbXBsZXMpXG4gICAgc3RvcF9zID0gcm5nLm11bHRpdmFyaWF0ZV9ub3JtYWwoc25hcFsnbXVfc3RvcCddLCBzbmFwWydzaWdtYV9zdG9wJ10sIG5fc2FtcGxlcylcblxuICAgICMgVXNlIG1vZHVsYXIgcGxvdHRpbmcgZnVuY3Rpb24gd2l0aCBleGlzdGluZyBheGlzXG4gICAgcGxvdF8zZF90cmFmZmljX2RhdGEoXG4gICAgICB4LCB5LCBzYW1wbGVzX2dvPWdvX3MsIHNhbXBsZXNfc3RvcD1zdG9wX3MsIGF4PWF4LFxuICAgICAgdGl0bGU9ZidJdGVyYXRpb24ge3NuYXBbXCJpdGVyXCJdfSB8IExvc3M6IHtzbmFwW1wibG9zc1wiXTouNGZ9J1xuICAgIClcblxuYW5pbSA9IEZ1bmNBbmltYXRpb24oZmlnLCB1cGRhdGUsIGZyYW1lcz1sZW4oYW5pbWF0aW9uX3NuYXBzaG90cyksIGludGVydmFsPTMwMCwgcmVwZWF0PVRydWUpXG5wbHQuY2xvc2UoKVxuSFRNTChhbmltLnRvX2pzaHRtbCgpKSJ9
+</script>
+</div>
+<p>You can see how the model distribution gets closer to the true data distribution for each gradient step. Remember, each point is a data point representing the 3-pixel image of a traffic light. Theoretically speaking, if there exists an analytical solution of a quadratic expression (single minimum), gradient descent should effectively reach to the same optimal point. However, the reason it’s not is likely because we’re missing the class prior <span class="math inline">\(\phi_\mathbf{k}\)</span> or the variance (i.e., the spread) is different between the two categories (needing two different learning rate?) Regardless, it still mostly converges.</p>
+</section>
+</section>
+<section id="summary" class="level1 page-columns page-full">
+<h1>Summary</h1>
+<p>Overall, you saw a simple GDA model to classify a 3-pixel image input of a traffic light as either <span class="math inline">\(\text{GO}\)</span> or <span class="math inline">\(\text{STOP}\)</span>, which would be used to tell the car to move or not. But if you recall, this is a simple abstraction. In a more realistic setting, we would have our models read from real images (i.e., an actual image of a traffic light), so you can expect the distribution would not just be over 3D (i.e., the three pixels), but one million dimensions! We also get to see how the model themselves is actually just a small part of the greater learning system. Instead of a normal distribution <span class="math inline">\(\mathcal{N}\)</span>, we can replace it with a multi-layered neural networks, or even augment it with convolutional layers, and the main idea still doesn’t change.</p>
+<p>So, going back to the original three questions:</p>
+<ul>
+<li>What are they?</li>
+</ul>
+<p>MAPs and MLEs are particular learning schemes we can use on our models to estimate an optimal <span class="math inline">\(\theta\)</span> given <span class="math inline">\(\mathbf{x}\)</span> and <span class="math inline">\(\mathbf{y}\)</span>. It also has a more general version where <span class="math inline">\(\theta\)</span> is modelled in a Bayesian/probabilistic way (i.e., Bayesian prediction).</p>
+<ul>
+<li>How do they relate to vision?</li>
+</ul>
+<p>Because probabilistic learners are not just restricted to tabular data, allowing other forms of data to train on the model (i.e., images). From a classical vision standpoint, assuming the model and the learning process as probabilistic allows the use of various powerful, abstract tools from statistics to model arbitrary distributions of visual data (i.e., quadratic discriminative analysis), whereas one needs to design different models for different domains. Refer <span class="citation" data-cites="sutton2019bitter">Sutton (<a href="#ref-sutton2019bitter" role="doc-biblioref">2019</a>)</span>.</p>
+<div class="no-row-height column-margin column-container"></div><ul>
+<li>Why are they useful to think about them?</li>
+</ul>
+<p>Nature is too complicated. Probability is <del>likely</del> the best way to effectively model complex processes into something simpler <em>to work with</em>, allowing effective training of the model for seemingly intelligent prediction. Refer <span class="citation" data-cites="sutton2019bitter">Sutton (<a href="#ref-sutton2019bitter" role="doc-biblioref">2019</a>)</span>.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-sutton2019bitter" class="csl-entry" role="listitem">
+Sutton, Richard S. 2019. <span>“The Bitter Lesson.”</span> <a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html" class="uri">http://www.incompleteideas.net/IncIdeas/BitterLesson.html</a>.
+</div></div><p>More practically, all deep learning-based vision models employs these statistical tools, and even moreso on modern generative models. So, to learn and apply these latest models, one likely needs to have strong foundation in these aspects.</p>
+
+
+<script type="pyodide-data">
+eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yOC4xL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIl19fQ==
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTYiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl82ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS02LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzYgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzYsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl81ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS01LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzUgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzUsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl80ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS00LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzQgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoiX3B5b2RpZGVfdmFsdWVfMyA9IHtcbiAgY29uc3QgeyBoaWdobGlnaHRQeXRob24sIGI2NERlY29kZX0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBldmFsdWF0aW9uIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oe1xuICAgIGlkOiBcInB5b2RpZGUtMy1jb250ZW50c1wiLFxuICAgIGVjaG86IHRydWUsXG4gICAgb3V0cHV0OiB0cnVlXG4gIH0sIGJsb2NrLmF0dHIpO1xuXG4gIC8vIEV2YWx1YXRlIHRoZSBwcm92aWRlZCBQeXRob24gY29kZVxuICBjb25zdCByZXN1bHQgPSBweW9kaWRlT2pzLnByb2Nlc3Moe2NvZGU6IGJsb2NrLmNvZGUsIG9wdGlvbnN9LCB7fSk7XG5cbiAgLy8gRWFybHkgeWllbGQgd2hpbGUgd2Ugd2FpdCBmb3IgdGhlIGZpcnN0IGV2YWx1YXRpb24gYW5kIHJlbmRlclxuICBpZiAob3B0aW9ucy5vdXRwdXQgJiYgIShcIjNcIiBpbiBweW9kaWRlT2pzLnJlbmRlcmVkT2pzKSkge1xuICAgIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XG4gICAgY29uc3Qgc3Bpbm5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XG5cbiAgICBpZiAob3B0aW9ucy5lY2hvKSB7XG4gICAgICAvLyBTaG93IG91dHB1dCBhcyBoaWdobGlnaHRlZCBzb3VyY2VcbiAgICAgIGNvbnN0IHByZUVsZW0gPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwicHJlXCIpO1xuICAgICAgY29udGFpbmVyLmNsYXNzTmFtZSA9IFwic291cmNlQ29kZVwiO1xuICAgICAgcHJlRWxlbS5jbGFzc05hbWUgPSBcInNvdXJjZUNvZGUgcHl0aG9uXCI7XG4gICAgICBwcmVFbGVtLmFwcGVuZENoaWxkKGhpZ2hsaWdodFB5dGhvbihibG9jay5jb2RlKSk7XG4gICAgICBzcGlubmVyLmNsYXNzTmFtZSA9IFwic3Bpbm5lci1ncm93IHNwaW5uZXItZ3Jvdy1zbSBtLTIgcG9zaXRpb24tYWJzb2x1dGUgdG9wLTAgZW5kLTBcIjtcbiAgICAgIHByZUVsZW0uYXBwZW5kQ2hpbGQoc3Bpbm5lcik7XG4gICAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQocHJlRWxlbSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHNwaW5uZXIuY2xhc3NOYW1lID0gXCJzcGlubmVyLWJvcmRlciBzcGlubmVyLWJvcmRlci1zbVwiO1xuICAgICAgY29udGFpbmVyLmFwcGVuZENoaWxkKHNwaW5uZXIpO1xuICAgIH1cblxuICAgIHlpZWxkIGNvbnRhaW5lcjtcbiAgfVxuXG4gIHB5b2RpZGVPanMucmVuZGVyZWRPanNbXCIzXCJdID0gdHJ1ZTtcbiAgeWllbGQgYXdhaXQgcmVzdWx0O1xufVxuIn0seyJjZWxsTmFtZSI6InB5b2RpZGUtMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3B5b2RpZGVfZWRpdG9yXzIgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTItY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7IGlkOiBgcHlvZGlkZS0yLWNvbnRlbnRzYCB9LCBibG9jay5hdHRyKTtcbiAgY29uc3QgZWRpdG9yID0gbmV3IFB5b2RpZGVFeGVyY2lzZUVkaXRvcihcbiAgICBweW9kaWRlT2pzLnB5b2RpZGVQcm9taXNlLFxuICAgIGJsb2NrLmNvZGUsXG4gICAgb3B0aW9uc1xuICApO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3B5b2RpZGVfdmFsdWVfMiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMiwge30pO1xuIn0seyJjZWxsTmFtZSI6InB5b2RpZGUtMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJfcHlvZGlkZV92YWx1ZV8xID0ge1xuICBjb25zdCB7IGhpZ2hsaWdodFB5dGhvbiwgYjY0RGVjb2RlfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICAvLyBEZWZhdWx0IGV2YWx1YXRpb24gY29uZmlndXJhdGlvblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7XG4gICAgaWQ6IFwicHlvZGlkZS0xLWNvbnRlbnRzXCIsXG4gICAgZWNobzogdHJ1ZSxcbiAgICBvdXRwdXQ6IHRydWVcbiAgfSwgYmxvY2suYXR0cik7XG5cbiAgLy8gRXZhbHVhdGUgdGhlIHByb3ZpZGVkIFB5dGhvbiBjb2RlXG4gIGNvbnN0IHJlc3VsdCA9IHB5b2RpZGVPanMucHJvY2Vzcyh7Y29kZTogYmxvY2suY29kZSwgb3B0aW9uc30sIHt9KTtcblxuICAvLyBFYXJseSB5aWVsZCB3aGlsZSB3ZSB3YWl0IGZvciB0aGUgZmlyc3QgZXZhbHVhdGlvbiBhbmQgcmVuZGVyXG4gIGlmIChvcHRpb25zLm91dHB1dCAmJiAhKFwiMVwiIGluIHB5b2RpZGVPanMucmVuZGVyZWRPanMpKSB7XG4gICAgY29uc3QgY29udGFpbmVyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKTtcbiAgICBjb25zdCBzcGlubmVyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKTtcblxuICAgIGlmIChvcHRpb25zLmVjaG8pIHtcbiAgICAgIC8vIFNob3cgb3V0cHV0IGFzIGhpZ2hsaWdodGVkIHNvdXJjZVxuICAgICAgY29uc3QgcHJlRWxlbSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJwcmVcIik7XG4gICAgICBjb250YWluZXIuY2xhc3NOYW1lID0gXCJzb3VyY2VDb2RlXCI7XG4gICAgICBwcmVFbGVtLmNsYXNzTmFtZSA9IFwic291cmNlQ29kZSBweXRob25cIjtcbiAgICAgIHByZUVsZW0uYXBwZW5kQ2hpbGQoaGlnaGxpZ2h0UHl0aG9uKGJsb2NrLmNvZGUpKTtcbiAgICAgIHNwaW5uZXIuY2xhc3NOYW1lID0gXCJzcGlubmVyLWdyb3cgc3Bpbm5lci1ncm93LXNtIG0tMiBwb3NpdGlvbi1hYnNvbHV0ZSB0b3AtMCBlbmQtMFwiO1xuICAgICAgcHJlRWxlbS5hcHBlbmRDaGlsZChzcGlubmVyKTtcbiAgICAgIGNvbnRhaW5lci5hcHBlbmRDaGlsZChwcmVFbGVtKTtcbiAgICB9IGVsc2Uge1xuICAgICAgc3Bpbm5lci5jbGFzc05hbWUgPSBcInNwaW5uZXItYm9yZGVyIHNwaW5uZXItYm9yZGVyLXNtXCI7XG4gICAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQoc3Bpbm5lcik7XG4gICAgfVxuXG4gICAgeWllbGQgY29udGFpbmVyO1xuICB9XG5cbiAgcHlvZGlkZU9qcy5yZW5kZXJlZE9qc1tcIjFcIl0gPSB0cnVlO1xuICB5aWVsZCBhd2FpdCByZXN1bHQ7XG59XG4ifSx7ImNlbGxOYW1lIjoicHlvZGlkZS1wcmVsdWRlIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoicHlvZGlkZU9qcyA9IHtcbiAgY29uc3Qge1xuICAgIFB5b2RpZGVFdmFsdWF0b3IsXG4gICAgUHlvZGlkZUVudmlyb25tZW50TWFuYWdlcixcbiAgICBzZXR1cFB5dGhvbixcbiAgICBzdGFydFB5b2RpZGVXb3JrZXIsXG4gICAgYjY0RGVjb2RlLFxuICAgIGNvbGxhcHNlUGF0aCxcbiAgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc3RhdHVzQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLXN0YXR1c1wiKTtcbiAgY29uc3QgaW5kaWNhdG9yQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaW5kaWNhdG9yQ29udGFpbmVyLmNsYXNzTGlzdC5yZW1vdmUoXCJkLW5vbmVcIik7XG5cbiAgbGV0IHN0YXR1c1RleHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiZGl2XCIpXG4gIHN0YXR1c1RleHQuY2xhc3NMaXN0ID0gXCJleGVyY2lzZS1sb2FkaW5nLWRldGFpbHNcIjtcbiAgc3RhdHVzVGV4dCA9IHN0YXR1c0NvbnRhaW5lci5hcHBlbmRDaGlsZChzdGF0dXNUZXh0KTtcbiAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBJbml0aWFsaXNlYDtcblxuICAvLyBIb2lzdCBpbmRpY2F0b3Igb3V0IGZyb20gZmluYWwgc2xpZGUgd2hlbiBydW5uaW5nIHVuZGVyIHJldmVhbFxuICBjb25zdCByZXZlYWxTdGF0dXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCAuZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGlmIChyZXZlYWxTdGF0dXMpIHtcbiAgICByZXZlYWxTdGF0dXMucmVtb3ZlKCk7XG4gICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgPiAuc2xpZGVzXCIpLmFwcGVuZENoaWxkKHJldmVhbFN0YXR1cyk7XG4gIH1cblxuICAvLyBNYWtlIGFueSByZXZlYWwgc2xpZGVzIHdpdGggbGl2ZSBjZWxscyBzY3JvbGxhYmxlXG4gIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoXCIucmV2ZWFsIC5leGVyY2lzZS1jZWxsXCIpLmZvckVhY2goKGVsKSA9PiB7XG4gICAgZWwuY2xvc2VzdCgnc2VjdGlvbi5zbGlkZScpLmNsYXNzTGlzdC5hZGQoXCJzY3JvbGxhYmxlXCIpO1xuICB9KVxuXG4gIC8vIFB5b2RpZGUgc3VwcGxlbWVudGFsIGRhdGEgYW5kIG9wdGlvbnNcbiAgY29uc3QgZGF0YUNvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS1kYXRhXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZGF0YSA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGRhdGFDb250ZW50KSk7XG5cbiAgLy8gR3JhYiBsaXN0IG9mIHJlc291cmNlcyB0byBiZSBkb3dubG9hZGVkXG4gIGNvbnN0IGZpbGVzQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ2ZnMtZmlsZVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGZpbGVzID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZmlsZXNDb250ZW50KSk7XG5cbiAgbGV0IHB5b2RpZGVQcm9taXNlID0gKGFzeW5jICgpID0+IHtcbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIFB5b2RpZGVgO1xuICAgIGNvbnN0IHB5b2RpZGUgPSBhd2FpdCBzdGFydFB5b2RpZGVXb3JrZXIoZGF0YS5vcHRpb25zKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcGFja2FnZTogbWljcm9waXBgO1xuICAgIGF3YWl0IHB5b2RpZGUubG9hZFBhY2thZ2UoXCJtaWNyb3BpcFwiKTtcbiAgICBjb25zdCBtaWNyb3BpcCA9IGF3YWl0IHB5b2RpZGUucHlpbXBvcnQoXCJtaWNyb3BpcFwiKTtcbiAgICBhd2FpdCBkYXRhLnBhY2thZ2VzLnBrZ3MubWFwKChwa2cpID0+ICgpID0+IHtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcGFja2FnZTogJHtwa2d9YDtcbiAgICAgIHJldHVybiBtaWNyb3BpcC5pbnN0YWxsKHBrZyk7XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG4gICAgYXdhaXQgbWljcm9waXAuZGVzdHJveSgpO1xuXG4gICAgLy8gRG93bmxvYWQgYW5kIGluc3RhbGwgcmVzb3VyY2VzXG4gICAgYXdhaXQgZmlsZXMubWFwKChmaWxlKSA9PiBhc3luYyAoKSA9PiB7XG4gICAgICBjb25zdCBuYW1lID0gZmlsZS5zdWJzdHJpbmcoZmlsZS5sYXN0SW5kZXhPZignLycpICsgMSk7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHJlc291cmNlOiAke25hbWV9YDtcbiAgICAgIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgZmV0Y2goZmlsZSk7XG4gICAgICBpZiAoIXJlc3BvbnNlLm9rKSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihgQ2FuJ3QgZG93bmxvYWQgXFxgJHtmaWxlfVxcYC4gRXJyb3IgJHtyZXNwb25zZS5zdGF0dXN9OiBcIiR7cmVzcG9uc2Uuc3RhdHVzVGV4dH1cIi5gKTtcbiAgICAgIH1cbiAgICAgIGNvbnN0IGRhdGEgPSBhd2FpdCByZXNwb25zZS5hcnJheUJ1ZmZlcigpO1xuXG4gICAgICAvLyBTdG9yZSBVUkxzIGluIHRoZSBjd2Qgd2l0aG91dCBhbnkgc3ViZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgaWYgKGZpbGUuaW5jbHVkZXMoXCI6Ly9cIikpIHtcbiAgICAgICAgZmlsZSA9IG5hbWU7XG4gICAgICB9XG5cbiAgICAgIC8vIENvbGxhcHNlIGhpZ2hlciBkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBmaWxlID0gY29sbGFwc2VQYXRoKGZpbGUpO1xuXG4gICAgICAvLyBDcmVhdGUgZGlyZWN0b3J5IHRyZWUsIGlnbm9yaW5nIFwiZGlyZWN0b3J5IGV4aXN0c1wiIFZGUyBlcnJvcnNcbiAgICAgIGNvbnN0IHBhcnRzID0gZmlsZS5zcGxpdCgnLycpLnNsaWNlKDAsIC0xKTtcbiAgICAgIGxldCBwYXRoID0gJyc7XG4gICAgICB3aGlsZSAocGFydHMubGVuZ3RoID4gMCkge1xuICAgICAgICBwYXRoICs9IHBhcnRzLnNoaWZ0KCkgKyAnLyc7XG4gICAgICAgIHRyeSB7XG4gICAgICAgICAgYXdhaXQgcHlvZGlkZS5GUy5ta2RpcihwYXRoKTtcbiAgICAgICAgfSBjYXRjaCAoZSkge1xuICAgICAgICAgIGlmIChlLm5hbWUgIT09IFwiRXJybm9FcnJvclwiKSB0aHJvdyBlO1xuICAgICAgICAgIGlmIChlLmVycm5vICE9PSAyMCkge1xuICAgICAgICAgICAgY29uc3QgZXJyb3JUZXh0UHRyID0gYXdhaXQgcHlvZGlkZS5fbW9kdWxlLl9zdHJlcnJvcihlLmVycm5vKTtcbiAgICAgICAgICAgIGNvbnN0IGVycm9yVGV4dCA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5VVEY4VG9TdHJpbmcoZXJyb3JUZXh0UHRyKTtcbiAgICAgICAgICAgIHRocm93IG5ldyBFcnJvcihgRmlsZXN5c3RlbSBFcnJvciAke2UuZXJybm99IFwiJHtlcnJvclRleHR9XCIuYCk7XG4gICAgICAgICAgfVxuICAgICAgICB9XG4gICAgICB9XG5cbiAgICAgIC8vIFdyaXRlIHRoaXMgZmlsZSB0byB0aGUgVkZTXG4gICAgICB0cnkge1xuICAgICAgICByZXR1cm4gYXdhaXQgcHlvZGlkZS5GUy53cml0ZUZpbGUoZmlsZSwgbmV3IFVpbnQ4QXJyYXkoZGF0YSkpO1xuICAgICAgfSBjYXRjaCAoZSkge1xuICAgICAgICBpZiAoZS5uYW1lICE9PSBcIkVycm5vRXJyb3JcIikgdGhyb3cgZTtcbiAgICAgICAgY29uc3QgZXJyb3JUZXh0UHRyID0gYXdhaXQgcHlvZGlkZS5fbW9kdWxlLl9zdHJlcnJvcihlLmVycm5vKTtcbiAgICAgICAgY29uc3QgZXJyb3JUZXh0ID0gYXdhaXQgcHlvZGlkZS5fbW9kdWxlLlVURjhUb1N0cmluZyhlcnJvclRleHRQdHIpO1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYEZpbGVzeXN0ZW0gRXJyb3IgJHtlLmVycm5vfSBcIiR7ZXJyb3JUZXh0fVwiLmApO1xuICAgICAgfVxuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBQeW9kaWRlIGVudmlyb25tZW50IHNldHVwYDtcbiAgICBhd2FpdCBzZXR1cFB5dGhvbihweW9kaWRlKTtcblxuICAgIHN0YXR1c1RleHQucmVtb3ZlKCk7XG4gICAgaWYgKHN0YXR1c0NvbnRhaW5lci5jaGlsZHJlbi5sZW5ndGggPT0gMCkge1xuICAgICAgc3RhdHVzQ29udGFpbmVyLnBhcmVudE5vZGUucmVtb3ZlKCk7XG4gICAgfVxuICAgIHJldHVybiBweW9kaWRlO1xuICB9KSgpLmNhdGNoKChlcnIpID0+IHtcbiAgICBzdGF0dXNUZXh0LnN0eWxlLmNvbG9yID0gXCJ2YXIoLS1leGVyY2lzZS1lZGl0b3ItaGwtZXIsICNBRDAwMDApXCI7XG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGVyci5tZXNzYWdlO1xuICAgIC8vaW5kaWNhdG9yQ29udGFpbmVyLnF1ZXJ5U2VsZWN0b3IoXCIuc3Bpbm5lci1ncm93XCIpLmNsYXNzTGlzdC5hZGQoXCJkLW5vbmVcIik7XG4gICAgdGhyb3cgZXJyO1xuICB9KTtcblxuICAvLyBLZWVwIHRyYWNrIG9mIGluaXRpYWwgT0pTIGJsb2NrIHJlbmRlclxuICBjb25zdCByZW5kZXJlZE9qcyA9IHt9O1xuXG4gIGNvbnN0IHByb2Nlc3MgPSBhc3luYyAoY29udGV4dCwgaW5wdXRzKSA9PiB7XG4gICAgY29uc3QgcHlvZGlkZSA9IGF3YWl0IHB5b2RpZGVQcm9taXNlO1xuICAgIGNvbnN0IGV2YWx1YXRvciA9IG5ldyBQeW9kaWRlRXZhbHVhdG9yKHB5b2RpZGUsIGNvbnRleHQpO1xuICAgIGF3YWl0IGV2YWx1YXRvci5wcm9jZXNzKGlucHV0cyk7XG4gICAgcmV0dXJuIGV2YWx1YXRvci5jb250YWluZXI7XG4gIH1cblxuICByZXR1cm4ge1xuICAgIHB5b2RpZGVQcm9taXNlLFxuICAgIHJlbmRlcmVkT2pzLFxuICAgIHByb2Nlc3MsXG4gIH07XG59XG4ifV19
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+
+</section>
+
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../blog";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark_dimmed">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      if (authorPrefersDark) {
+          [baseTheme, altTheme] = [altTheme, baseTheme];
+      }
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "andrew-shc/andrew-shc.github.io";
+    script.dataset.repoId = "R_kgDOMDq5Jg";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOMDq5Js4C2fss";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "bottom";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

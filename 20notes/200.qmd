@@ -1,0 +1,150 @@
+---
+title: "Style Showcase"
+subtitle: "Live Python, callouts, and sidenotes"
+image: ???
+date: 6-28-26
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [numpy, matplotlib]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+toc: true
+toc-location: left
+---
+
+# Introduction
+
+This note exists purely to stress-test styling: live Python cells, collapsible callouts, and margin sidenotes.[^intro]
+
+[^intro]: Notes differ from blog posts mainly in intent — a note is a running reference document while a blog post is a narrative piece. Both share the same Quarto machinery here.
+
+# Live Python
+
+```{pyodide}
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Visualise a 2-D Gaussian density on a grid
+rng = np.random.default_rng(7)
+N = 300
+pts = rng.multivariate_normal([0, 0], [[1, 0.7], [0.7, 1]], size=N)
+
+fig, ax = plt.subplots(figsize=(5, 5))
+ax.scatter(pts[:, 0], pts[:, 1], s=6, alpha=0.4, color="steelblue")
+ax.set_aspect("equal")
+ax.set_title("Correlated 2-D Gaussian (ρ = 0.7)")
+ax.set_xlabel("x₁")
+ax.set_ylabel("x₂")
+plt.tight_layout()
+plt.show()
+```
+
+Edit the covariance matrix above (try `[[1, 0], [0, 1]]` for independent components) and re-run.
+
+# Callout Notes
+
+## Definition (always visible)
+
+::: {.callout-note}
+**Multivariate Normal.** $X \sim \mathcal{N}(\mu, \Sigma)$ has density
+
+$$p(x) = \frac{1}{(2\pi)^{d/2}|\Sigma|^{1/2}} \exp\!\left(-\tfrac{1}{2}(x-\mu)^\top \Sigma^{-1}(x-\mu)\right).$$
+:::
+
+## Derivation (collapsed)
+
+::: {.callout-tip collapse="true"}
+### Click to expand: sampling via Cholesky
+
+To draw $X \sim \mathcal{N}(\mu, \Sigma)$:
+
+1. Compute the Cholesky factor $L$ such that $\Sigma = LL^\top$.
+2. Draw $Z \sim \mathcal{N}(0, I)$.
+3. Return $X = \mu + LZ$.
+
+**Why it works:** $\text{Cov}(LZ) = L\,\text{Cov}(Z)\,L^\top = LIL^\top = \Sigma$. [^chol]
+:::
+
+[^chol]: Cholesky is $O(d^3)$ and only needs to be computed once per covariance matrix, making repeated sampling cheap.
+
+## Common pitfall (collapsed)
+
+::: {.callout-warning collapse="true"}
+### Click to expand: $\Sigma$ must be positive semi-definite
+
+Passing a non-PSD matrix to `np.random.multivariate_normal` raises `LinAlgError`.
+A quick fix is to add a small diagonal jitter: `Σ + ε·I`.
+:::
+
+## Implementation note (collapsed)
+
+::: {.callout-caution collapse="true"}
+### Click to expand: numerical precision of the log-density
+
+Computing $\log p(x)$ directly can underflow for high $d$.
+Prefer working in log-space throughout:
+
+```python
+from scipy.stats import multivariate_normal
+logp = multivariate_normal.logpdf(x, mean=mu, cov=Sigma)
+```
+:::
+
+# Table
+
+| Property | Expression | Notes |
+|---|---|---|
+| Mean | $\mu$ | First moment |
+| Covariance | $\Sigma$ | Must be PSD |
+| Entropy | $\frac{1}{2}\ln\lvert 2\pi e\,\Sigma\rvert$ | Maximised over all distributions with fixed $\Sigma$ |
+| KL divergence | $\frac{1}{2}\left[\mathrm{tr}(\Sigma_1^{-1}\Sigma_0) + (\mu_1-\mu_0)^\top\Sigma_1^{-1}(\mu_1-\mu_0) - d + \ln\frac{|\Sigma_1|}{|\Sigma_0|}\right]$ | $\mathrm{KL}(\mathcal{N}_0 \| \mathcal{N}_1)$ |
+
+# Blockquote
+
+> The multivariate Gaussian is the maximum-entropy distribution subject to a fixed mean and covariance — it is, in a precise sense, the least informative distribution consistent with second-order statistics.
+
+# Static Code
+
+```python
+import numpy as np
+from scipy.linalg import cholesky
+
+def sample_mvn(mu, Sigma, n, rng):
+    """Draw n samples from N(mu, Sigma) via Cholesky."""
+    L = cholesky(Sigma, lower=True)
+    z = rng.standard_normal((len(mu), n))
+    return mu[:, None] + L @ z
+```
+
+# Long Equation
+
+Full log-density of the multivariate normal expanded via eigendecomposition $\Sigma = V\Lambda V^\top$:
+
+$$\log p(x) = -\tfrac{d}{2}\log(2\pi) - \tfrac{1}{2}\log|\Sigma| - \tfrac{1}{2}(x-\mu)^\top\Sigma^{-1}(x-\mu) = -\tfrac{d}{2}\log(2\pi) - \tfrac{1}{2}\sum_{i=1}^{d}\log\lambda_i - \tfrac{1}{2}\sum_{i=1}^{d}\frac{\bigl(v_i^\top(x-\mu)\bigr)^2}{\lambda_i}$$
+
+# More sidenotes
+
+The **marginal** of a joint Gaussian is also Gaussian.[^marginal]
+The **conditional** $X_1 \mid X_2 = x_2$ is Gaussian with mean $\mu_1 + \Sigma_{12}\Sigma_{22}^{-1}(x_2 - \mu_2)$ and covariance $\Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21}$.[^schur]
+
+[^marginal]: Marginalization just drops the unwanted dimensions: $p(x_1) = \int p(x_1, x_2)\,dx_2 = \mathcal{N}(x_1;\mu_1,\Sigma_{11})$.
+[^schur]: The expression $\Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21}$ is the **Schur complement** of $\Sigma_{22}$ in $\Sigma$. It appears in Gaussian process regression as the posterior variance.
+
+```{pyodide}
+import numpy as np
+
+mu = np.array([0.0, 0.0])
+Sigma = np.array([[1.0, 0.7], [0.7, 1.0]])
+
+# Conditional X1 | X2 = 1.5
+x2 = 1.5
+mu_cond = mu[0] + Sigma[0, 1] / Sigma[1, 1] * (x2 - mu[1])
+var_cond = Sigma[0, 0] - Sigma[0, 1]**2 / Sigma[1, 1]
+
+print(f"X1 | X2={x2}:  mean = {mu_cond:.4f},  var = {var_cond:.4f}")
+```

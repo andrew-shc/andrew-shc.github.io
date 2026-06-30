@@ -1,0 +1,100 @@
+[
+  {
+    "objectID": "20notes_entry.html",
+    "href": "20notes_entry.html",
+    "title": "",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\n???\n\n\n???\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\n\n\nStyle Showcase\n\n\nLive Python, callouts, and sidenotes\n\n\n\nJun 28, 2026\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "20notes/100.html",
+    "href": "20notes/100.html",
+    "title": "???",
+    "section": "",
+    "text": "Beginning of one of many great notes"
+  },
+  {
+    "objectID": "20blog/200.html",
+    "href": "20blog/200.html",
+    "title": "Style Showcase",
+    "section": "",
+    "text": "This post exists purely to stress-test styling: live Python code blocks, collapsible callouts, and margin sidenotes.1\n1 Sidenotes render in the right margin when reference-location: margin is set and the viewport is wide enough. On narrow screens they fall back to footnotes at the bottom."
+  },
+  {
+    "objectID": "20blog/200.html#plain-note",
+    "href": "20blog/200.html#plain-note",
+    "title": "Style Showcase",
+    "section": "Plain note",
+    "text": "Plain note\n\n\n\n\n\n\nNote\n\n\n\nThis is a plain, always-visible note callout. It is useful for asides that every reader should see."
+  },
+  {
+    "objectID": "20blog/200.html#collapsible-tip",
+    "href": "20blog/200.html#collapsible-tip",
+    "title": "Style Showcase",
+    "section": "Collapsible tip",
+    "text": "Collapsible tip\n\n\n\n\n\n\nTipClick to expand: numerical stability trick\n\n\n\n\n\nWhen computing \\(\\log\\sum_i e^{x_i}\\), subtract the max first:\n\\[\\log\\sum_i e^{x_i} = x_{\\max} + \\log\\sum_i e^{x_i - x_{\\max}}\\]\nThis is the log-sum-exp trick and avoids floating-point overflow.3\n\n\n\n3 The same trick appears in softmax computation: divide numerator and denominator by \\(e^{x_{\\max}}\\), which leaves the result unchanged but keeps all exponents non-positive."
+  },
+  {
+    "objectID": "20blog/200.html#collapsible-warning",
+    "href": "20blog/200.html#collapsible-warning",
+    "title": "Style Showcase",
+    "section": "Collapsible warning",
+    "text": "Collapsible warning\n\n\n\n\n\n\nWarningClick to expand: watch out for default RNG state\n\n\n\n\n\nCalling np.random.seed(42) sets the legacy global RNG. Prefer np.random.default_rng(42) which returns an isolated Generator object and does not touch global state."
+  },
+  {
+    "objectID": "20blog/200.html#collapsible-caution",
+    "href": "20blog/200.html#collapsible-caution",
+    "title": "Style Showcase",
+    "section": "Collapsible caution",
+    "text": "Collapsible caution\n\n\n\n\n\n\nCautionClick to expand: matplotlib backend\n\n\n\n\n\nplt.show() behaves differently in scripts vs. notebooks vs. Pyodide. In Pyodide the inline backend is active by default, so plt.show() renders the figure inline without extra setup."
+  },
+  {
+    "objectID": "20blog/100.html",
+    "href": "20blog/100.html",
+    "title": "???",
+    "section": "",
+    "text": "Under construction"
+  },
+  {
+    "objectID": "20blog_entry.html",
+    "href": "20blog_entry.html",
+    "title": "",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n???\n\n\n???\n\n\n\nInvalid Date\n\n\n\n\n\n\n\n\n\n\n\n\n\nStyle Showcase\n\n\nLive Python, callouts, and sidenotes\n\n\n\nJun 28, 2026\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "20notes/200.html",
+    "href": "20notes/200.html",
+    "title": "Style Showcase",
+    "section": "",
+    "text": "This note exists purely to stress-test styling: live Python cells, collapsible callouts, and margin sidenotes.1\n1 Notes differ from blog posts mainly in intent — a note is a running reference document while a blog post is a narrative piece. Both share the same Quarto machinery here."
+  },
+  {
+    "objectID": "20notes/200.html#definition-always-visible",
+    "href": "20notes/200.html#definition-always-visible",
+    "title": "Style Showcase",
+    "section": "Definition (always visible)",
+    "text": "Definition (always visible)\n\n\n\n\n\n\nNote\n\n\n\nMultivariate Normal. \\(X \\sim \\mathcal{N}(\\mu, \\Sigma)\\) has density\n\\[p(x) = \\frac{1}{(2\\pi)^{d/2}|\\Sigma|^{1/2}} \\exp\\!\\left(-\\tfrac{1}{2}(x-\\mu)^\\top \\Sigma^{-1}(x-\\mu)\\right).\\]"
+  },
+  {
+    "objectID": "20notes/200.html#derivation-collapsed",
+    "href": "20notes/200.html#derivation-collapsed",
+    "title": "Style Showcase",
+    "section": "Derivation (collapsed)",
+    "text": "Derivation (collapsed)\n\n\n\n\n\n\nTipClick to expand: sampling via Cholesky\n\n\n\n\n\nTo draw \\(X \\sim \\mathcal{N}(\\mu, \\Sigma)\\):\n\nCompute the Cholesky factor \\(L\\) such that \\(\\Sigma = LL^\\top\\).\nDraw \\(Z \\sim \\mathcal{N}(0, I)\\).\nReturn \\(X = \\mu + LZ\\).\n\nWhy it works: \\(\\text{Cov}(LZ) = L\\,\\text{Cov}(Z)\\,L^\\top = LIL^\\top = \\Sigma\\). 2\n\n\n\n2 Cholesky is \\(O(d^3)\\) and only needs to be computed once per covariance matrix, making repeated sampling cheap."
+  },
+  {
+    "objectID": "20notes/200.html#common-pitfall-collapsed",
+    "href": "20notes/200.html#common-pitfall-collapsed",
+    "title": "Style Showcase",
+    "section": "Common pitfall (collapsed)",
+    "text": "Common pitfall (collapsed)\n\n\n\n\n\n\nWarningClick to expand: \\(\\Sigma\\) must be positive semi-definite\n\n\n\n\n\nPassing a non-PSD matrix to np.random.multivariate_normal raises LinAlgError. A quick fix is to add a small diagonal jitter: Σ + ε·I."
+  },
+  {
+    "objectID": "20notes/200.html#implementation-note-collapsed",
+    "href": "20notes/200.html#implementation-note-collapsed",
+    "title": "Style Showcase",
+    "section": "Implementation note (collapsed)",
+    "text": "Implementation note (collapsed)\n\n\n\n\n\n\nCautionClick to expand: numerical precision of the log-density\n\n\n\n\n\nComputing \\(\\log p(x)\\) directly can underflow for high \\(d\\). Prefer working in log-space throughout:\nfrom scipy.stats import multivariate_normal\nlogp = multivariate_normal.logpdf(x, mean=mu, cov=Sigma)"
+  }
+]

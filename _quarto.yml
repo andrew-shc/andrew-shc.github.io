@@ -1,8 +1,11 @@
 project:
   type: website
+  output-dir: .
   render:
-    - blog/*.qmd
-    - blog_entry.qmd
+    - 20blog/*.qmd
+    - 20blog_entry.qmd
+    - 20notes/*.qmd
+    - 20notes_entry.qmd
 
 filters:
   - r-wasm/live

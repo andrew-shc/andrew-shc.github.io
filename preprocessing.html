@@ -51,6 +51,28 @@
         font-family: var(--zed);
         font-weight: 700;
     }
+
+    /* ── Listing filter/sort widgets: no border-radius, themed ── */
+    .quarto-listing-sort .input-group-text,
+    .quarto-listing-sort .form-select,
+    .quarto-listing-filter .input-group-text,
+    .quarto-listing-filter .form-control {
+        border-radius: 0 !important;
+        color: var(--accent-front-body) !important;
+        border-color: var(--accent-front-body) !important;
+        background-color: var(--front-body) !important;
+    }
+    .quarto-listing-sort > :first-child,
+    .quarto-listing-sort > :last-child,
+    .quarto-listing-filter > :first-child,
+    .quarto-listing-filter > :last-child {
+        border-radius: 0 !important;
+    }
+    /* dropdown option items inherit body bg/color */
+    .quarto-listing-sort .form-select option {
+        background-color: var(--front-body) !important;
+        color: var(--accent-front-body) !important;
+    }
 </style>
 
 <base target="_top">

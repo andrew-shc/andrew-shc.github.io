@@ -1,0 +1,147 @@
+---
+title: "Style Showcase"
+subtitle: "Live Python, callouts, and sidenotes"
+image: ../img/image-placeholder.png
+date: 6-28-26
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [numpy, matplotlib]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+toc: true
+toc-location: left
+---
+
+# Introduction
+
+This post exists purely to stress-test styling: live Python code blocks, collapsible callouts, and margin sidenotes.[^intro]
+
+[^intro]: Sidenotes render in the right margin when `reference-location: margin` is set and the viewport is wide enough. On narrow screens they fall back to footnotes at the bottom.
+
+# Live Python
+
+The cell below runs directly in the browser via Pyodide — no server needed.[^pyodide]
+
+[^pyodide]: Pyodide compiles CPython to WebAssembly. First load downloads ~10 MB; subsequent loads hit the browser cache.
+
+```{pyodide}
+import numpy as np
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(42)
+x = np.linspace(0, 2 * np.pi, 200)
+noise = rng.normal(scale=0.15, size=x.shape)
+y = np.sin(x) + noise
+
+fig, ax = plt.subplots(figsize=(6, 3))
+ax.scatter(x, y, s=4, alpha=0.6, label="noisy samples")
+ax.plot(x, np.sin(x), color="tomato", lw=2, label="sin(x)")
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.legend()
+ax.set_title("Noisy sine wave")
+plt.tight_layout()
+plt.show()
+```
+
+Try editing the cell — change `np.sin` to `np.cos`, or crank up the noise scale.
+
+# Callout Notes
+
+## Plain note
+
+::: {.callout-note}
+This is a plain, always-visible note callout.
+It is useful for asides that every reader should see.
+:::
+
+## Collapsible tip
+
+::: {.callout-tip collapse="true"}
+### Click to expand: numerical stability trick
+
+When computing $\log\sum_i e^{x_i}$, subtract the max first:
+
+$$\log\sum_i e^{x_i} = x_{\max} + \log\sum_i e^{x_i - x_{\max}}$$
+
+This is the **log-sum-exp** trick and avoids floating-point overflow.[^lse]
+:::
+
+[^lse]: The same trick appears in softmax computation: divide numerator and denominator by $e^{x_{\max}}$, which leaves the result unchanged but keeps all exponents non-positive.
+
+## Collapsible warning
+
+::: {.callout-warning collapse="true"}
+### Click to expand: watch out for default RNG state
+
+Calling `np.random.seed(42)` sets the *legacy* global RNG.
+Prefer `np.random.default_rng(42)` which returns an isolated `Generator` object and does not touch global state.
+:::
+
+## Collapsible caution
+
+::: {.callout-caution collapse="true"}
+### Click to expand: matplotlib backend
+
+`plt.show()` behaves differently in scripts vs. notebooks vs. Pyodide.
+In Pyodide the inline backend is active by default, so `plt.show()` renders the figure inline without extra setup.
+:::
+
+# Table
+
+| Method | Variance | Bias | Notes |
+|---|---|---|---|
+| Naive MC | $O(N^{-1})$ | 0 | Baseline |
+| Importance Sampling | $< O(N^{-1})$ | 0 | Optimal $q$ minimises variance |
+| Control Variates | $< O(N^{-1})$ | 0 | Requires correlated $g$ |
+| Quasi-MC | $O(N^{-2})$ | 0 | Low-discrepancy sequences |
+
+# Blockquote
+
+> The purpose of computing is insight, not numbers.
+>
+> — Richard Hamming
+
+# Static Code
+
+```python
+def log_sum_exp(x):
+    """Numerically stable log-sum-exp."""
+    x_max = x.max()
+    return x_max + np.log(np.exp(x - x_max).sum())
+```
+
+# Long Equation
+
+The ELBO, log-marginal likelihood, and importance-weighted bound in one line:
+
+$$\log p(y) = \log \int p(y \mid f)\,p(f)\,df \;\ge\; \mathbb{E}_{q(f)}\!\left[\log p(y \mid f)\right] - \mathrm{KL}\!\left[q(f)\,\|\,p(f)\right] = \sum_{i=1}^{N}\mathbb{E}_{q(f_i)}\!\left[\log p(y_i \mid f_i)\right] - \tfrac{1}{2}\left[\mathrm{tr}(K^{-1}S) + (m-\mu)^\top K^{-1}(m-\mu) - d + \log|K| - \log|S|\right]$$
+
+# More sidenotes
+
+Monte Carlo integration estimates $\int_a^b f(x)\,dx \approx \frac{b-a}{N}\sum_{i=1}^N f(x_i)$ where each $x_i \sim \text{Uniform}(a,b)$.[^mc]
+
+[^mc]: Variance of the estimator is $\frac{(b-a)^2}{N}\text{Var}[f(X)]$, so the standard error shrinks as $O(N^{-1/2})$ regardless of dimension — this dimension-independence is the main appeal of Monte Carlo over deterministic quadrature in high dimensions.
+
+The interactive cell below lets you experiment with sample count directly:
+
+```{pyodide}
+import numpy as np
+
+def mc_integrate(f, a, b, n, seed=0):
+    rng = np.random.default_rng(seed)
+    xs = rng.uniform(a, b, n)
+    return (b - a) * np.mean(f(xs))
+
+n_samples = 10_000
+estimate = mc_integrate(np.sin, 0, np.pi, n_samples)
+exact = 2.0
+print(f"Estimate ({n_samples:,} samples): {estimate:.6f}")
+print(f"Exact:                          {exact:.6f}")
+print(f"Error:                          {abs(estimate - exact):.2e}")
+```

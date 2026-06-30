@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-06-11">
+
+<title>Interesting Topics in RL</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-30fc45633b0910a22497ea642fc28e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../math-styling.css">
+</head>
+
+<body class="floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#autotelic-intelligence" id="toc-autotelic-intelligence" class="nav-link active" data-scroll-target="#autotelic-intelligence">Autotelic Intelligence</a></li>
+  <li><a href="#trading" id="toc-trading" class="nav-link" data-scroll-target="#trading">Trading</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#portfolio-management" id="toc-portfolio-management" class="nav-link" data-scroll-target="#portfolio-management">Portfolio Management</a></li>
+  <li><a href="#market-making" id="toc-market-making" class="nav-link" data-scroll-target="#market-making">Market Making</a></li>
+  <li><a href="#options-hedging" id="toc-options-hedging" class="nav-link" data-scroll-target="#options-hedging">Options Hedging</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interesting Topics in RL</h1>
+<p class="subtitle lead">Micro Blog: RL</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 11, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- [TL;ND]{.tlnd} -->
+<p>Two topics that seems intriguing in the context of RL:</p>
+<ul>
+<li>Autotelic AI</li>
+<li>Trading</li>
+</ul>
+<section id="autotelic-intelligence" class="level1">
+<h1>Autotelic Intelligence</h1>
+<p>When people say AI, I would imagine some artificial computers that not only <em>act</em> like human but also <em>think</em> like human—a one-to-one correspondence of biological intelligence and artificial intelligence. When I ask people what kind of AI they’re talking about? Before 2023: It goes something like XGBoost, LSTMs, or DNNs! Like come on they’re just fancy, albeit powerful, statistical modelling on tabular data. After 2023: autoregression on transformers and diffusion. At least they <em>act</em> quite like humans? Current (hype?) cycle: world models, which actually makes environmental consideration first-class. However, you still have to <em>prompt</em> the model. A true AI should exhibit the ability to interact the world <em>unprompted</em> (e.g., intrinsic curiosity) with occasional <em>prompting</em> (e.g., teachers setting curriculum) through time. Through this, we not only get the benefit of an artificial computer that can self-initiate, but a system that eventually <em>thinks</em> like human—hopefully. In other words, <strong>biomimicry without mortality</strong>.</p>
+<p>Maybe the idea of autotelicity and self-initiation seems more like engineering: Just insert an infinite <code>while</code> loop at the end of the model to continuously, <em>un</em>conditionally prompt the model to achieve similar effect. Yet, maybe its more complicated then that. Regardless, I would not have discovered the word “autotelic” if it were not for existing research that have been working on this—lately. And they work on the AI aspect, not just in psychology, where I think it best fits in RL.</p>
+<p>…</p>
+<p>Ok this is me after a week of being busy on other stuff and I realized there’s just too much stuff to explore in this world and currently automated trading is piquing my interest.</p>
+</section>
+<section id="trading" class="level1 page-columns page-full">
+<h1>Trading</h1>
+<blockquote class="blockquote">
+<p>If money is evil, then that building is hell. This is the most obnoxious group of money-hungry, low-IQ, high-energy, jack-rabbit, fucking wannabe big-time, small-time, shit-talking, bothersome, irritating bunch of motherfuckers I have ever had to endure for more than five minutes.</p>
+<p>— Robert Downey Jr., <em>The Last Party</em> (1993)</p>
+</blockquote>
+<p>I held a long belief that supervised and unsupervised ML models can never predict the utter unpredictability in both the traditional and predictions market because of the rigidity in their training and inference pipeline. Now, I want to test that belief with the following two questions:</p>
+<ul>
+<li>Is my intuition wrong that supervised and unsupervised ML models are inferior? If so, what’s the point of RL?</li>
+<li>Regardless, what’s the current research showing RL can (potentially) succeed existing model paradigms in markets?</li>
+</ul>
+<p>First question can be briefly answered by <span class="citation" data-cites="sun2021reinforcementlearningquantitativetrading"><a href="#ref-sun2021reinforcementlearningquantitativetrading" role="doc-biblioref">[1]</a></span>. According to them, there are some RL methods that yields high returns, but many aspects of quantative trading tasks has yet to be fully developed from RL (e.g., lack of consistent evaluation metrics, lack of infrastructure, etc.) or even explored yet. All of this is implicitly compared against supervised methods, so, yes, my intuition is mostly wrong. In fact, my thought is that RL can dynamically explore the states and constantly learn or “self-trains” on new out-of-distribution data (similiar idea to autotelic AI). While I don’t think most RL methods “self-train” (i.e., self-optimizes on newly explored data), they actually do exhibit the same o.o.d. problem like supervised methods. Nevertheless, the point of RL, briefly mentioned in <span class="citation" data-cites="sun2021reinforcementlearningquantitativetrading"><a href="#ref-sun2021reinforcementlearningquantitativetrading" role="doc-biblioref">[1]</a></span>, is (i) end-to-end pipeline, (ii) can safely be optimized over price directly, (iii) task-specific constraints easily modelled as objectives, and (iv) generalize to any market condition. Although there’s a lack of theoretical/empirical grounding in these reasoning, it at least sufficiently answer the question initially and motivate us to further look into this subject.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-sun2021reinforcementlearningquantitativetrading" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">S. Sun, R. Wang, and B. An, <span>“Reinforcement learning for quantitative trading.”</span> 2021. Available: <a href="https://arxiv.org/abs/2109.13851">https://arxiv.org/abs/2109.13851</a></div>
+</div></div><p>This brings us to our second question.</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Key idea from <a href="https://arxiv.org/abs/2112.04553">Hambly (2023)</a> is most RL methods developed for finance assumes a lot, and for it to be practical in the first place, one must relax many of these assumptions (e.g., stationarity). With further browsing from <a href="https://arxiv.org/pdf/2408.10932">Pippas (2025)</a> and <a href="https://arxiv.org/pdf/2411.12746">Bai (2024)</a>, portfolio management, options (e.g., derivatives), and market-making has the right balance of intrigue and proximity to applications (i.e., profitable end-to-end systems). Despite the infamous <a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html"><em>The Bitter Lesson</em></a> that says we need general learners, we also have this blog <a href="https://www.argmin.net/p/cool-kids-keep"><em>Cool Kids Keep</em></a> saying the opposite (at least in RL).</p>
+<p>Apparently, RL is related to optimal control which is used in various engineering fields. In our case, it would be stochastic optimal control for trading. While it doesn’t sound as sexy as RL, there could be some concepts that can be borrowed to aid in the development of this area. The application of RL is also more general that could include automatic ways to seek alpha and online learning, unlike optimal control’s more narrow usage for things like risk minimization (albeit in a more transparent, interpretable, and accessible way.)</p>
+</section>
+<section id="portfolio-management" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="portfolio-management">Portfolio Management</h2>
+<p><em>Similiar to portfolio optimization/allocation, asset allocation, etc.</em></p>
+<p>Let us consider a portfolio based on S&amp;P 500. Suppose <span class="math inline">\(\mathbf{w}_t\)</span> is a normalized vector of weights for each <span class="math inline">\(m\)</span> assets at time <span class="math inline">\(t\)</span> and <span class="math inline">\(\mathbf{y}_t\)</span> as the price for each asset (at time <span class="math inline">\(t\)</span>).</p>
+<p>We will investigate two model-free RL approach: <a href="https://arxiv.org/pdf/1706.10059">EIIE (2017)</a> and <a href="https://arxiv.org/pdf/2002.05780">SARL (2020)</a>. Both uses (deterministic) policy gradient method where we optimize via <span class="math inline">\(\nabla_\theta J(\xi)\)</span> where <span class="math inline">\(\xi \sim \pi_\theta\)</span> such that <span class="math inline">\(\pi_\theta:\mathcal{S}\to\mathcal{A}\)</span> and <span class="math inline">\(J:=R\)</span>. <span class="math inline">\(J\)</span> is our loss defined as the reward <span class="math inline">\(R\)</span> of the trajectory <span class="math inline">\(\xi\)</span> based on the optimized policy <span class="math inline">\(\pi_\theta\)</span> represented as function approximators (i.e., neural networks like CNN, LSTM, etc.) with parameters <span class="math inline">\(\theta\)</span>.</p>
+<p>In the EIIE approach, their states <span class="math inline">\(\mathcal{S}\)</span> are the asset weights with price history and actions <span class="math inline">\(\mathcal{A}\)</span> as the <em>new</em> future asset weights that the policy wants to later re-allocate towards to. SARL has an embedder to represent external sources (e.g., news) as states <span class="math inline">\(\mathcal{S}\)</span> in hopes to better inform the model with similiar <span class="math inline">\(\mathcal{A}\)</span> as before. Both consider some form of overhead costs <span class="math inline">\(\beta_t\)</span> (e.g., transaction fees, commissions) in their returns, which is modelled as some aggregation of individual rewards for each <span class="math inline">\(t\)</span> where each rewards <span class="math inline">\(\beta_t(\mathbf{w}_t\cdot\mathbf{y}_t)\)</span> are the total value of the portfolio at <span class="math inline">\(t\)</span>. While both methods have their own unique, novel contributions, we will mostly focus on the understanding of their overall RL framework.</p>
+<p>Note: For the figure, we will only be comparing EIIE and SPY ETF since the provided SARL model has its encoder only trained on DJIA.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/80_eiie_vs_spy.png" class="img-fluid figure-img"></p>
+<figcaption>EIIE vs SPY on portfolio return and EIIE asset allocation</figcaption>
+</figure>
+</div>
+<p>While the graph does feel reminiscent of supervised DL, supervised DL, after further investigation, seems to require significant feature engineering and pipelining (if we want end-to-end decision-making model). Pipelining can introduce good inductive/structural bias per the no free lunch theorem, but the way it does so can be messy and error-prone. RL models the end-to-end process naturally without the structural bias<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and we still can incrementally introduce regularization that is both mathematically elegant and a system that’s more workable. Additionally, EIIE introduces Online Stochastic Batch Learning (OSBL) from Online RL, emphasizing RL readily supports real-time learning from theory that could be important in trading/markets<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Overall, it’ll be interesting to see how POMDP and non-stationarity by on-policy can be included in existing RL models for trading in hopes of exceeding existing algorithm’s performance—especially when tabular data are inherently easier to work with overall compared to 2D data (e.g., images) or 3D data (e.g., meshes).</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;However, it does replace some assumptions from supervised DL with its own.</p></div><div id="fn2"><p><sup>2</sup>&nbsp;Online RL has already demonstrated its use in real-time robotics, overlapping control theory.</p></div></div><p>Side note: Some argue a better RL needs a better simulation. If we try to simulate the market dynamics, then we kind of want back in a full circle. What most people are likely talking about is improving current state of market simulation that current lacks many basic elements (e.g., transaction costs).</p>
+<p>Based on <a href="github.com/TradeMaster-NTU/TradeMaster">TradeMaster</a> (functionally active up to ~3 years ago)</p>
+</section>
+<section id="market-making" class="level2">
+<h2 class="anchored" data-anchor-id="market-making">Market Making</h2>
+<p><em>Similiar to high-frequency trading, quote optimization, inventory management, etc.</em></p>
+<!-- Just like any differentiable function is approximately locally linear when zooming in, zooming in on market dynamics -->
+<!-- (i.e., market microstructure) becomes approximately locally stationary (even with other competitive agents). -->
+<p>As we focus on the market microstructure, we can no longer assume the repeatibility of the environment as the market at this level responds much more dynamically. Simulation becomes more important (e.g., transaction cost, limit-order books, order flows, order precedence). This is where RL seems to really shine considering it generalizes the environment which can easily incorporate dynamic (non-stationary) transitions while also natively supporting the notion of actions (i.e., decision-making process) for end-to-end modelling. Also latency, in-practice, is very important, which we will side-step for now. Deep models are getting faster on dedicated GPUs to an extent that RL and other deep models can soon or even be actively deployed right now.</p>
+<p>We will specifically look into two model-free value-based RL: tabular Q-learning and double deep Q-learning (DDQN). Importantly, the training is simulated in a Markov Chain (MC) based LOB environment (most exchanges in-practice uses the LOB model to manage unfilled orders). Both Q-learning and DDQN here are based on temporal difference (TD) to optimize the values and augmented with <span class="math inline">\(\epsilon\)</span>-greedy (i.e., random exploration). Both of their action space <span class="math inline">\(\mathcal{A}\)</span> is defined as <span class="math inline">\(\mathcal{A}:=\mathcal{D}=\{1,\cdots,\overline{d}\}^2\)</span> where they represent how deep their LO (on both sides) should be placed <em>relatively</em> to the opposing best price (i.e., higher value means more profit from larger spread but less chance of executing from the incoming MOs). Both rewards are similiar: <span class="math inline">\(R_t=\Delta V_t\)</span> where <span class="math inline">\(V_t=X_t+H_t\)</span> is the total value process as the sum of cash process <span class="math inline">\(X_t\)</span> and the holding process <span class="math inline">\(H_t\)</span> (the value of all the LOs if liquidated). For DDQN, it is additionally regularized with <span class="math inline">\(-\phi Q_t^2\)</span> to account for risk management (i.e., less inventory <span class="math inline">\(Q_t\)</span> means less risk from adverse market trends with unrealized LOs). The realization process from matching order flows are implicitly done by the simulation (i.e., the conversion of some inventories <span class="math inline">\(Q_t\)</span> into cash <span class="math inline">\(X_t\)</span>). The state space for tabular Q-learning is <span class="math inline">\(\mathcal{S}:=\tilde{\mathcal{T}}\times\tilde{\mathcal{Q}}\)</span>, where both the time and inventory increments are binned to reduce spaces, whereas DDQN’s support for larger spaces allow modelling the full observable states of the environment <span class="math inline">\(\mathcal{S}:=\mathcal{T}\times\mathcal{Q}\times\mathcal{L}\)</span>. The time and inventory increments are unbinned with an additional current LOB state <span class="math inline">\(\mathcal{L}\)</span> which records the volume at each increment relative to the asking/bidding price with the spread <span class="math inline">\(s(t)\)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/80_mm_boxplot_comparison.png" class="img-fluid figure-img"></p>
+<figcaption>Boxplot comparison on their rewards</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/80_mm_traj_comparison.png" class="img-fluid figure-img"></p>
+<figcaption>Trajectory comparison between tabular Q-learning and DDQN</figcaption>
+</figure>
+</div>
+<p>No inventory regularization was applied for DDQN. Despite DDQN being on average (i.e., the expectation) better, it is also more volatile. This is where sharpe ratio comes in oftenly and why risk management is important since each trajectory represents individual forecast on how well the model will do. If even one negative trajectory shows up, the model would be risky to run since it would have a chance to follow that negative trajectory. This does not even factor in the difference between the results evaluated in-simulation and performance of the model in-reality.</p>
+<p>Based on <a href="https://github.com/KodAgge/Reinforcement-Learning-for-Market-Making">RL for MM from Carlsson’s MS Thesis</a> (functionally active up to ~3 years ago)</p>
+</section>
+<section id="options-hedging" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="options-hedging">Options Hedging</h2>
+<p><em>Similiar to options/derivatives pricing, deriviatives hedging, etc.</em></p>
+<p>We will assume our action <span class="math inline">\(\mathcal{A}\)</span> space to be <span class="math inline">\(\Delta_t\)</span>, which is a <span class="math inline">\(d\)</span>-dimensional <span class="math inline">\(\delta_t := (\delta_t^i)_{i=1,\cdots,d}\)</span> for how much units (e.g., ratio of 100 shares) we want to hold for each <span class="math inline">\(i\)</span>th asset at time <span class="math inline">\(t\)</span>. Our state space <span class="math inline">\(\mathcal{S}\)</span> would be <span class="math inline">\(\Delta_{t-1}\times H\)</span> where <span class="math inline">\((S^i_t)\in H\)</span> is the history of the underlying valuation for each <span class="math inline">\(i\)</span>th asset up to <span class="math inline">\(t\)</span>. Think <span class="math inline">\(H\)</span> as like a big matrix between the number of assets (<span class="math inline">\(d\)</span>) we can use to hedge against our short option(s) <span class="math inline">\(Z\)</span> and all the previous time increments/ticks (<span class="math inline">\(t\)</span>). Our policy <span class="math inline">\(\pi\)</span> is simply a mapping from the state space to the action space, which is implemented as a semi-RNN over time where we use different weights across time for a pre-specified total time period <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Most options have a pre-specified time periods that are usually in months or weeks.</p></div></div><p>Specifying the individual reward <span class="math inline">\(R_t\)</span> at each timestep is commonly done in RL; however, we only define our individual rewards as the overall return <span class="math inline">\(R\)</span> as it seems to be commonly done so in financial modelling.</p>
+<p><span class="math display">\[
+R(\theta)=-\rho(\text{PL}_T(Z,p_0,\delta^\theta))
+\]</span></p>
+<p>Definitions:</p>
+<ul>
+<li><span class="math inline">\(\rho\)</span> is some abstract risk measure function. Riskier an asset, the higher the measure will be. Hence, we want to maximize the “safety” <span class="math inline">\(-\rho\)</span>. Entropic risk measure (ERM) will be used: <span class="math inline">\(\rho(\cdot):=\frac{1}{\lambda}\log\mathbb{E}[\exp{(-\lambda(\cdot))}]\)</span>.
+<ul>
+<li>Alternatively, <span class="math inline">\(\alpha\)</span>-CVaR (conditional/average value at risk) is also used, where <span class="math inline">\(\rho(\cdot):=\frac{1}{1-\alpha}\int_{0}^{1-\alpha}\text{VaR}_\gamma(\cdot)d\gamma\)</span>. The integrand VaR (value at risk) outputs the smallest value <span class="math inline">\(m\)</span> when the chance of the input asset (a R.V.) being below <span class="math inline">\(-m\)</span> reaches <span class="math inline">\(\gamma\)</span>. In other words, <span class="math inline">\(m\)</span> is the risk in terms of price (i.e., when the input asset’s value goes below <span class="math inline">\(-m\)</span> (loss) at a probability of <span class="math inline">\(\gamma\)</span>).</li>
+</ul></li>
+<li><span class="math inline">\(\text{PL}_T\)</span> is the agent’s terminal (<span class="math inline">\(t=T\)</span>) portfolio value after full liquidation. The portfolio is the range of <span class="math inline">\(d\)</span> assets used to hedge against the liability and the liability itself (the option of interest).</li>
+<li><span class="math inline">\(Z=\sum Z_i\)</span> is the risky asset/portfolio. In our case, it’s our portfolio of options <span class="math inline">\(Z_i\)</span> for each underlying stock <span class="math inline">\(S^i\)</span> (which can be synthetic or real).</li>
+<li><span class="math inline">\(p_0\)</span> is the indifferent price of <span class="math inline">\(Z\)</span> (i.e., how much initial money it takes to buy the portfolio <span class="math inline">\(Z\)</span> such that its risk is same as not buying in anything).
+<ul>
+<li>More commonly known as the minimum premium of the options we are willing to sell/short our options <span class="math inline">\(Z_i\)</span> (derived from <span class="math inline">\(S^i\)</span>)</li>
+</ul></li>
+<li><span class="math inline">\(\delta^\theta\)</span> is the history of weights used to decide which asset(s) to allocate more to hedge against <span class="math inline">\(Z\)</span>. This is predicted by the semi-RNN parameterized by <span class="math inline">\(\theta\)</span>.</li>
+</ul>
+<p>If we have <span class="math inline">\(\delta^i\)</span> <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> to be all <span class="math inline">\(1.0\)</span> and the corresponding stock value <span class="math inline">\(S^i\)</span> goes up to make the OTM option <span class="math inline">\(Z\)</span> to be ITM, then the buyer is likely to exercise (i.e., the seller gets assigned) and we, the seller, profit off of the initial uncertainty (the volatility) from a positive premium (since the shares we bought earlier raised in equal value to be re-sold to the buyer). However, if the ITM option <span class="math inline">\(Z\)</span> becomes OTM as <span class="math inline">\(S^i\)</span> goes down, then the buyer will not exercise and we are left with 100 shares of <em>devalued</em> <span class="math inline">\(S^i\)</span>: This can be thought of as the hedge risk. If we reverse and have <span class="math inline">\(\delta^i\)</span> to be all <span class="math inline">\(0.0\)</span> when <span class="math inline">\(Z\)</span> goes from ITM to OTM, we save the hedging risk and 100% profit off of the premium (the buyer has 0 reason to exercise the call). But if the option <span class="math inline">\(Z\)</span> goes from OTM to ITM, the buyer will exercise and we have to buy the share high and sell it low to the buyer per the options contract: This can be thought of as the assignment risk. Since we never know whether an option will stay (ITM to ITM, OTM to OTM) or flip (ITM to OTM, OTM to ITM) or to what degree, per the direction of the underlying stock, we always have to dynamically balance out the hedging risk and the assigment risk. This is where deep learning or deep RL comes in to find the optimal mapping from the current environment to the optimal weights trajectory <span class="math inline">\(\delta^i_t\)</span> (and maybe try to profit a bit also).</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Precisely <span class="math inline">\(\delta^{i,\theta}\)</span> but omit <span class="math inline">\(\theta\)</span> when it’s not needed for clarity.</p></div></div><p>Using policy gradient (PG) method from RL, we don’t need to know the individual reward at each timestep nor their <span class="math inline">\(Q\)</span> or <span class="math inline">\(V\)</span> values: We compute <span class="math inline">\(\nabla J(\theta)\)</span> where <span class="math inline">\(J(\theta):=R(\theta)\)</span>. In this way, we will find the optimal policy <span class="math inline">\(\pi^{*}\)</span> (implemented as the semi-RNN) that best hedge against our portfolio of options given the available assets/stocks, which would find the optimal delta trajectory <span class="math inline">\(\delta_t\)</span> to minimize risk (i.e., maximize “guarantees”).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/80_opth_dh_pnl_european.png" class="img-fluid figure-img"></p>
+<figcaption>P&amp;L of deep hedging on various methods and simulated dynamics</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/80_opth_dh_heston5.png" class="img-fluid figure-img"></p>
+<figcaption>Deep hedger dynamic weighting with proportional cost</figcaption>
+</figure>
+</div>
+<p>The weight allocation changes a lot (aggressive rebalancing) since we set the cost low. If the cost to change hands is high, the weights trajectory should be smoother. Although CVaR seems to have better P&amp;L distribution (more profit than losing), it sets the base premium price higher (i.e., the indifferent price) that makes it less competitive (i.e., less likely to be executed). Hence, the simulation is also incomplete (i.e., need to incorporate multiple agents).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>(Simulated) Stochastic Model for Market Dynamics (GBM &amp; Heston)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="geometric-brownian-motion-gbm" class="level3">
+<h3 class="anchored" data-anchor-id="geometric-brownian-motion-gbm">Geometric Brownian Motion (GBM)</h3>
+<p><span class="math display">\[
+dS_t=\mu S_t dt + \sigma S_t dW_t
+\]</span></p>
+<p>If we remove the <span class="math inline">\(dW_t\)</span> term in this SDE, the rest is just ODE. <span class="math inline">\(dW_t\)</span> is the Brownian motion (Wiener process) that governs the randomness. It is from a general subject called stochastic calculus (specifically, Ito integral) that requires further reading. In our case, we assume risk-neutral modelling so <span class="math inline">\(\mu=0\)</span>.</p>
+<p>Properties:</p>
+<ul>
+<li>Constant drift <span class="math inline">\(\mu\)</span> and constant volatility <span class="math inline">\(\sigma\)</span> (unrealistic)</li>
+<li>Memoryless (hence, geometric)</li>
+<li>Options pricing (for European calls/puts) is the well known Black-Scholes formula</li>
+<li>… many others</li>
+</ul>
+</section>
+<section id="heston" class="level3">
+<h3 class="anchored" data-anchor-id="heston">Heston</h3>
+<p><span class="math display">\[
+\begin{align*}
+dS_t &amp;= \mu S_t dt + \sqrt{V_t}S_t dB_t \\
+dV_t &amp;= \alpha(b-V_t)dt + \sigma \sqrt{V_t} dW_t
+\end{align*}
+\]</span></p>
+<p>Also <span class="math inline">\(\mu=0\)</span> for risk-neutral simmulation.</p>
+<p>For Heston model, each stock has two assets usable for hedging (instead of each stock having one asset in the case of GBM.)</p>
+<p>While the volatility <span class="math inline">\(V_t\)</span> is not tradable directly, we can wrap it as <em>options on variance</em> via “idealized variance swap with maturity <span class="math inline">\(T\)</span>”.</p>
+<p><span class="math display">\[
+S_t^{'} = \mathbb{E}\bigg[\int_0^T V_s ds \bigg| \mathcal{F}^H_t \bigg]
+\]</span></p>
+<p>So if we have 2 stocks, we have <span class="math inline">\((S^{1}, S^{1'}, S^{2}, S^{2'})\)</span> each with its own delta weight <span class="math inline">\(\delta^i\)</span> trajectories which the deep hedger optimizes.</p>
+</section>
+</div>
+</div>
+</div>
+<p>Based on <a href="https://github.com/pfnet-research/pfhedge">PFHedge</a> which is based on <a href="https://arxiv.org/pdf/1802.03042">Deep Hedge (2018)</a>.</p>
+</section>
+<section id="code" class="level2">
+<h2 class="anchored" data-anchor-id="code">Code</h2>
+<p>All custom basic training and visualization code are in this <a href="https://github.com/andrew-shc/3frl">repo</a>.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../blog";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark_dimmed">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      if (authorPrefersDark) {
+          [baseTheme, altTheme] = [altTheme, baseTheme];
+      }
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "andrew-shc/andrew-shc.github.io";
+    script.dataset.repoId = "R_kgDOMDq5Jg";
+    script.dataset.category = "Announcements";
+    script.dataset.categoryId = "DIC_kwDOMDq5Js4C2fss";
+    script.dataset.mapping = "pathname";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "bottom";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

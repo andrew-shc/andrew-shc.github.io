@@ -13,18 +13,59 @@ $font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, 
 // $headings-font-weight: 700;
 
 /* Colors */
-$body-bg: #fffaf3; // page background
-$body-color: #575279; // default text
+$body-bg: #917043; // var(--front-body) -- can't use var() here, Bootstrap does color math on this
+$body-color: #D7CBB5; // var(--accent-front-body) -- same issue
 // $link-color: #6aa9ff; // links
 // $link-hover-color: #99c4ff;
 
 /* Components you likely see on listings */
-$card-bg: #ffffff;
-$card-border-color: #9893a5;
+$card-bg: var(--card-body);
+$card-border-color: var(--border);
 $card-border-width: 1px;
-$card-title-color: #286983;
-$card-subtitle-color: #575279;
+$card-title-color: var(--accent-front-body);
+$card-subtitle-color: var(--accent-front-body);
 $card-border-radius: 0;
 $card-inner-border-radius: 0;
 
 // https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
+
+/*-- scss:rules --*/
+body {
+    background-color: var(--front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+.quarto-listing .card {
+    background-color: var(--card-body) !important;
+}
+
+.quarto-listing .card .listing-title,
+.quarto-listing .card .listing-subtitle,
+.quarto-listing .card .listing-date,
+.quarto-listing .card .card-text {
+    color: var(--accent-front-body) !important;
+}
+
+.quarto-listing-filter .input-group-text,
+.quarto-listing-sort .input-group-text {
+    color: var(--accent-front-body) !important;
+    border-color: var(--accent-front-body) !important;
+    background-color: var(--front-body) !important;
+}
+
+.quarto-listing-filter .form-control,
+.quarto-listing-sort .form-select {
+    border-color: var(--accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+    background-color: var(--front-body) !important;
+    border-radius: 0 !important;
+}
+
+.quarto-listing-filter .input-group-text,
+.quarto-listing-sort .input-group-text,
+.quarto-listing-filter > :first-child,
+.quarto-listing-filter > :last-child,
+.quarto-listing-sort > :first-child,
+.quarto-listing-sort > :last-child {
+    border-radius: 0 !important;
+}

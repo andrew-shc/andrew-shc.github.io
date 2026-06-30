@@ -32,19 +32,39 @@
 .name,
 h2,
 h3 {
-    font-family: 'Chakra Petch', sans-serif;
+    font-family: var(--font-heading);
+}
+
+h2 {
+    text-align: right;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0.225em;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: currentColor;
 }
 
 p,
 a,
 ul {
-    font-family: 'Zed', sans-serif;
+    font-family: var(--font-body);
     font-size: 16px;
+}
+
+a {
+    text-decoration-thickness: 2px;
+    text-decoration-color: currentColor;
 }
 
 .name {
     font-size: 20px;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 h2 {
@@ -59,15 +79,12 @@ h3 {
 
 /* colors  https://rosepinetheme.com/palette/ */
 
-:root {
-    --accent: #286983;
-    /* #286983 */
-    --border: #9893a5;
-    /* #9893a5 */
-}
+/* variables defined in _vars.css */
 
 html {
-    background-color: #faf4ed;
+    /* background-color: #faf4ed; */
+    background-color: var(--back-body);
+    position: relative;
 }
 
 .name,
@@ -79,19 +96,21 @@ h3 {
 p,
 a,
 ul {
-    color: #575279;
+    color: var(--accent-front-body);/*   #575279; */
 }
 
 .main {
-    background-color: #fffaf3;
+    /* background-color: #fffaf3; */
+    background-color: var(--front-body);
     /* border-color: #797593; */
     border-color: var(--border)
 }
 
 nav {
-    background-color: #f4ede8;
+    background-color: var(--front-body);/*  #f4ede8; */
     /* border-color: #797593; */
     border-color: var(--border);
+    z-index: 100;
 }
 
 article {
@@ -202,7 +221,7 @@ svg {
 
 /* .top-image-container {
     width: 100%;
-    height: 200px;   
+    height: 200px;
     overflow: hidden;
 
     margin-bottom: 20px;
@@ -288,24 +307,23 @@ svg {
     } */
     /* .proj-container {
         flex-direction: column;
-        align-items: center;    
+        align-items: center;
     }
 
     .proj-image-container {
-        width: 100%;            
-        max-width: 300px;       
+        width: 100%;
+        max-width: 300px;
     }
 
     .proj-blurb-container {
-        text-align: center;     
+        text-align: center;
     } */
 }
 
 /* For larger screens, retain the max-width as 1200px */
 @media (min-width: 1000px) {
     body {
-        width: 1000px;
-        /* 1200px max-width */
+        width: 700px;
         padding-left: 20px;
         padding-right: 20px;
     }
@@ -317,16 +335,86 @@ svg {
 }
 
 
+@font-face {
+    font-family: 'JP-Period-Fallback';
+    src: local('Noto Sans CJK JP'), local('Hiragino Kaku Gothic Pro'), local('Yu Gothic');
+    unicode-range: U+3002;
+}
+
+.jp-text {
+    position: absolute;
+    right: 0px;
+    top: 0;
+    bottom: 0;
+    width: calc((100vw - 700px) / 2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    font-family: 'JP-Period-Fallback', 'Dela Gothic One', var(--font-heading);
+    color: var(--accent-back-body);
+    opacity: 0.4;
+    user-select: none;
+    pointer-events: none;
+    z-index: -1;
+    overflow: visible;
+}
+
+.jp-sub {
+    margin-top: auto;
+    font-family: var(--font-body);
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 0.1em;
+}
+
+.barcode-left {
+    position: absolute;
+    left: calc((100vw - 700px) / 4);
+    transform: translateX(-50%);
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 24px;
+    opacity: 0.40;
+    pointer-events: none;
+    user-select: none;
+    z-index: -1;
+    visibility: hidden;
+}
+
+@media (max-width: 1100px) {
+    .barcode-left {
+        display: none;
+    }
+}
+
+.qr-left {
+    position: absolute;
+    left: calc((100vw - 700px) / 4);
+    transform: translateX(-50%);
+    top: calc(100vh - 180px - 24px);
+    pointer-events: none;
+    user-select: none;
+    z-index: -1;
+    visibility: hidden;
+}
+
+@media (max-width: 1100px) {
+    .qr-left {
+        display: none;
+    }
+}
+
+
 /* custom CSS components */
 
 .horizontal-bar {
-    /* position: absolute; */
-    /* width: 80%; */
     height: 0px;
-    /* Set the height of the bar */
-    border-style: solid;
-    border-width: 0px 0px 1px 0px;
-    margin-left: -5px;
-    margin-top: -15px;
-    margin-bottom: 15px;
+    border: none;
+    margin: 0 0 15px 0;
 }

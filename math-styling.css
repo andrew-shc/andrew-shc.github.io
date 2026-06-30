@@ -15,6 +15,121 @@
     line-height: 0.1;
 }
 
+/* Hide the default Quarto toggle — replaced by the Type 86 switch */
+a.quarto-color-scheme-toggle {
+    display: none !important;
+}
+
+/* ── Type 86 light switch ───────────────────────────────────────────────── */
+.t86-switch {
+    position: absolute;
+    right: 1.1rem;
+    top: 1rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 1040;
+}
+
+/* Outer faceplate — invisible, just a layout wrapper */
+.t86-plate {
+    width:  58px;
+    height: 58px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Rocker paddle */
+.t86-rocker {
+    width:  44px;
+    height: 46px;
+    background: #eaeae8;
+    border: 1px solid rgba(0, 0, 0, 0.13);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0 8px;
+
+    transform: perspective(50px) rotateX(9deg);
+    transform-origin: center center;
+    transition: transform 0.16s ease-out;
+
+}
+
+/* Dark mode — bottom pressed in */
+.t86-switch.t86-dark .t86-rocker {
+    transform: perspective(50px) rotateX(-9deg);
+}
+
+/* Thin reference bar */
+.t86-nub {
+    width:  22px;
+    height:  2px;
+    background: #d2d0ce;
+    border-radius: 1px;
+}
+
+@keyframes t86-flicker {
+    0%,  100% { opacity: 1.00; }
+    7%         { opacity: 0.91; }
+    13%        { opacity: 0.98; }
+    21%        { opacity: 0.83; }
+    24%        { opacity: 1.00; }
+    49%        { opacity: 0.94; }
+    52%        { opacity: 0.80; }
+    55%        { opacity: 1.00; }
+    76%        { opacity: 0.89; }
+    79%        { opacity: 0.96; }
+    93%        { opacity: 0.85; }
+    97%        { opacity: 1.00; }
+}
+
+/* Indicator LED */
+.t86-indicator {
+    width:  10px;
+    height: 10px;
+    overflow: visible;
+}
+
+.t86-led {
+    fill: #bfbcb9;
+}
+
+.t86-switch.t86-dark .t86-led {
+    fill: transparent;
+}
+
+.t86-switch.t86-dark .t86-indicator {
+    animation: t86-flicker 3.8s linear infinite;
+}
+
+/* Glow + dot on ::after — solid fill covers the SVG, box-shadow radiates from it */
+.t86-switch.t86-dark::after {
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ff5500;
+    z-index: 1;
+    pointer-events: none;
+    box-shadow:
+        0 0  1px  0px rgba(255, 85,  0, 1.00),
+        0 0  5px  1px rgba(255, 85,  0, 0.75),
+        0 0 12px  3px rgba(255, 85,  0, 0.50),
+        0 0 24px  6px rgba(255, 80,  0, 0.30),
+        0 0 40px 11px rgba(255, 75,  0, 0.15);
+    animation: t86-flicker 3.8s linear infinite;
+}
+
 /* Horizontal scrolling for long math equations */
 
 .katex-display,

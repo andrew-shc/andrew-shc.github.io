@@ -1,0 +1,26 @@
+format:
+  r-wasm/live-html:
+    theme:
+      light: flatly
+      dark: darkly
+    highlight-style: github
+    respect-user-color-scheme: true
+    css:
+      - ../_qmd_styling.css
+      - ../math-styling.css
+    include-after-body: ../type86.html
+
+comments:
+  giscus:
+    repo: andrew-shc/andrew-shc.github.io
+    repo-id: R_kgDOMDq5Jg
+    category: Announcements
+    category-id: DIC_kwDOMDq5Js4C2fss
+    mapping: pathname
+    reactions-enabled: true
+    loading: lazy
+    input-position: bottom
+    theme:
+      light: light
+      dark: dark_dimmed
+  

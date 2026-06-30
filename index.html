@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1200">
     <meta name="color-scheme" content="light dark">
     <meta name="author" content="Andrew Shen">
     <title>Andrew Shen</title>
@@ -15,40 +15,53 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"> -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'); */
+        @import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
     </style>
     <!-- <script src="https://unpkg.com/htmx.org@1.9.12"></script> -->
     <!-- <script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script> -->
     <script src="https://unpkg.com/jquery@3/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-creator/dist/qr-creator.min.js"></script>
 
+    <link rel="stylesheet" href="_vars.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div id="beginning"></div>
+    <div class="barcode-left">
+        <canvas id="barcode128"></canvas>
+    </div>
+    <div class="qr-left">
+        <canvas id="qrcode128"></canvas>
+    </div>
+    <div class="jp-text">
+        <div class="jp-sub">
+            andrew shen + 'S + VIRTUAL +
+            PLAZA + INTO + WELCOME
+        </div>
+    </div>
 
     <nav>
-        <ul></ul>
         <ul>
             <li><a href="#beginning" class="name">Andrew Shen </a></li>
         </ul>
-        <ul></ul>
         <ul>
-            <li><a href="#about">About Me</a></li>
             <li><a href="#blogs">Blogs</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#teaching">Teaching</a></li>
-            <!-- <li><a href="#random">😄</a></li> -->
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#notes">Notes</a></li>
         </ul>
     </nav>
 
     <div class="main">
+        <!--
         <header>
             <div class="top-image-container">
                 <img src="./img/Matrixagon003(1).png" alt="Matrixagon003.png" class="top-image" />
             </div>
         </header>
+        -->
 
         <section id="about">
             <h2>About Me</h2>
@@ -61,21 +74,22 @@
                 </div>
                 <div class="proj-blurb-container" style="align-items: center;">
                     <p>
-                        I'm an undergrad studying computer science and a bit of math at UC Irvine interested in all
-                        aspects of
-                        computer vision from software to research. Particularly, at the intersection of vision,
-                        graphics, and geometry,
-                        3D understanding presents some of the most interesting yet challenging problems (e.g.,
-                        reconstruction), with
-                        many applications ranging from autonomous vehicles to medical imaging.
-                        <!-- In combination with
-                        reinforcement learning, an autonomous system relying on 3D understanding system that relies less on training data and more on
-                        self-exploration is another field I'm intrigued by for its future potential. -->
+                        Independent researcher from UCI. Obsessed on anything related to three-dimensional
+                        space such as inverse/forward rendering, 3D vision, spatial understanding, and geometric structures.
+                        Excited to learn more about our world and find new domains of problem where the knowledge
+                        of three-dimension can carry us further.
                     </p>
                 </div>
             </div>
+            <p style="text-align: right;">
+                shena8 [at] uci [dot] edu <br>
+                https://www.github.com/<a href="https://www.github.com/andrew-shc" target="_blank">andrew-shc</a> <br>
+                https://www.linkedin.com/in/<a href="https://www.linkedin.com/in/andrew-shc/" target="_blank">andrew-shc</a> <br>
+                https://scholar.google.com/citations?user=<a href="https://scholar.google.com/citations?user=Rlq093cAAAAJ" target="_blank">Rlq093cAAAAJ</a>
+            </p>
         </section>
 
+        <!--
         <section id="blogs">
             <h2>Blogs</h2>
             <div class="horizontal-bar"></div>
@@ -83,7 +97,26 @@
             <iframe id="q" src="_site/blog_entry.html" width="100%" height="800"
                 style="width:100%; border:0; display:block; overflow:hidden;" scrolling="no"></iframe>
         </section>
+        -->
+        <section id="blogs">
+            <h2>Blogs</h2>
+            <div class="horizontal-bar"></div>
 
+            <iframe id="q" src="20blog_entry.html" width="100%" height="800"
+                style="width:100%; border:0; display:block; overflow:hidden;" scrolling="no"></iframe>
+        </section>
+
+
+        <section id="notes">
+            <h2>Notes</h2>
+            <div class="horizontal-bar"></div>
+
+            <iframe id="q" src="20notes_entry.html" width="100%" height="800"
+                style="width:100%; border:0; display:block; overflow:hidden;" scrolling="no"></iframe>
+        </section>
+
+
+        <!--
         <section id="projects">
             <h2>Projects</h2>
             <div class="horizontal-bar"></div>
@@ -114,8 +147,8 @@
                 <div class="proj-container">
                     <div class="proj-image-container">
                         <img src="./img/sdf_gt_img.png" alt="Ground truth"
-                            style="width: 64px; height: 64px; margin: 0px;" class="proj-image" /><!--
-            --><img src="./img/sdf_illumination_img.png" alt="Learned color"
+                            style="width: 64px; height: 64px; margin: 0px;" class="proj-image" />
+                <img src="./img/sdf_illumination_img.png" alt="Learned color"
                             style="width: 64px; height: 64px; margin: 0px;" class="proj-image" />
                         <img src="./img/sdf_obj.png" alt="Reconstructed object"
                             style="width: 128px; height: 64px; margin: 0px;" class="proj-image" />
@@ -173,6 +206,8 @@
             </ul>
         </section>
 
+        -->
+
         <!-- <section id="random">
             <h2>Book Reviews 😄</h2>
             <div class="horizontal-bar"></div>
@@ -184,47 +219,89 @@
             </ul>
         </section> -->
 
-        <section id="contact">
-            <h2>Contact</h2>
-            <div class="horizontal-bar"></div>
-
-            <div class="grid">
-                <div>
-                    <a href="mailto:shena8@uci.edu">
-                        <img src="./img/gmail.png" alt="" class="icon">
-                        shena8@uci.edu
-                    </a>
-                    <br>
-                    <a href="https://github.com/andrew-shc">
-                        <img src="./img/github-mark.png" alt="" class="icon">
-                        GitHub
-                    </a>
-                </div>
-                <div>
-                    <a href="https://www.linkedin.com/in/andrew-shc/">
-                        <img src="./img/In-Blue-128@2x.png" alt="" class="icon">
-                        LinkedIn
-                    </a>
-                    <br>
-                    <a href="https://scholar.google.com/citations?user=Rlq093cAAAAJ">
-                        <img src="./img/google_scholar.png" alt="" class="icon">
-                        Google Scholar
-                    </a>
-                </div>
-            </div>
-            <br>
-        </section>
-    </div>
+        </div>
 
     <footer>
         <p>Last updated: BUILD_TIME_PLACEHOLDER PT</p>
-        <p>&copy; 2025 Andrew Shen</p>
+        <p>&copy; 2026 Andrew Shen</p>
     </footer>
 
+    <!--
     <svg id="lattice">
     </svg>
+    -->
+    <script src="halftone.js"></script>
+    <script>
+        (function () {
+            const cs = getComputedStyle(document.documentElement);
+            const lineColor = cs.getPropertyValue('--accent-back-body').trim()  || '#9893a5';
+            const qrColor   = cs.getPropertyValue('--accent-front-body').trim() || '#D7CBB5';
+
+            const tmpSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+            JsBarcode(tmpSvg, "058987935483", {
+                format: "CODE128C",
+                displayValue: false,
+                width: 4,
+                height: 70,
+                margin: 5,
+                background: "transparent",
+                lineColor: lineColor,
+            });
+
+            const sw = parseInt(tmpSvg.getAttribute('width'));
+            const sh = parseInt(tmpSvg.getAttribute('height'));
+
+            const fontSize = 24;
+            const textCol = fontSize + 6;
+
+            const canvas = document.getElementById('barcode128');
+            canvas.width = sh + textCol;
+            canvas.height = sw;
+
+            const svgData = new XMLSerializer().serializeToString(tmpSvg);
+            const img = new Image();
+            img.onload = function () {
+                const ctx = canvas.getContext('2d');
+
+                // draw number vertically on the left
+                ctx.save();
+                ctx.translate(textCol / 2, sw / 2);
+                ctx.rotate(Math.PI / 2);
+                ctx.font = `${fontSize}px monospace`;
+                ctx.fillStyle = lineColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('058987935483', 0, 0);
+                ctx.restore();
+
+                // draw barcode (rotated 90deg CW) to the right of the number
+                ctx.save();
+                ctx.translate(textCol + sh, 0);
+                ctx.rotate(Math.PI / 2);
+                ctx.drawImage(img, 0, 0, sw, sh);
+                ctx.restore();
+
+                // QR code — separate element, full opacity
+                QrCreator.render({
+                    text: 'https://www.andrew-shen.dev',
+                    radius: 0,
+                    ecLevel: 'H',
+                    fill: qrColor,
+                    background: null,
+                    size: 180,
+                }, document.getElementById('qrcode128'));
+
+                document.querySelector('.barcode-left').style.visibility = 'visible';
+                document.querySelector('.qr-left').style.visibility = 'visible';
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
+        })();
+    </script>
 </body>
 
+
+<!--
 <script>
     (() => {
         const q = document.getElementById('q');
@@ -363,4 +440,7 @@
     // document.getElementById("last-updated").textContent = "BUILD_TIME_PLACEHOLDER PT";
 </script>
 
+-->
+
 </html>
+

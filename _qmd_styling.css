@@ -1,0 +1,399 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('_vars.css');
+
+/* ── Font faces ──────────────────────────────────────────────────────────── */
+/* Paths are relative to this CSS file (project root)                         */
+
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Zed';
+    src: url('zed-sans-bolditalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* ── Override Bootstrap font vars (everything that reads --bs-* inherits) ── */
+
+:root {
+    --bs-body-font-family: var(--font-body);
+    --bs-font-monospace: var(--font-mono);
+}
+
+body {
+    font-family: var(--bs-body-font-family);
+}
+
+/* ── Override syntax highlighting vars (beat the Quarto highlight CSS) ────── */
+
+:root {
+    --quarto-hl-kw-color: var(--hl-keyword);
+    --quarto-hl-cf-color: var(--hl-keyword);
+    --quarto-hl-bu-color: var(--hl-keyword);
+    --quarto-hl-ex-color: var(--hl-keyword);
+    --quarto-hl-pp-color: var(--hl-keyword);
+    --quarto-hl-st-color: var(--hl-string);
+    --quarto-hl-ss-color: var(--hl-string);
+    --quarto-hl-ch-color: var(--hl-string);
+    --quarto-hl-vs-color: var(--hl-string);
+    --quarto-hl-im-color: var(--hl-string);
+    --quarto-hl-co-color: var(--hl-comment);
+    --quarto-hl-cv-color: var(--hl-comment);
+    --quarto-hl-do-color: var(--hl-comment);
+    --quarto-hl-an-color: var(--hl-comment);
+    --quarto-hl-in-color: var(--hl-comment);
+    --quarto-hl-re-color: var(--hl-comment);
+    --quarto-hl-fu-color: var(--hl-function);
+    --quarto-hl-dv-color: var(--hl-number);
+    --quarto-hl-bn-color: var(--hl-number);
+    --quarto-hl-fl-color: var(--hl-number);
+    --quarto-hl-cn-color: var(--hl-number);
+    --quarto-hl-sc-color: var(--hl-number);
+    --quarto-hl-va-color: var(--hl-variable);
+    --quarto-hl-at-color: var(--hl-variable);
+    --quarto-hl-op-color: var(--hl-operator);
+    --quarto-hl-dt-color: var(--hl-keyword);
+    --quarto-hl-al-color: #ff5555;
+    --quarto-hl-er-color: #ff5555;
+    --quarto-hl-wa-color: #ff5555;
+}
+
+/* ── Dark mode — Bootstrap vars cascade into live-runtime and all components  */
+
+body.quarto-dark {
+    --bs-body-bg:          var(--back-body);
+    --bs-body-color:       var(--accent-front-body);
+    --bs-border-color:     var(--border);
+    --bs-card-cap-bg:      var(--card-body);
+    --bs-light-bg-subtle:  var(--card-body);
+    --bs-secondary-bg:     var(--card-body);
+    --bs-link-color:       var(--accent-front-body);
+    --bs-link-hover-color: var(--accent);
+
+    /* propagate dark syntax highlight vars to quarto-hl-* */
+    --quarto-hl-kw-color: var(--hl-keyword);
+    --quarto-hl-cf-color: var(--hl-keyword);
+    --quarto-hl-bu-color: var(--hl-keyword);
+    --quarto-hl-ex-color: var(--hl-keyword);
+    --quarto-hl-pp-color: var(--hl-keyword);
+    --quarto-hl-st-color: var(--hl-string);
+    --quarto-hl-ss-color: var(--hl-string);
+    --quarto-hl-ch-color: var(--hl-string);
+    --quarto-hl-vs-color: var(--hl-string);
+    --quarto-hl-im-color: var(--hl-string);
+    --quarto-hl-co-color: var(--hl-comment);
+    --quarto-hl-cv-color: var(--hl-comment);
+    --quarto-hl-do-color: var(--hl-comment);
+    --quarto-hl-an-color: var(--hl-comment);
+    --quarto-hl-in-color: var(--hl-comment);
+    --quarto-hl-re-color: var(--hl-comment);
+    --quarto-hl-fu-color: var(--hl-function);
+    --quarto-hl-dv-color: var(--hl-number);
+    --quarto-hl-bn-color: var(--hl-number);
+    --quarto-hl-fl-color: var(--hl-number);
+    --quarto-hl-cn-color: var(--hl-number);
+    --quarto-hl-sc-color: var(--hl-number);
+    --quarto-hl-va-color: var(--hl-variable);
+    --quarto-hl-at-color: var(--hl-variable);
+    --quarto-hl-op-color: var(--hl-operator);
+    --quarto-hl-dt-color: var(--hl-keyword);
+}
+
+/* ── Dark sidebar and margin panel ───────────────────────────────────────── */
+
+body.quarto-dark #quarto-sidebar,
+body.quarto-dark #quarto-margin-sidebar,
+body.quarto-dark .sidebar {
+    background-color: var(--back-body);
+    border-color: var(--border);
+}
+
+/* ── Headings ────────────────────────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6,
+.subtitle,
+.quarto-title-meta-heading {
+    color: var(--qmd-heading);
+    font-family: var(--font-heading);
+    font-weight: normal;
+}
+
+h1 {
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0.25em;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: currentColor;
+}
+
+h1.title::after,
+.quarto-title h1::after {
+    display: none;
+}
+
+h2, h3, h4, h5, h6 {
+    border-bottom: none;
+}
+
+/* ── TOC ─────────────────────────────────────────────────────────────────── */
+/* Scope both --bs-link-color and --bs-nav-link-color to #TOC.               */
+/* Flatly sets --bs-link-color: #18bc9c on :root; that's the teal bleeding in */
+
+#TOC {
+    font-size: 0.85rem;
+    --bs-link-color:           var(--qmd-toc);
+    --bs-link-hover-color:     var(--qmd-toc-active);
+    --bs-nav-link-color:       var(--qmd-toc);
+    --bs-nav-link-hover-color: var(--qmd-toc-active);
+}
+
+#TOC a.nav-link {
+    opacity: 0.7;
+    transition: opacity 0.15s, color 0.15s;
+}
+
+#TOC a.nav-link:hover {
+    opacity: 1;
+    color: var(--qmd-toc-active) !important;
+}
+
+#TOC a.nav-link.active {
+    opacity: 1;
+    color: var(--qmd-toc-active) !important;
+    border-left-color: var(--qmd-toc-active);
+    font-weight: 600;
+}
+
+/* ── Superscript footnote numbers ────────────────────────────────────────── */
+
+a.footnote-ref {
+    color: var(--qmd-toc-active);
+    text-decoration: none;
+    font-size: 0.75em;
+}
+
+/* ── Sidenotes ───────────────────────────────────────────────────────────── */
+
+.column-margin {
+    color: var(--qmd-margin);
+    font-size: 0.8rem;
+}
+
+/* ── Text selection ──────────────────────────────────────────────────────── */
+
+::selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-text);
+}
+
+/* Static code blocks — explicit override since syntax spans set their own color */
+pre ::selection,
+code ::selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-text);
+}
+
+/* CodeMirror live editor — two cases:                                        */
+/* 1. Browser native selection dragged into the editor content                */
+.card.exercise-editor .cm-content ::selection {
+    background-color: rgba(var(--front-body-rgb), 0.4) !important;
+    color: var(--selection-text) !important;
+}
+/* 2. Click-drag started inside the editor (CodeMirror renders its own        */
+/*    .cm-selectionBackground divs — live-runtime.css rule for these is       */
+/*    broken due to a typo, so they get CodeMirror's default blue)            */
+.card.exercise-editor .cm-selectionBackground {
+    background-color: rgba(var(--front-body-rgb), 0.35) !important;
+}
+
+/* ── Callouts ────────────────────────────────────────────────────────────── */
+
+.callout.callout-note      { border-left-color: var(--qmd-callout-note)      !important; }
+.callout.callout-tip       { border-left-color: var(--qmd-callout-tip)       !important; }
+.callout.callout-warning   { border-left-color: var(--qmd-callout-warning)   !important; }
+.callout.callout-important { border-left-color: var(--qmd-callout-important) !important; }
+.callout.callout-caution   { border-left-color: var(--qmd-callout-caution)   !important; }
+
+/* ── Live code — exercise editor card ────────────────────────────────────── */
+/* The exercise widget reads --bs-body-bg / --bs-card-cap-bg set above.       */
+/* Active line: override --exercise-line-bg which chains through primary-rgb  */
+
+.card.exercise-editor {
+    --exercise-line-bg:        rgba(var(--front-body-rgb), 0.08);
+    --exercise-line-gutter-bg: rgba(var(--front-body-rgb), 0.14);
+}
+
+body.quarto-dark .card.exercise-editor {
+    background-color: var(--back-body);
+    border-color: var(--border);
+}
+
+body.quarto-dark .card.exercise-editor .card-header {
+    background-color: var(--card-body);
+    border-color: var(--border);
+}
+
+/* Run button (btn-primary) */
+.card.exercise-editor .card-header .btn.btn-primary {
+    --bs-btn-bg:                var(--front-body);
+    --bs-btn-border-color:      var(--front-body);
+    --bs-btn-hover-bg:          var(--accent-front-body);
+    --bs-btn-hover-border-color: var(--accent-front-body);
+    --bs-btn-hover-color:       var(--back-body);
+    --bs-btn-color:             var(--accent);
+}
+
+/* Secondary buttons (Reset, Hint, …) */
+.card.exercise-editor .card-header .btn.btn-outline-dark {
+    --bs-btn-color:             var(--front-body);
+    --bs-btn-border-color:      var(--front-body);
+    --bs-btn-hover-bg:          var(--front-body);
+    --bs-btn-hover-color:       var(--accent);
+    --bs-btn-hover-border-color: var(--front-body);
+}
+
+body.quarto-dark .card.exercise-editor .card-header .btn.btn-outline-dark {
+    --bs-btn-color:             var(--accent-front-body);
+    --bs-btn-border-color:      var(--border);
+    --bs-btn-hover-bg:          var(--front-body);
+    --bs-btn-hover-color:       var(--accent);
+    --bs-btn-hover-border-color: var(--front-body);
+}
+
+/* ── Code gutters (line numbers) ─────────────────────────────────────────── */
+
+.card.exercise-editor .cm-gutters {
+    background-color: rgba(var(--front-body-rgb), 0.05);
+    border-right-color: var(--border);
+    color: var(--qmd-margin);
+}
+
+/* ── Scrollbars ──────────────────────────────────────────────────────────── */
+/* Scoped to overflowing QMD elements: math display, code editor, sidebars   */
+
+.math.display,
+.card.exercise-editor .cm-scroller,
+#quarto-sidebar,
+#quarto-margin-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.math.display::-webkit-scrollbar,
+.card.exercise-editor .cm-scroller::-webkit-scrollbar,
+#quarto-sidebar::-webkit-scrollbar,
+#quarto-margin-sidebar::-webkit-scrollbar { height: 5px; width: 5px; }
+
+.math.display::-webkit-scrollbar-track,
+.card.exercise-editor .cm-scroller::-webkit-scrollbar-track,
+#quarto-sidebar::-webkit-scrollbar-track,
+#quarto-margin-sidebar::-webkit-scrollbar-track { background: transparent; }
+
+.math.display::-webkit-scrollbar-thumb,
+.card.exercise-editor .cm-scroller::-webkit-scrollbar-thumb,
+#quarto-sidebar::-webkit-scrollbar-thumb,
+#quarto-margin-sidebar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.math.display::-webkit-scrollbar-thumb:hover,
+.card.exercise-editor .cm-scroller::-webkit-scrollbar-thumb:hover {
+    background: var(--front-body);
+}
+
+/* ── TOC title ───────────────────────────────────────────────────────────── */
+
+#toc-title,
+.quarto-title-meta-heading {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--qmd-margin);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* ── Title metadata (Published, date) ────────────────────────────────────── */
+
+.quarto-title-meta-contents,
+.quarto-title-meta-contents p,
+.date {
+    color: var(--qmd-margin);
+    font-size: 0.85rem;
+}
+
+/* ── Anchor links (AnchorJS # on headings) ───────────────────────────────── */
+
+.anchor-section,
+a.anchorjs-link {
+    color: var(--border) !important;
+    text-decoration: none;
+}
+
+.anchor-section:hover,
+a.anchorjs-link:hover {
+    color: var(--front-body) !important;
+}
+
+/* ── Callout header backgrounds ──────────────────────────────────────────── */
+
+.callout-note      .callout-header { background-color: rgba(52,  152, 219, 0.12); }
+.callout-tip       .callout-header { background-color: rgba(46,  204, 113, 0.12); }
+.callout-warning   .callout-header { background-color: rgba(243, 156,  18, 0.12); }
+.callout-important .callout-header { background-color: rgba(231,  76,  60, 0.12); }
+.callout-caution   .callout-header { background-color: rgba(230, 126,  34, 0.12); }
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+
+table { border-color: var(--border); }
+thead { border-bottom-color: var(--border); }
+td, th { border-color: var(--border); }
+
+/* ── Blockquotes ─────────────────────────────────────────────────────────── */
+
+blockquote {
+    border-left-color: var(--border);
+    color: var(--qmd-margin);
+}
+
+/* ── Footnote section ────────────────────────────────────────────────────── */
+
+section.footnotes {
+    font-size: 0.85rem;
+    color: var(--qmd-margin);
+    border-top: 1px solid var(--border);
+}
+
+section.footnotes ol {
+    padding-left: 1.2em;
+}
+
+/* ── Pyodide loading indicator ───────────────────────────────────────────── */
+
+#exercise-loading-indicator {
+    background-color: var(--card-body);
+    border-color: var(--border);
+    color: var(--accent-front-body);
+}
