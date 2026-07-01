@@ -4,7 +4,6 @@ format:
       light: flatly
       dark: darkly
     highlight-style: github
-    respect-user-color-scheme: true
     css:
       - ../_qmd_styling.css
       - ../math-styling.css
@@ -21,6 +20,6 @@ comments:
     loading: lazy
     input-position: bottom
     theme:
-      light: light
-      dark: dark_dimmed
+      light: dark_dimmed
+      dark: light
   

@@ -16,6 +16,18 @@ format:
   html:
     theme:
       - iframe_match.scss
-    css: _vars.css
+    css: _entry_dark_vars.css
     include-in-header: preprocessing.html
 ---
+
+```{=html}
+<style>
+.quarto-listing .card .card-body {
+    padding: 0.35rem 0.6rem !important;
+    font-size: 0.75rem !important;
+}
+.quarto-listing .card .listing-date {
+    font-size: 0.75rem !important;
+}
+</style>
+```

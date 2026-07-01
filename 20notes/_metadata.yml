@@ -4,7 +4,6 @@ format:
       light: flatly
       dark: darkly
     highlight-style: github
-    respect-user-color-scheme: true
     css:
       - ../_qmd_styling.css
       - ../math-styling.css

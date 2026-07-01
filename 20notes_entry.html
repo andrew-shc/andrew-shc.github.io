@@ -29,6 +29,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./img/favicon.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-listing/list.min.js"></script>
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -41,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-810502a79b509f9099f43f13911b2cfd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-94d8a5823be40715cc78090e96a68ccc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
 <link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -81,9 +82,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-image','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-subtitle"],
+      searchColumns: [],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -153,6 +154,35 @@ ul.task-list li input[type="checkbox"] {
         font-family: var(--zed);
         font-weight: 700;
     }
+
+    /* ── Listing filter/sort widgets: no border-radius, themed ── */
+    .quarto-listing-sort .input-group-text,
+    .quarto-listing-sort .form-select,
+    .quarto-listing-filter .input-group-text,
+    .quarto-listing-filter .form-control {
+        border-radius: 0 !important;
+        color: var(--accent-front-body) !important;
+        border-color: var(--accent-front-body) !important;
+        background-color: var(--front-body) !important;
+    }
+    .quarto-listing-sort > :first-child,
+    .quarto-listing-sort > :last-child,
+    .quarto-listing-filter > :first-child,
+    .quarto-listing-filter > :last-child {
+        border-radius: 0 !important;
+    }
+    /* Specificity 0,3,0 beats the Chakra .quarto-listing .card * (0,2,0) rule */
+    .quarto-listing .card .listing-date,
+    .quarto-listing .card .card-attribution {
+        font-family: var(--font-body) !important;
+        color: var(--accent-front-body) !important;
+    }
+
+    /* Native <option> elements don't resolve CSS vars — hardcode palette */
+    .quarto-listing-sort .form-select option {
+        background-color: #3e313b !important;
+        color: #d3c7d1 !important;
+    }
 </style>
 
 <base target="_top">
@@ -187,42 +217,7 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="_vars.css">
-<style>
-    .listing-title, .listing-subtitle { display: none !important; }
-    .card-body.post-contents { padding-top: 0.35rem !important; padding-bottom: 0.35rem !important; }
-    .quarto-listing-sort .input-group-text,
-    .quarto-listing-sort .form-select,
-    .quarto-listing-filter .input-group-text,
-    .quarto-listing-filter .form-control {
-        border-radius: 0 !important;
-        color: var(--accent-front-body) !important;
-        border-color: var(--accent-front-body) !important;
-        background-color: var(--front-body) !important;
-    }
-    .quarto-listing-sort .form-select option {
-        background-color: var(--front-body) !important;
-        color: var(--accent-front-body) !important;
-    }
-    .cs-wrapper { position: relative; display: flex; flex: 1; }
-    .cs-trigger {
-        flex: 1; padding: .25rem .5rem; font-size: 0.875rem; cursor: pointer;
-        border: 1px solid var(--accent-front-body); border-radius: 0;
-        color: var(--accent-front-body); background: var(--front-body);
-        user-select: none; font-family: inherit;
-    }
-    .cs-dropdown {
-        display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 999;
-        border: 1px solid var(--accent-front-body); border-top: none;
-        background: var(--front-body);
-    }
-    .cs-dropdown.open { display: block; }
-    .cs-item {
-        padding: .25rem .5rem; font-size: 0.875rem;
-        color: var(--accent-front-body); cursor: pointer; font-family: inherit;
-    }
-    .cs-item:hover { background: var(--accent-front-body); color: var(--front-body); }
-</style>
+<link rel="stylesheet" href="_entry_dark_vars.css">
 </head>
 
 <body class="quarto-light">
@@ -239,6 +234,15 @@ window.Quarto = {
 
 
 
+<style>
+.quarto-listing .card .card-body {
+    padding: 0.35rem 0.6rem !important;
+    font-size: 0.75rem !important;
+}
+.quarto-listing .card .listing-date {
+    font-size: 0.75rem !important;
+}
+</style>
 
 
 
@@ -274,48 +278,7 @@ W10=
   </div>
 </div>
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="NaN" data-listing-file-modified-sort="1782604405875" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="3">
-<a href="./20notes/100.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./20notes/???" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-???
-</h5>
-<div class="card-subtitle listing-subtitle">
-???
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-Invalid Date
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-listing-date-sort="1782630000000" data-listing-file-modified-sort="1782772678863" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="518">
-<a href="./20notes/200.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./20notes/???" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Style Showcase
-</h5>
-<div class="card-subtitle listing-subtitle">
-Live Python, callouts, and sidenotes
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-Jun 28, 2026
-</div>
-</div>
-</div>
-</div></a>
-</div>
+
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
 </div></main> <!-- /main -->
@@ -720,45 +683,6 @@ Jun 28, 2026
   });
   </script>
 </div> <!-- /content -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.quarto-listing-sort').forEach(function (group) {
-        var sel = group.querySelector('.form-select');
-        if (!sel) return;
-        var minW = Math.ceil(sel.getBoundingClientRect().width);
-        var trigger = document.createElement('div');
-        trigger.className = 'cs-trigger';
-        trigger.textContent = 'Order By';
-        var menu = document.createElement('div');
-        menu.className = 'cs-dropdown';
-        Array.from(sel.options).forEach(function (opt, i) {
-            if (opt.disabled || opt.hidden) return;
-            var item = document.createElement('div');
-            item.className = 'cs-item';
-            item.textContent = opt.textContent.trim();
-            item.addEventListener('click', function () {
-                trigger.textContent = item.textContent;
-                menu.classList.remove('open');
-                sel.selectedIndex = i;
-                sel.dispatchEvent(new Event('change'));
-            });
-            menu.appendChild(item);
-        });
-        trigger.addEventListener('click', function (e) {
-            e.stopPropagation();
-            menu.classList.toggle('open');
-        });
-        document.addEventListener('click', function () { menu.classList.remove('open'); });
-        var wrapper = document.createElement('div');
-        wrapper.className = 'cs-wrapper';
-        wrapper.style.minWidth = minW + 'px';
-        wrapper.appendChild(trigger);
-        wrapper.appendChild(menu);
-        sel.style.display = 'none';
-        group.appendChild(wrapper);
-    });
-});
-</script>
 
 
 

@@ -34,6 +34,11 @@
 :root {
     --bs-body-font-family: var(--font-body);
     --bs-font-monospace: var(--font-mono);
+    --bs-border-color: var(--accent-front-body);
+    --bs-nav-link-color:       var(--accent-front-body);
+    --bs-nav-link-hover-color: var(--accent-front-body);
+    --bs-link-color:       var(--accent-front-body);
+    --bs-link-hover-color: var(--accent-front-body);
 }
 
 body {
@@ -68,10 +73,11 @@ body {
     --quarto-hl-va-color: var(--hl-variable);
     --quarto-hl-at-color: var(--hl-variable);
     --quarto-hl-op-color: var(--hl-operator);
+    --quarto-hl-ot-color: var(--hl-operator);
     --quarto-hl-dt-color: var(--hl-keyword);
-    --quarto-hl-al-color: #ff5555;
-    --quarto-hl-er-color: #ff5555;
-    --quarto-hl-wa-color: #ff5555;
+    --quarto-hl-al-color: var(--hl-alert);
+    --quarto-hl-er-color: var(--hl-alert);
+    --quarto-hl-wa-color: var(--hl-alert);
 }
 
 /* ── Dark mode — Bootstrap vars cascade into live-runtime and all components  */
@@ -79,12 +85,30 @@ body {
 body.quarto-dark {
     --bs-body-bg:          var(--back-body);
     --bs-body-color:       var(--accent-front-body);
-    --bs-border-color:     var(--border);
+    --bs-border-color:     var(--accent-front-body);
+    --bs-card-bg:          var(--card-body);
     --bs-card-cap-bg:      var(--card-body);
     --bs-light-bg-subtle:  var(--card-body);
     --bs-secondary-bg:     var(--card-body);
-    --bs-link-color:       var(--accent-front-body);
-    --bs-link-hover-color: var(--accent);
+    --bs-tertiary-bg:      var(--back-body);
+    --bs-heading-color:    var(--qmd-heading);
+    --bs-emphasis-color:   var(--accent-front-body);
+    --bs-link-color:           var(--accent-front-body);
+    --bs-link-hover-color:     var(--accent-front-body);
+    --bs-nav-link-color:       var(--accent-front-body);
+    --bs-nav-link-hover-color: var(--accent-front-body);
+
+    --quarto-body-bg:      var(--back-body);
+    --quarto-body-color:   var(--accent-front-body);
+    --quarto-border-color: var(--accent-front-body);
+
+    --mermaid-bg-color:       var(--back-body);
+    --mermaid-edge-color:     var(--accent-front-body);
+    --mermaid-fg-color:       var(--accent-front-body);
+    --mermaid-label-bg-color: var(--back-body);
+    --mermaid-label-fg-color: var(--accent-front-body);
+    --mermaid-node-bg-color:  var(--front-body);
+    --mermaid-node-fg-color:  var(--accent-front-body);
 
     /* propagate dark syntax highlight vars to quarto-hl-* */
     --quarto-hl-kw-color: var(--hl-keyword);
@@ -112,6 +136,7 @@ body.quarto-dark {
     --quarto-hl-va-color: var(--hl-variable);
     --quarto-hl-at-color: var(--hl-variable);
     --quarto-hl-op-color: var(--hl-operator);
+    --quarto-hl-ot-color: var(--hl-operator);
     --quarto-hl-dt-color: var(--hl-keyword);
 }
 
@@ -121,7 +146,75 @@ body.quarto-dark #quarto-sidebar,
 body.quarto-dark #quarto-margin-sidebar,
 body.quarto-dark .sidebar {
     background-color: var(--back-body);
-    border-color: var(--border);
+    border-color: var(--accent-front-body);
+}
+
+/* ── Light mode — Bootstrap vars ─────────────────────────────────────────── */
+
+body.quarto-light {
+    --bs-body-bg:          var(--back-body);
+    --bs-body-color:       var(--accent-front-body);
+    --bs-border-color:     var(--accent-front-body);
+    --bs-card-bg:          var(--card-body);
+    --bs-card-cap-bg:      var(--card-body);
+    --bs-light-bg-subtle:  var(--card-body);
+    --bs-secondary-bg:     var(--card-body);
+    --bs-tertiary-bg:      var(--back-body);
+    --bs-heading-color:    var(--qmd-heading);
+    --bs-emphasis-color:   var(--accent-front-body);
+    --bs-link-color:           var(--accent-front-body);
+    --bs-link-hover-color:     var(--accent-front-body);
+    --bs-nav-link-color:       var(--accent-front-body);
+    --bs-nav-link-hover-color: var(--accent-front-body);
+
+    --quarto-body-bg:      var(--back-body);
+    --quarto-body-color:   var(--accent-front-body);
+    --quarto-border-color: var(--accent-front-body);
+
+    --mermaid-bg-color:       var(--back-body);
+    --mermaid-edge-color:     var(--accent-front-body);
+    --mermaid-fg-color:       var(--accent-front-body);
+    --mermaid-label-bg-color: var(--back-body);
+    --mermaid-label-fg-color: var(--accent-front-body);
+    --mermaid-node-bg-color:  var(--front-body);
+    --mermaid-node-fg-color:  var(--accent-front-body);
+
+    --quarto-hl-kw-color: var(--hl-keyword);
+    --quarto-hl-cf-color: var(--hl-keyword);
+    --quarto-hl-bu-color: var(--hl-keyword);
+    --quarto-hl-ex-color: var(--hl-keyword);
+    --quarto-hl-pp-color: var(--hl-keyword);
+    --quarto-hl-st-color: var(--hl-string);
+    --quarto-hl-ss-color: var(--hl-string);
+    --quarto-hl-ch-color: var(--hl-string);
+    --quarto-hl-vs-color: var(--hl-string);
+    --quarto-hl-im-color: var(--hl-string);
+    --quarto-hl-co-color: var(--hl-comment);
+    --quarto-hl-cv-color: var(--hl-comment);
+    --quarto-hl-do-color: var(--hl-comment);
+    --quarto-hl-an-color: var(--hl-comment);
+    --quarto-hl-in-color: var(--hl-comment);
+    --quarto-hl-re-color: var(--hl-comment);
+    --quarto-hl-fu-color: var(--hl-function);
+    --quarto-hl-dv-color: var(--hl-number);
+    --quarto-hl-bn-color: var(--hl-number);
+    --quarto-hl-fl-color: var(--hl-number);
+    --quarto-hl-cn-color: var(--hl-number);
+    --quarto-hl-sc-color: var(--hl-number);
+    --quarto-hl-va-color: var(--hl-variable);
+    --quarto-hl-at-color: var(--hl-variable);
+    --quarto-hl-op-color: var(--hl-operator);
+    --quarto-hl-ot-color: var(--hl-operator);
+    --quarto-hl-dt-color: var(--hl-keyword);
+}
+
+/* ── Light sidebar and margin panel ──────────────────────────────────────── */
+
+body.quarto-light #quarto-sidebar,
+body.quarto-light #quarto-margin-sidebar,
+body.quarto-light .sidebar {
+    background-color: var(--back-body);
+    border-color: var(--sub-accent-front-body);
 }
 
 /* ── Headings ────────────────────────────────────────────────────────────── */
@@ -129,9 +222,20 @@ body.quarto-dark .sidebar {
 h1, h2, h3, h4, h5, h6,
 .subtitle,
 .quarto-title-meta-heading {
-    color: var(--qmd-heading);
     font-family: var(--font-heading);
     font-weight: normal;
+}
+
+body.quarto-dark h1, body.quarto-dark h2, body.quarto-dark h3,
+body.quarto-dark h4, body.quarto-dark h5, body.quarto-dark h6,
+body.quarto-dark .subtitle {
+    color: var(--accent-front-body) !important;
+}
+
+body.quarto-light h1, body.quarto-light h2, body.quarto-light h3,
+body.quarto-light h4, body.quarto-light h5, body.quarto-light h6,
+body.quarto-light .subtitle {
+    color: var(--accent-front-body) !important;
 }
 
 h1 {
@@ -144,8 +248,8 @@ h1::after {
     bottom: 0.25em;
     left: 0;
     right: 0;
-    height: 1px;
-    background-color: currentColor;
+    height: 0;
+    border-top: 1px solid currentColor;
 }
 
 h1.title::after,
@@ -169,160 +273,396 @@ h2, h3, h4, h5, h6 {
     --bs-nav-link-hover-color: var(--qmd-toc-active);
 }
 
+body.quarto-dark #TOC .nav-link,
+body.quarto-light #TOC .nav-link {
+    color: var(--accent-front-body) !important;
+}
+
+/* Bootstrap flatly/darkly hardcode border-left: 1px solid #ecf0f1 on all TOC links */
+.sidebar nav[role=doc-toc]>ul a {
+    border-left-color: var(--sub-accent-front-body) !important;
+}
+
 #TOC a.nav-link {
     opacity: 0.7;
     transition: opacity 0.15s, color 0.15s;
 }
 
-#TOC a.nav-link:hover {
+body.quarto-dark #TOC a.nav-link:hover,
+body.quarto-light #TOC a.nav-link:hover {
     opacity: 1;
-    color: var(--qmd-toc-active) !important;
+    color: var(--accent-front-body) !important;
 }
 
-#TOC a.nav-link.active {
+body.quarto-dark #TOC a.nav-link.active,
+body.quarto-light #TOC a.nav-link.active {
     opacity: 1;
-    color: var(--qmd-toc-active) !important;
-    border-left-color: var(--qmd-toc-active);
+    color: var(--accent-front-body) !important;
+    border-left-color: var(--accent-front-body) !important;
     font-weight: 600;
 }
 
 /* ── Superscript footnote numbers ────────────────────────────────────────── */
 
 a.footnote-ref {
-    color: var(--qmd-toc-active);
+    color: var(--accent-front-body) !important;
     text-decoration: none;
     font-size: 0.75em;
+}
+
+sup {
+    color: inherit;
 }
 
 /* ── Sidenotes ───────────────────────────────────────────────────────────── */
 
 .column-margin {
-    color: var(--qmd-margin);
+    color: var(--accent-front-body) !important;
     font-size: 0.8rem;
 }
 
 /* ── Text selection ──────────────────────────────────────────────────────── */
 
 ::selection {
-    background-color: var(--selection-bg);
-    color: var(--selection-text);
+    background-color: var(--accent-front-body);
+    color: var(--back-body);
 }
 
 /* Static code blocks — explicit override since syntax spans set their own color */
 pre ::selection,
 code ::selection {
-    background-color: var(--selection-bg);
-    color: var(--selection-text);
+    background-color: var(--accent-front-body);
+    color: var(--back-body);
 }
 
 /* CodeMirror live editor — two cases:                                        */
 /* 1. Browser native selection dragged into the editor content                */
 .card.exercise-editor .cm-content ::selection {
-    background-color: rgba(var(--front-body-rgb), 0.4) !important;
-    color: var(--selection-text) !important;
+    background-color: var(--accent-front-body) !important;
+    color: var(--back-body) !important;
 }
 /* 2. Click-drag started inside the editor (CodeMirror renders its own        */
 /*    .cm-selectionBackground divs — live-runtime.css rule for these is       */
 /*    broken due to a typo, so they get CodeMirror's default blue)            */
-.card.exercise-editor .cm-selectionBackground {
-    background-color: rgba(var(--front-body-rgb), 0.35) !important;
+.card.exercise-editor .cm-editor.cm-focused .cm-selectionBackground {
+    background-color: var(--accent-front-body) !important;
+}
+/* When editor loses focus the selectionBackground div persists but code text
+   stays --accent-front-body, so same-color bg makes text invisible. Use a
+   clearly different background so the inactive selection stays readable.     */
+.card.exercise-editor .cm-editor:not(.cm-focused) .cm-selectionBackground {
+    background-color: var(--front-body) !important;
 }
 
 /* ── Callouts ────────────────────────────────────────────────────────────── */
 
-.callout.callout-note      { border-left-color: var(--qmd-callout-note)      !important; }
-.callout.callout-tip       { border-left-color: var(--qmd-callout-tip)       !important; }
-.callout.callout-warning   { border-left-color: var(--qmd-callout-warning)   !important; }
-.callout.callout-important { border-left-color: var(--qmd-callout-important) !important; }
-.callout.callout-caution   { border-left-color: var(--qmd-callout-caution)   !important; }
+/* Right/top/bottom borders are hardcoded in Bootstrap; override here */
+.callout.callout-style-default,
+.callout.callout-style-simple {
+    border-right-color:  var(--accent-front-body) !important;
+    border-top-color:    var(--accent-front-body) !important;
+    border-bottom-color: var(--accent-front-body) !important;
+}
+
+body.quarto-dark .callout.callout-note,
+body.quarto-dark .callout.callout-tip,
+body.quarto-dark .callout.callout-warning,
+body.quarto-dark .callout.callout-important,
+body.quarto-dark .callout.callout-caution,
+body.quarto-light .callout.callout-note,
+body.quarto-light .callout.callout-tip,
+body.quarto-light .callout.callout-warning,
+body.quarto-light .callout.callout-important,
+body.quarto-light .callout.callout-caution { border-left-color: var(--accent-front-body) !important; }
+
+.callout .callout-icon-container i,
+.callout .callout-icon-container svg {
+    color: var(--accent-front-body) !important;
+    fill:  var(--accent-front-body) !important;
+}
+
+/* ── Callout icon SVG overrides (fill baked into data URIs, can't use CSS vars) ── */
+/* Dark:  --accent-front-body = #d4c0aa = rgb(211, 199, 209)                   */
+/* Light: --accent-front-body = #3a1510 = rgb( 58,  21,  16)                   */
+
+.callout.callout-note .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(211, 199, 209)" class="bi bi-info-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg>') !important;
+}
+body.quarto-dark .callout.callout-note .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(12, 91, 26)" class="bi bi-info-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg>') !important;
+}
+
+.callout.callout-tip .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(211, 199, 209)" class="bi bi-lightbulb" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1z"/></svg>') !important;
+}
+body.quarto-dark .callout.callout-tip .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(12, 91, 26)" class="bi bi-lightbulb" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1z"/></svg>') !important;
+}
+
+.callout.callout-warning .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(211, 199, 209)" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/><path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/></svg>') !important;
+}
+body.quarto-dark .callout.callout-warning .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(12, 91, 26)" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/><path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/></svg>') !important;
+}
+
+.callout.callout-important .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(211, 199, 209)" class="bi bi-exclamation-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/></svg>') !important;
+}
+body.quarto-dark .callout.callout-important .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(12, 91, 26)" class="bi bi-exclamation-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/></svg>') !important;
+}
+
+.callout.callout-caution .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(211, 199, 209)" class="bi bi-cone-striped" viewBox="0 0 16 16"><path d="M9.97 4.88l.953 3.811C10.158 8.878 9.14 9 8 9c-1.14 0-2.159-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.274 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"/></svg>') !important;
+}
+body.quarto-dark .callout.callout-caution .callout-icon::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(12, 91, 26)" class="bi bi-cone-striped" viewBox="0 0 16 16"><path d="M9.97 4.88l.953 3.811C10.158 8.878 9.14 9 8 9c-1.14 0-2.159-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.274 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"/></svg>') !important;
+}
+
+/* ── Callout collapse toggle arrow ───────────────────────────────────────── */
+
+.callout-toggle::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(211, 199, 209)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') !important;
+}
+body.quarto-dark .callout-toggle::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: rgb(12, 91, 26)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') !important;
+}
 
 /* ── Live code — exercise editor card ────────────────────────────────────── */
 /* The exercise widget reads --bs-body-bg / --bs-card-cap-bg set above.       */
 /* Active line: override --exercise-line-bg which chains through primary-rgb  */
 
 .card.exercise-editor {
-    --exercise-line-bg:        rgba(var(--front-body-rgb), 0.08);
-    --exercise-line-gutter-bg: rgba(var(--front-body-rgb), 0.14);
+    --exercise-line-bg:        rgb(from var(--front-body) r g b / 0.08);
+    --exercise-line-gutter-bg: rgb(from var(--front-body) r g b / 0.14);
+    border-color: var(--accent-front-body);
+}
+
+.card.exercise-editor .card-header {
+    background-color: var(--sub-accent-front-body) !important;
+    border-bottom-color: var(--accent-front-body) !important;
 }
 
 body.quarto-dark .card.exercise-editor {
     background-color: var(--back-body);
-    border-color: var(--border);
+    border-color: var(--accent-front-body);
 }
 
 body.quarto-dark .card.exercise-editor .card-header {
-    background-color: var(--card-body);
-    border-color: var(--border);
+    background-color: var(--sub-accent-front-body);
+    border-color: var(--accent-front-body);
 }
 
 /* Run button (btn-primary) */
 .card.exercise-editor .card-header .btn.btn-primary {
-    --bs-btn-bg:                var(--front-body);
-    --bs-btn-border-color:      var(--front-body);
-    --bs-btn-hover-bg:          var(--accent-front-body);
-    --bs-btn-hover-border-color: var(--accent-front-body);
-    --bs-btn-hover-color:       var(--back-body);
-    --bs-btn-color:             var(--accent);
+    --bs-btn-bg:                    var(--front-body);
+    --bs-btn-border-color:          var(--front-body);
+    --bs-btn-color:                 var(--accent-front-body);
+    --bs-btn-hover-bg:              var(--accent-front-body);
+    --bs-btn-hover-border-color:    var(--accent-front-body);
+    --bs-btn-hover-color:           var(--back-body);
+    --bs-btn-active-bg:             var(--accent-front-body);
+    --bs-btn-active-border-color:   var(--accent-front-body);
+    --bs-btn-active-color:          var(--back-body);
+    --bs-btn-disabled-bg:           var(--front-body);
+    --bs-btn-disabled-border-color: var(--front-body);
+    --bs-btn-disabled-color:        var(--accent-front-body);
+    --bs-btn-box-shadow: 0 0 0 0.25rem rgb(from var(--front-body) r g b / 0.5);
 }
 
-/* Secondary buttons (Reset, Hint, …) */
+/* Secondary buttons (Reset, Hint, …) — matches run button style */
 .card.exercise-editor .card-header .btn.btn-outline-dark {
-    --bs-btn-color:             var(--front-body);
-    --bs-btn-border-color:      var(--front-body);
-    --bs-btn-hover-bg:          var(--front-body);
-    --bs-btn-hover-color:       var(--accent);
-    --bs-btn-hover-border-color: var(--front-body);
+    --bs-btn-bg:                    var(--front-body);
+    --bs-btn-border-color:          var(--front-body);
+    --bs-btn-color:                 var(--accent-front-body);
+    --bs-btn-hover-bg:              var(--accent-front-body);
+    --bs-btn-hover-border-color:    var(--accent-front-body);
+    --bs-btn-hover-color:           var(--back-body);
+    --bs-btn-active-bg:             var(--accent-front-body);
+    --bs-btn-active-border-color:   var(--accent-front-body);
+    --bs-btn-active-color:          var(--back-body);
+    --bs-btn-disabled-bg:           var(--front-body);
+    --bs-btn-disabled-border-color: var(--front-body);
+    --bs-btn-disabled-color:        var(--accent-front-body);
 }
 
 body.quarto-dark .card.exercise-editor .card-header .btn.btn-outline-dark {
-    --bs-btn-color:             var(--accent-front-body);
-    --bs-btn-border-color:      var(--border);
-    --bs-btn-hover-bg:          var(--front-body);
-    --bs-btn-hover-color:       var(--accent);
-    --bs-btn-hover-border-color: var(--front-body);
+    --bs-btn-bg:                    var(--front-body);
+    --bs-btn-border-color:          var(--front-body);
+    --bs-btn-color:                 var(--accent-front-body);
+    --bs-btn-hover-bg:              var(--accent-front-body);
+    --bs-btn-hover-border-color:    var(--accent-front-body);
+    --bs-btn-hover-color:           var(--back-body);
+    --bs-btn-active-bg:             var(--accent-front-body);
+    --bs-btn-active-border-color:   var(--accent-front-body);
+    --bs-btn-active-color:          var(--back-body);
+    --bs-btn-disabled-bg:           var(--front-body);
+    --bs-btn-disabled-border-color: var(--front-body);
+    --bs-btn-disabled-color:        var(--accent-front-body);
+}
+
+/* ── Live code console output ─────────────────────────────────────────────── */
+/* Output containers created dynamically by live-runtime.js — no background    */
+/* is set by live-runtime so they would inherit Bootstrap's light defaults.     */
+
+.exercise-cell-output,
+.cell-output-container,
+.cell-output-container-webr,
+.cell-output-container-pyodide {
+    background-color: var(--back-body);
+    color: var(--accent-front-body);
+}
+
+/* pre inside output (stdout/stderr text) */
+.exercise-cell-output pre,
+.cell-output-container pre,
+.cell-output.cell-output-webr pre,
+.cell-output.cell-output-pyodide pre {
+    background-color: var(--sub-accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+    border-color: var(--sub-accent-front-body) !important;
+}
+
+/* live-runtime.css sets cell-output-stderr pre code { color: var(--exercise-editor-hl-er, #AD0000) }
+   directly on the code element (not inherited), so it beats the pre color above.
+   Override with a scoped rule of higher specificity + !important.             */
+body.quarto-dark .exercise-cell-output.cell-output-stderr pre code,
+body.quarto-light .exercise-cell-output.cell-output-stderr pre code {
+    color: var(--accent-front-body) !important;
+}
+
+/* observablehq inspector value display — uses --quarto-hl-* which are         */
+/* two-level chains; override directly so they respond to both modes           */
+body.quarto-dark .observablehq--key,
+body.quarto-dark .observablehq--index,
+body.quarto-dark .observablehq--string,
+body.quarto-dark .observablehq--bigint,
+body.quarto-dark .observablehq--date,
+body.quarto-dark .observablehq--number,
+body.quarto-dark .observablehq--regexp,
+body.quarto-dark .observablehq--symbol,
+body.quarto-dark .observablehq--null,
+body.quarto-dark .observablehq--boolean,
+body.quarto-dark .observablehq--undefined,
+body.quarto-dark .observablehq--keyword,
+body.quarto-light .observablehq--key,
+body.quarto-light .observablehq--index,
+body.quarto-light .observablehq--string,
+body.quarto-light .observablehq--bigint,
+body.quarto-light .observablehq--date,
+body.quarto-light .observablehq--number,
+body.quarto-light .observablehq--regexp,
+body.quarto-light .observablehq--symbol,
+body.quarto-light .observablehq--null,
+body.quarto-light .observablehq--boolean,
+body.quarto-light .observablehq--undefined,
+body.quarto-light .observablehq--keyword {
+    color: var(--accent-front-body) !important;
 }
 
 /* ── Code gutters (line numbers) ─────────────────────────────────────────── */
 
 .card.exercise-editor .cm-gutters {
-    background-color: rgba(var(--front-body-rgb), 0.05);
-    border-right-color: var(--border);
-    color: var(--qmd-margin);
+    position: sticky;
+    left: 0;
+    z-index: 200;
+    background-color: var(--back-body);
+    border-right-color: var(--accent-front-body);
+    color: var(--accent-front-body) !important;
 }
 
 /* ── Scrollbars ──────────────────────────────────────────────────────────── */
-/* Scoped to overflowing QMD elements: math display, code editor, sidebars   */
 
-.math.display,
+/* Page scrollbar */
+html {
+    scrollbar-color: var(--sub-accent-front-body) var(--back-body);
+    scrollbar-width: thin;
+}
+
+/* Code editor + sidebars: show scrollbar only on container hover */
 .card.exercise-editor .cm-scroller,
 #quarto-sidebar,
 #quarto-margin-sidebar {
     scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.15s;
 }
 
-.math.display::-webkit-scrollbar,
+.card.exercise-editor:hover .cm-scroller,
+.card.exercise-editor .cm-scroller:hover,
+#quarto-sidebar:hover,
+#quarto-margin-sidebar:hover {
+    scrollbar-color: var(--sub-accent-front-body) transparent;
+}
+
 .card.exercise-editor .cm-scroller::-webkit-scrollbar,
 #quarto-sidebar::-webkit-scrollbar,
 #quarto-margin-sidebar::-webkit-scrollbar { height: 5px; width: 5px; }
 
-.math.display::-webkit-scrollbar-track,
 .card.exercise-editor .cm-scroller::-webkit-scrollbar-track,
 #quarto-sidebar::-webkit-scrollbar-track,
 #quarto-margin-sidebar::-webkit-scrollbar-track { background: transparent; }
 
-.math.display::-webkit-scrollbar-thumb,
 .card.exercise-editor .cm-scroller::-webkit-scrollbar-thumb,
 #quarto-sidebar::-webkit-scrollbar-thumb,
 #quarto-margin-sidebar::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: transparent;
     border-radius: 3px;
+    transition: background 0.15s;
 }
 
-.math.display::-webkit-scrollbar-thumb:hover,
-.card.exercise-editor .cm-scroller::-webkit-scrollbar-thumb:hover {
-    background: var(--front-body);
+.card.exercise-editor:hover .cm-scroller::-webkit-scrollbar-thumb,
+.card.exercise-editor .cm-scroller:hover::-webkit-scrollbar-thumb {
+    background: var(--sub-accent-front-body);
 }
+
+#quarto-sidebar:hover::-webkit-scrollbar-thumb,
+#quarto-margin-sidebar:hover::-webkit-scrollbar-thumb {
+    background: var(--sub-accent-front-body);
+}
+
+/* ── Live code autocomplete tooltip ─────────────────────────────────────────── */
+/* CodeMirror mounts tooltips inside .cm-editor; hardcoded &light/#f5f5f5 and  */
+/* &dark/#333338 from baseTheme are overridden here via !important.             */
+
+.card.exercise-editor .cm-tooltip {
+    background-color: var(--front-body) !important;
+    border: 1px solid var(--sub-accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+.card.exercise-editor .cm-tooltip-autocomplete > ul > li {
+    color: var(--accent-front-body) !important;
+}
+
+.card.exercise-editor .cm-tooltip-autocomplete > ul > li[aria-selected] {
+    background-color: var(--sub-accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+.card.exercise-editor .cm-completionMatchedText {
+    color: var(--accent-front-body) !important;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.card.exercise-editor .cm-completionDetail {
+    color: var(--accent-front-body) !important;
+    opacity: 0.6;
+}
+
+.card.exercise-editor .cm-completionIcon {
+    color: var(--accent-front-body) !important;
+    opacity: 0.7;
+}
+
+/* Math display + tables: standard scrollbar with visible track */
+.math.display,
+table {
+    scrollbar-color: var(--sub-accent-front-body) var(--front-body);
+}
+
 
 /* ── TOC title ───────────────────────────────────────────────────────────── */
 
@@ -330,7 +670,7 @@ body.quarto-dark .card.exercise-editor .card-header .btn.btn-outline-dark {
 .quarto-title-meta-heading {
     font-family: var(--font-body);
     font-size: 0.75rem;
-    color: var(--qmd-margin);
+    color: var(--accent-front-body) !important;
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
@@ -340,7 +680,7 @@ body.quarto-dark .card.exercise-editor .card-header .btn.btn-outline-dark {
 .quarto-title-meta-contents,
 .quarto-title-meta-contents p,
 .date {
-    color: var(--qmd-margin);
+    color: var(--accent-front-body) !important;
     font-size: 0.85rem;
 }
 
@@ -348,42 +688,163 @@ body.quarto-dark .card.exercise-editor .card-header .btn.btn-outline-dark {
 
 .anchor-section,
 a.anchorjs-link {
-    color: var(--border) !important;
+    color: var(--accent-front-body) !important;
     text-decoration: none;
 }
 
 .anchor-section:hover,
 a.anchorjs-link:hover {
-    color: var(--front-body) !important;
+    color: var(--accent-back-body) !important;
+}
+
+/* Bootstrap only covers h2–h6; h1 needs its own hover rule */
+h1:hover > .anchorjs-link { opacity: 1; }
+
+/* AnchorJS v5 with icon:'' sets data-anchorjs-icon="" so ::after renders empty content.
+   Override with a visible '#' glyph in the body font for all headings. */
+:is(h1, h2, h3, h4, h5, h6) > a.anchorjs-link::after {
+    content: '#' !important;
+    font-family: var(--font-body) !important;
 }
 
 /* ── Callout header backgrounds ──────────────────────────────────────────── */
 
-.callout-note      .callout-header { background-color: rgba(52,  152, 219, 0.12); }
-.callout-tip       .callout-header { background-color: rgba(46,  204, 113, 0.12); }
-.callout-warning   .callout-header { background-color: rgba(243, 156,  18, 0.12); }
-.callout-important .callout-header { background-color: rgba(231,  76,  60, 0.12); }
-.callout-caution   .callout-header { background-color: rgba(230, 126,  34, 0.12); }
+.callout-note .callout-header,
+.callout-tip .callout-header,
+.callout-warning .callout-header,
+.callout-important .callout-header,
+.callout-caution .callout-header { background-color: var(--sub-accent-front-body) !important; }
+
+/* ── Code block text color ───────────────────────────────────────────────── */
+/* quarto-syntax-highlighting-*.css sets hardcoded colors on code span.*      */
+/* Scoped to body class so --accent-front-body resolves at the right scope.  */
+
+body.quarto-dark pre > code.sourceCode > span,
+body.quarto-dark code span,
+body.quarto-light pre > code.sourceCode > span,
+body.quarto-light code span {
+    color: var(--accent-front-body) !important;
+}
+
+/* Live code editor — tok-* spans use live-runtime.css cached var chain       */
+/* (3 levels deep); override directly here instead.                           */
+body.quarto-dark .cm-line span,
+body.quarto-light .cm-line span {
+    color: var(--accent-front-body) !important;
+}
 
 /* ── Tables ──────────────────────────────────────────────────────────────── */
 
-table { border-color: var(--border); }
-thead { border-bottom-color: var(--border); }
-td, th { border-color: var(--border); }
+table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.table {
+    --bs-table-bg:             var(--front-body);
+    --bs-table-color:          var(--accent-front-body);
+    --bs-table-border-color:   var(--accent-back-body);
+    --bs-table-striped-bg:     rgb(from var(--front-body) r g b / 0.15);
+    --bs-table-striped-color:  var(--accent-front-body);
+    --bs-table-hover-bg:       rgb(from var(--front-body) r g b / 0.2);
+    --bs-table-hover-color:    var(--accent-front-body);
+    --bs-table-active-bg:      rgb(from var(--front-body) r g b / 0.25);
+    --bs-table-active-color:   var(--accent-front-body);
+    border-color: var(--accent-back-body) !important;
+}
+
+.table > :not(caption) > * > * {
+    border-color: var(--accent-back-body) !important;
+    color: var(--accent-front-body) !important;
+}
 
 /* ── Blockquotes ─────────────────────────────────────────────────────────── */
 
 blockquote {
-    border-left-color: var(--border);
-    color: var(--qmd-margin);
+    border-left-color: var(--accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+/* ── Code backgrounds ────────────────────────────────────────────────────── */
+
+div.sourceCode {
+    background-color: var(--sub-accent-front-body) !important;
+    border-color: var(--accent-front-body) !important;
+}
+
+pre {
+    background-color: var(--sub-accent-front-body) !important;
+    border-color: var(--accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+:not(pre) > code {
+    background-color: var(--sub-accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+/* ── General link color ──────────────────────────────────────────────────── */
+/* Bootstrap uses rgba(var(--bs-link-color-rgb), ...) which is a triplet we   */
+/* don't set. Override directly — our CSS loads last so no !important needed. */
+
+a {
+    color: var(--accent-front-body);
+}
+
+a:hover {
+    color: var(--accent-front-body);
+}
+
+/* ── Figure captions and blockquote footers ──────────────────────────────── */
+
+.figure-caption,
+.blockquote-footer {
+    color: var(--accent-front-body);
+}
+
+/* ── Keyboard labels ─────────────────────────────────────────────────────── */
+
+kbd {
+    color: var(--accent-front-body);
+    background-color: var(--front-body);
+    border-color: var(--sub-accent-front-body);
+}
+
+/* ── Code-with-filename header tab ───────────────────────────────────────── */
+
+.code-with-filename .code-with-filename-file {
+    background-color: var(--sub-accent-front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+
+/* ── Code-tools button (view source icon) ────────────────────────────────── */
+
+.code-tools-button {
+    color: var(--sub-accent-front-body) !important;
+}
+.code-tools-button:hover {
+    color: var(--accent-front-body) !important;
+}
+
+/* ── Title block banner ───────────────────────────────────────────────────── */
+
+.quarto-title-banner {
+    background: var(--front-body) !important;
+    color: var(--accent-front-body) !important;
+}
+.quarto-title-banner a,
+.quarto-title-banner h1, .quarto-title-banner .h1,
+.quarto-title-banner h2, .quarto-title-banner .h2 {
+    color: var(--accent-front-body) !important;
 }
 
 /* ── Footnote section ────────────────────────────────────────────────────── */
 
 section.footnotes {
     font-size: 0.85rem;
-    color: var(--qmd-margin);
-    border-top: 1px solid var(--border);
+    color: var(--accent-front-body);
+    border-top: 1px solid var(--accent-front-body);
 }
 
 section.footnotes ol {
@@ -393,7 +854,7 @@ section.footnotes ol {
 /* ── Pyodide loading indicator ───────────────────────────────────────────── */
 
 #exercise-loading-indicator {
-    background-color: var(--card-body);
-    border-color: var(--border);
+    background-color: var(--sub-accent-front-body);
+    border-color: var(--accent-front-body);
     color: var(--accent-front-body);
 }

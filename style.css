@@ -46,8 +46,8 @@ h2::after {
     bottom: 0.225em;
     left: 0;
     right: 0;
-    height: 1px;
-    background-color: currentColor;
+    height: 0;
+    border-top: 1px solid currentColor;
 }
 
 p,
@@ -77,10 +77,6 @@ h3 {
     font-weight: normal;
 }
 
-/* colors  https://rosepinetheme.com/palette/ */
-
-/* variables defined in _vars.css */
-
 html {
     /* background-color: #faf4ed; */
     background-color: var(--back-body);
@@ -89,38 +85,36 @@ html {
 
 .name,
 h2,
-h3 {
-    color: var(--accent);
-}
-
+h3,
 p,
 a,
 ul {
-    color: var(--accent-front-body);/*   #575279; */
+    color: var(--accent-front-body);
+}
+
+::selection {
+    background-color: var(--accent-front-body);
+    color: var(--back-body);
 }
 
 .main {
     /* background-color: #fffaf3; */
     background-color: var(--front-body);
-    /* border-color: #797593; */
-    border-color: var(--border)
+    border-color: var(--accent-front-body);
 }
 
 nav {
     background-color: var(--front-body);/*  #f4ede8; */
-    /* border-color: #797593; */
-    border-color: var(--border);
+    border-color: var(--accent-front-body);
     z-index: 100;
 }
 
 article {
-    /* border-color: #797593; */
-    border-color: var(--border);
+    border-color: var(--accent-front-body);
 }
 
 .avatar {
-    /* border-color: #797593; */
-    border-color: var(--border);
+    border-color: var(--accent-front-body);
 }
 
 .horizontal-bar {
@@ -252,17 +246,14 @@ svg {
     /* Align items at the start */
     align-items: center;
     /* Vertically center the items */
-    gap: 8px;
+    gap: 20px;
     /* Space between the image and the text */
 }
 
 .proj-image-container {
-    width: 150px;
-    /* Set a fixed width for the image */
+    width: auto;
     height: auto;
-    /* Keep aspect ratio */
     flex-shrink: 0;
-    /* Prevent image from shrinking */
 }
 
 .proj-blurb-container {
@@ -280,16 +271,10 @@ svg {
 }
 
 .avatar {
-    width: 100px;
-    /* set a fixed width */
-    height: 100px;
-    /* set a fixed height (same as width for a perfect circle) */
-    object-fit: cover;
-    /* ensures the image fills the container while maintaining its aspect ratio */
-    border-radius: 50%;
-    /* makes the image circular */
-    border-width: 1px;
-    border-style: solid;
+    display: block;
+    width: 102px;
+    height: auto;
+    border: 1px solid var(--accent-front-body);
 }
 
 /* For smaller screens (below 600px), reduce the max-width */

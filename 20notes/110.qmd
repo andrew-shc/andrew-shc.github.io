@@ -1,10 +1,9 @@
 ---
 title: "???"
 subtitle: "???"
-# image: ???
+image: ???
 date: ???
 # date-modified: last-modified
-icsl: acm-sig-proceedings.csl
 format:
     r-wasm/live-html:
       grid:
@@ -21,8 +20,3 @@ toc-location: left
 ---
 
 <!-- [TL;ND]{.tlnd} -->
-
-
-# Under construction
-
-

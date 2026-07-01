@@ -68,10 +68,17 @@
     .quarto-listing-filter > :last-child {
         border-radius: 0 !important;
     }
-    /* dropdown option items inherit body bg/color */
-    .quarto-listing-sort .form-select option {
-        background-color: var(--front-body) !important;
+    /* Specificity 0,3,0 beats the Chakra .quarto-listing .card * (0,2,0) rule */
+    .quarto-listing .card .listing-date,
+    .quarto-listing .card .card-attribution {
+        font-family: var(--font-body) !important;
         color: var(--accent-front-body) !important;
+    }
+
+    /* Native <option> elements don't resolve CSS vars — hardcode palette */
+    .quarto-listing-sort .form-select option {
+        background-color: #3e313b !important;
+        color: #d3c7d1 !important;
     }
 </style>
 

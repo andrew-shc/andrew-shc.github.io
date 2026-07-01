@@ -1,13 +1,16 @@
 :root {
-    /* ── Palette ──────────────────────────────────────────────────────────── */
-    --accent: #FAF3E0;
-    --border: #9893a5;
-    --back-body: #3E2318;
-    --front-body: #917043;
-    --front-body-rgb: 145, 112, 67;
-    --accent-front-body: #D7CBB5;
-    --card-body: #816f56;
-    --accent-back-body: #777777;
+    /* ── Palette (5 real values) ─────────────────────────────────────────── */
+    --back-body:              #3E2624;
+    --front-body:             #3e313b;
+    --accent-front-body:      #d3c7d1;
+    --accent-back-body:       #856F61;
+    --sub-accent-front-body:  #37314d;
+
+    /* ── Aliases ─────────────────────────────────────────────────────────── */
+    --accent:    var(--accent-front-body);
+    --border:    var(--sub-accent-front-body);
+    --card-body: var(--sub-accent-front-body);
+    --accent-body: var(--accent-front-body); /* alias: compiled Bootstrap CSS references this old name */
 
     /* ── Fonts ────────────────────────────────────────────────────────────── */
     --font-body: 'Zed', sans-serif;
@@ -15,52 +18,39 @@
     --font-mono: ui-monospace, monospace;
 
     /* ── Text selection ───────────────────────────────────────────────────── */
-    --selection-bg: var(--front-body);
-    --selection-text: var(--accent);
+    --selection-bg: var(--accent);
+    --selection-text: var(--back-body);
 
     /* ── Light mode tokens ────────────────────────────────────────────────── */
-    --qmd-heading: var(--front-body);
-    --qmd-toc: var(--front-body);
-    --qmd-toc-active: var(--front-body);
-    --qmd-margin: var(--accent-back-body);
+    --qmd-heading: var(--accent-front-body);
+    --qmd-toc: var(--accent-front-body);
+    --qmd-toc-active: var(--accent-front-body);
+    --qmd-margin: var(--accent-front-body);
 
     /* ── Callouts (light) ─────────────────────────────────────────────────── */
-    --qmd-callout-note: #3498db;
-    --qmd-callout-tip: #2ecc71;
-    --qmd-callout-warning: #f39c12;
-    --qmd-callout-important: #e74c3c;
-    --qmd-callout-caution: #e67e22;
+    --qmd-callout-note:      var(--accent-front-body);
+    --qmd-callout-tip:       var(--accent-front-body);
+    --qmd-callout-warning:   var(--accent-front-body);
+    --qmd-callout-important: var(--accent-front-body);
+    --qmd-callout-caution:   var(--accent-front-body);
 
     /* ── Syntax highlighting (light) ──────────────────────────────────────── */
-    --hl-keyword:  #d73a49;
-    --hl-string:   #032f62;
-    --hl-comment:  #6a737d;
-    --hl-function: #6f42c1;
-    --hl-number:   #005cc5;
-    --hl-variable: #e36209;
-    --hl-operator: #24292e;
+    --hl-keyword:  var(--accent-front-body);
+    --hl-string:   var(--accent-front-body);
+    --hl-comment:  var(--accent-front-body);
+    --hl-function: var(--accent-front-body);
+    --hl-number:   var(--accent-front-body);
+    --hl-variable: var(--accent-front-body);
+    --hl-operator: var(--accent-front-body);
+    --hl-alert:    var(--accent-front-body);
 }
 
-/* ── Dark mode tokens ─────────────────────────────────────────────────────── */
+/* ── Light palette — active when Quarto's dark-mode toggle is on ─────────── */
+/* ── quarto-light = dark palette (default); quarto-dark = light palette ───── */
 body.quarto-dark {
-    --qmd-heading: var(--accent);
-    --qmd-toc: var(--accent-front-body);
-    --qmd-toc-active: var(--accent);
-    --qmd-margin: var(--accent-back-body);
-
-    /* ── Callouts (dark) ──────────────────────────────────────────────────── */
-    --qmd-callout-note: #3498db;
-    --qmd-callout-tip: #2ecc71;
-    --qmd-callout-warning: #f39c12;
-    --qmd-callout-important: #e74c3c;
-    --qmd-callout-caution: #e67e22;
-
-    /* ── Syntax highlighting (dark) ───────────────────────────────────────── */
-    --hl-keyword:  #ff7b72;
-    --hl-string:   #a5d6ff;
-    --hl-comment:  #8b949e;
-    --hl-function: #d2a8ff;
-    --hl-number:   #79c0ff;
-    --hl-variable: #ffa657;
-    --hl-operator: var(--accent-front-body);
+    --back-body:             #83cef5; /* #FF0000;*/ /* #3E2624; */
+    --front-body:            #2ab6d9; /* #00FF00;*/ /* #3e313b; */
+    --accent-front-body:     #0c5b1a; /* #0000FF;*/ /* #d3c7d1; */
+    --accent-back-body:      #0178b0; /* #FFFF00;*/ /* #856F61; */
+    --sub-accent-front-body: #6bc6d8; /* #FF00FF;*/ /* #37314d; */
 }

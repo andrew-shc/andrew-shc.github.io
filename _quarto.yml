@@ -1,11 +1,15 @@
 project:
   type: website
   output-dir: .
+  pre-render: sync_palette.py
   render:
     - 20blog/*.qmd
     - 20blog_entry.qmd
     - 20notes/*.qmd
     - 20notes_entry.qmd
+
+website:
+  favicon: img/favicon.png
 
 filters:
   - r-wasm/live

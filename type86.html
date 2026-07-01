@@ -13,9 +13,10 @@
     var btn = document.getElementById('t86-switch');
 
     function isDark() {
+        /* Palette is inverted: quarto-light (primary) = dark, quarto-dark (alternate) = light.
+           The button should show "dark" when the page is visually dark = NOT in alternate. */
         var s = localStorage.getItem('quarto-color-scheme');
-        return s === 'alternate' ||
-               (!s && !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        return s !== 'alternate';
     }
 
     function sync() { btn.classList.toggle('t86-dark', isDark()); }
@@ -38,4 +39,23 @@
         if (qt) new MutationObserver(sync).observe(qt, { attributes: true });
     }, 200);
 })();
+</script>
+<script>
+/* Quarto adds .anchored to h2+ but skips h1.
+   setTimeout(fn,0) defers until after all DOMContentLoaded handlers
+   (including Quarto's anchorJS.add('.anchored') pass) have completed. */
+window.document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+        document.querySelectorAll('section.level1[id] > h1').forEach(function (h1) {
+            var id = h1.closest('section.level1').id;
+            h1.setAttribute('data-anchor-id', id);
+            h1.classList.add('anchored');
+        });
+        if (window.AnchorJS) {
+            var h1anchors = new window.AnchorJS();
+            h1anchors.options = { placement: 'right', icon: '' };
+            h1anchors.add('h1.anchored');
+        }
+    }, 0);
+});
 </script>

@@ -18,6 +18,16 @@ format:
   html:
     theme:
       - iframe_match.scss
-    css: _vars.css
+    css: _entry_dark_vars.css
     include-in-header: preprocessing.html
 ---
+
+```{=html}
+<style>
+/* 0,3,0 specificity beats Chakra .quarto-listing .card * (0,2,0) */
+.quarto-listing .card .listing-title,
+.quarto-listing .card .listing-subtitle {
+    font-family: var(--font-heading) !important;
+}
+</style>
+```

@@ -1,0 +1,27 @@
+/* Vars for listing entry pages (always dark — iframed in the dark portfolio).
+   Only :root is defined so body.quarto-light (Quarto's default) has no
+   override to hit; CSS vars fall through to :root = dark palette always. */
+:root {
+    --back-body:              #3E2624;
+    --front-body:             #3e313b;
+    --accent-front-body:      #d3c7d1;
+    --accent-back-body:       #856F61;
+    --sub-accent-front-body:  #37314d;
+
+    --accent:      var(--accent-front-body);
+    --border:      var(--sub-accent-front-body);
+    --card-body:   var(--sub-accent-front-body);
+    --accent-body: var(--accent-front-body);
+
+    --font-body:    'Zed', sans-serif;
+    --font-heading: 'Compacta', 'Times New Roman', serif;
+    --font-mono:    ui-monospace, monospace;
+
+    --selection-bg:   var(--accent);
+    --selection-text: var(--back-body);
+}
+
+::selection {
+    background-color: var(--accent-front-body);
+    color: var(--back-body);
+}

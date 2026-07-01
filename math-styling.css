@@ -46,8 +46,8 @@ a.quarto-color-scheme-toggle {
 .t86-rocker {
     width:  44px;
     height: 46px;
-    background: #eaeae8;
-    border: 1px solid rgba(0, 0, 0, 0.13);
+    background: #888685;
+    border: 1px solid var(--accent-front-body);
     border-radius: 2px;
     display: flex;
     flex-direction: column;
@@ -70,7 +70,7 @@ a.quarto-color-scheme-toggle {
 .t86-nub {
     width:  22px;
     height:  2px;
-    background: #d2d0ce;
+    background: var(--accent-front-body);
     border-radius: 1px;
 }
 

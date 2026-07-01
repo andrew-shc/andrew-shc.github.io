@@ -13,19 +13,24 @@ $font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, 
 // $headings-font-weight: 700;
 
 /* Colors */
-$body-bg: #917043; // var(--front-body) -- can't use var() here, Bootstrap does color math on this
-$body-color: #D7CBB5; // var(--accent-front-body) -- same issue
+// SYNC REQUIRED: Bootstrap performs color-math on these at compile time, so CSS vars can't be used.
+// These must match --front-body and --accent-front-body in _vars.css. Update both together on palette changes.
+$body-bg: #3e313b;    // = --front-body
+$body-color: #d3c7d1; // = --accent-front-body
 // $link-color: #6aa9ff; // links
 // $link-hover-color: #99c4ff;
 
 /* Components you likely see on listings */
 $card-bg: var(--card-body);
-$card-border-color: var(--border);
+$card-border-color: $body-color;   // CSS vars can't be used here; $body-color = --accent-front-body
 $card-border-width: 1px;
 $card-title-color: var(--accent-front-body);
 $card-subtitle-color: var(--accent-front-body);
 $card-border-radius: 0;
 $card-inner-border-radius: 0;
+
+// Form select (Sort by) dropdown chevron — flatly compiles a dark arrow, override to theme color
+$form-select-indicator-color: $body-color;
 
 // https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
 

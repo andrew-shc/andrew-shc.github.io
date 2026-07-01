@@ -1,16 +1,10 @@
 [
   {
     "listing": "/20notes_entry.html",
-    "items": [
-      "/20notes/100.html",
-      "/20notes/200.html"
-    ]
+    "items": []
   },
   {
     "listing": "/20blog_entry.html",
-    "items": [
-      "/20blog/100.html",
-      "/20blog/200.html"
-    ]
+    "items": []
   }
 ]
