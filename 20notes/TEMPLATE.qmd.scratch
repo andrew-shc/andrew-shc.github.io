@@ -1,6 +1,6 @@
 ---
-title: "???"
-subtitle: "???"
+title: "Notes"
+subtitle: "X. Text"
 image: ???
 date: ???
 # date-modified: last-modified
@@ -13,8 +13,6 @@ format:
 execute:
   echo: fenced
 reference-location: margin
-citation-location: margin
-bibliography: main.bib
 toc: true
 toc-location: left
 ---

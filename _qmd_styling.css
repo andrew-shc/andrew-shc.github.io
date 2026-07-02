@@ -797,8 +797,13 @@ a:hover {
 }
 
 /* ── Figure captions and blockquote footers ──────────────────────────────── */
+/* Bootstrap/Quarto ship a bare `figcaption` (and `.subfigure-caption`) rule  */
+/* with a hardcoded gray, which otherwise beats our `.figure-caption` class   */
+/* selector since the caption Pandoc emits from image alt text has no class. */
 
 .figure-caption,
+.subfigure-caption,
+figcaption,
 .blockquote-footer {
     color: var(--accent-front-body);
 }
