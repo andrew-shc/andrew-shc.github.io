@@ -1,0 +1,187 @@
+---
+title: "Notes"
+subtitle: "II. The Coming Reality \"Slop\" and Implementation Workflow for 2026"
+image: ???
+date: 7/4/26
+# date-modified: last-modified
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+# The Coming Reality "Slop"
+
+Dead internet theory is more alive then ever, and will be more so in the coming years. What comes
+next is dead reality theory. By the time we have working humanoid robotics, we will likely have reached
+singularity (e.g., no more drunk PhDs) with machines that not only talk intelligently but act intelligently. Or, rather,
+is an intelligent, reproductive sentient organism---a human. A cat, fish, or any other animal might be smart
+enough to deduce when their (responsible) owner will repeatedly feed them (and people generally
+underestimate how smart these creatures can be,) they will never know *why* this higher-being, the human,
+always give them food. Although this is always debatable, it is undebatable that they are subject to the whims of
+the owner's will (or the lack thereof.) Within our lifetime, a reality at the subject of some higher-being's whim
+will be the end of humanity. Sure, we *could* live on just like how cats, as a species, continue to live ever since they were domesticated
+long time ago. But, we may never know what the higher-being's true intention is. Note: we are specifically
+interested in the case where this higher-being is digital/electronic and frequently interacts with/for us in obvious,
+direct ways.
+
+Although it has been shown that domestication does alter the domesticatee's behavior around the domesticator,
+the domesticatee such as cats continue to just be themselves. When the time comes, some are fine with the new
+reality and play along *being* human while others might not and get domesticated out.
+If we can't control our own curiosity, why not join with it? An alternate reality where human
+is augmented with super-intelligent machine bounded into one unified mind. An artifical evolution between
+carbon and silicon.
+
+This is what people likely want if singularity has been achieved and here to stay.
+Biological integration with electronics is the most comfortable way forward and there's no time to waste.
+
+# Implementation Workflow for 2026
+
+The change in this entire field is so fast-paced. Even as a student, it is hard to keep up the change.
+It should be exciting. But when the entire workflow itself that produces these change gets overturend every year
+(or even every month,) it starts to become a fatigue. This is even worse (or better?) than the daily new JS framework
+of the pre-LLM era. *Wish I was born earlier where saying "no AI used" is not an achievement but the default.*
+
+
+Here are the most common problem (I have encountered) with Claude Code right now:
+
+* Cost/usage: What happens when the 5-hr session limit is reached?
+* Multi-tasking: The awkward waiting time between responses/requests that is too long to wait but too short to do meaningful side-work.
+* Inefficiency: Hallucination, verbosity, confusion, etc.
+
+## Cost/usage
+
+While a single project rarely runs over session limit[^ff], two project simulatenously does. And if
+we ever need to achieve higher efficiency (i.e., more simulatenous runs), we have to start looking for
+alternative models.
+
+[^ff]: IIRC, ChatGPT last year did not have this and seriously got duped by Anthropic by this
+annoying, transient limit.
+
+* Claude Code CLI (annual Pro plan) **baseline
+  * $16.67/mo.
+  * Models: *practically* limited to Sonnet, Opus, Haiku
+* Codex CLI (monthly Plus plan)
+  * $20/mo.
+    * ChatGPT has a cheaper plan but doesn't have Codex
+  * Better for initial exploratory coding plan (according to the internet)
+  * More usage and likely still does not have session limits (?)
+  * Models: *practically* limited to ChatGPT Codex models
+    * Seems Codex has their own variation of the same model (e.g., fine-tuned?)
+* Antigravity CLI (annual Pro plan)
+  * $16.67/mo.
+  * Close 3rd in terms of coding (according to the internet)
+    * And in general tbh
+  * Long context length and a lot of random cloud features (**and notably includes NotebookLM**)
+  * Models: *practically* limited to Gemini models [(source)](https://antigravity.google/docs/models)
+* Opencode CLI (Go)
+  * $10/mo. ($5 on 1st mo.)
+  * 6x monthly "Leverage" [(source)](https://opencode.ai/docs/go/#usage-limits)
+  * Restrictive (no pay as you go)
+  * Models: Open-weight models (GLM, Deepseek, Kimi, Qwen, etc.)
+* Opencode CLI (Zen)
+  * $20/mo. + $1.23/mo. (credit card fee)
+  * Per-request
+  * Pay as you go
+  * Models: Go plan + the classic three (Claude, GPT, Gemini) + Grok
+* Aider
+  * Minimalist (per-file, minimal orchestration)
+  * Highly auditable
+  * git native
+  * Emphasis on locally ran models (OpenRouter)
+  * Models: BYOK (Pay-as-you-go / API)
+* ZCode ADE + remote control
+  * Pricing: *some promotion going on (need further research)*
+  * Not CLI (no ssh/tmux), but has (mobile) remote control + remote notification
+  * Models: *GLM + others? (need further research)*
+
+*Other models/harness/orchestrator not considered: Cursor CLI, Devin CLI (Windsurf), OpenRouter CLI, Goose CLI, Droid CLI,
+Amp CLI, KIMI Code CLI, Mistral Vibe CLI, BLACKBOX CLI, Kiro CLI, Command Code, Charmbracelet/Crush, Kilo Code CLI, Qwen Code,
+Plandex, Pi*
+
+## Multi-tasking
+
+Most of the time it is the fear of forgetting to continue prompting Claude Code. Claude Code CLI
+has built-in notification, which is the reason for switching from their VS Code extension (doesn't
+work well with SSH/TMUX).
+
+*Check future works.*
+
+## Inefficiency
+
+Compaction works 0% of the time. Per [Dex Horthy](https://www.skool.com/cliefnotes/no-vibes-allowed-solving-hard-problems-in-complex-codebases-dex-horthy-humanlayer),
+we actually should try to limit our context well below the model's stated context length, and leave
+compaction to ourselves via context engineering via markdown files.
+
+`CLAUDE.md` and [`AGENTS.md`](https://agents.md) does the job for us. Notably, `.claude/*` and `.agents/*`
+support finer-grain setting to be loaded on-demand (to keep the initial context small.)
+
+Modularized specification-driven development (SDD) helps reduce context where we treat code as an artifact
+and the specification itself as the truth. This helps depending on how specific the specification gets.
+The more specific it is the less it helps, so it's another tradeoff against specificity/reproducability.
+[^1]: It will be interesting if we can do SDD based on LaTeX Overleaf project.
+
+Think `AGENTS.md` as project constant and SDD as the project description that changes.
+
+*Check future works.*
+
+<!-- ## Summary -->
+<!---->
+<!-- Previous ancient workflow: -->
+<!---->
+<!-- Current updated workflow: -->
+
+<!-- We'll look at the workflow from an ECS-style rather than OOP-style.
+
+Four key concepts (i.e., component) in today's vibecoding to accelerate the implementation aspect of research:
+
+* Specification-driven development (SDD)
+  * Clarify architectural problems and project motive without the noise of pure code and environment management.
+  * Saves time and expensive trial and error with more flexible free-form human input.
+* Context engineering
+* Multi-agent orchestration
+* Models, cost, deployment -->
+
+<!--
+Before we decide what platform to use, there's so many secondary tools that's hard to filter out.
+Let's start with some common problems:
+
+* Cost. If local deployment is feasible in any way, we should consider using it. (3090 Ti)
+* Multi-tasking. The awkward waiting time between responses that is too long to wait but too short to do meaningful side-work.
+* a
+-->
+
+<!-- Twenty-most popular platforms (i.e., entity) that incorporates these working key concepts:
+
+* Github Spec-Kit (100K+ GH stars)
+* *...* (too many)
+
+There's a noticeable gap in platform that focuses on implementing code from papers. While most
+existing platform does this fine end-to-end, it could still be a difficult problem in itself.
+Although, many aforementioned platforms closes a significant gap from a more manageable higher-level "code" description of the paper
+to working code.
+
+Reference:
+* https://github.com/engineering4ai/awesome-spec-driven-development -->
+
+# Future Work
+
+The near future is either bleak or a biological integration of some form with the super intelligent being,
+so might as well just think about what biological integration of current technology could look like.
+
+Regarding workflows, more time is needed to look at the OpenCode plan and ZCode promotion and
+remote control feature, which is similiar to a problem I've been trying to solve with
+Termius (iOS) + Claude Code (Linux via ssh/tmux) with notifications. SDD seems to be not worth-while
+on small-scale research codebase and might look into intent-driven development where markdowns are
+reserved for high-level description while self-documenting code still reigns as the supreme documentation.
+Regardless, I will probably come back to this ASAP for a more comprehensive analysis.
+

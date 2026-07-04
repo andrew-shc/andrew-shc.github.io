@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-07-04">
+
+<title>Notes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../img/favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-30fc45633b0910a22497ea642fc28e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-443a8c2d8fa65f4c6b846c90aafe8287.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../_qmd_styling.css">
+<link rel="stylesheet" href="../math-styling.css">
+</head>
+
+<body class="floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-coming-reality-slop" id="toc-the-coming-reality-slop" class="nav-link active" data-scroll-target="#the-coming-reality-slop">The Coming Reality “Slop”</a></li>
+  <li><a href="#implementation-workflow-for-2026" id="toc-implementation-workflow-for-2026" class="nav-link" data-scroll-target="#implementation-workflow-for-2026">Implementation Workflow for 2026</a>
+  <ul class="collapse">
+  <li><a href="#costusage" id="toc-costusage" class="nav-link" data-scroll-target="#costusage">Cost/usage</a></li>
+  <li><a href="#multi-tasking" id="toc-multi-tasking" class="nav-link" data-scroll-target="#multi-tasking">Multi-tasking</a></li>
+  <li><a href="#inefficiency" id="toc-inefficiency" class="nav-link" data-scroll-target="#inefficiency">Inefficiency</a></li>
+  </ul></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Notes</h1>
+<p class="subtitle lead">II. The Coming Reality “Slop” and Implementation Workflow for 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 4, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- [TL;ND]{.tlnd} -->
+<section id="the-coming-reality-slop" class="level1">
+<h1>The Coming Reality “Slop”</h1>
+<p>Dead internet theory is more alive then ever, and will be more so in the coming years. What comes next is dead reality theory. By the time we have working humanoid robotics, we will likely have reached singularity (e.g., no more drunk PhDs) with machines that not only talk intelligently but act intelligently. Or, rather, is an intelligent, reproductive sentient organism—a human. A cat, fish, or any other animal might be smart enough to deduce when their (responsible) owner will repeatedly feed them (and people generally underestimate how smart these creatures can be,) they will never know <em>why</em> this higher-being, the human, always give them food. Although this is always debatable, it is undebatable that they are subject to the whims of the owner’s will (or the lack thereof.) Within our lifetime, a reality at the subject of some higher-being’s whim will be the end of humanity. Sure, we <em>could</em> live on just like how cats, as a species, continue to live ever since they were domesticated long time ago. But, we may never know what the higher-being’s true intention is. Note: we are specifically interested in the case where this higher-being is digital/electronic and frequently interacts with/for us in obvious, direct ways.</p>
+<p>Although it has been shown that domestication does alter the domesticatee’s behavior around the domesticator, the domesticatee such as cats continue to just be themselves. When the time comes, some are fine with the new reality and play along <em>being</em> human while others might not and get domesticated out. If we can’t control our own curiosity, why not join with it? An alternate reality where human is augmented with super-intelligent machine bounded into one unified mind. An artifical evolution between carbon and silicon.</p>
+<p>This is what people likely want if singularity has been achieved and here to stay. Biological integration with electronics is the most comfortable way forward and there’s no time to waste.</p>
+</section>
+<section id="implementation-workflow-for-2026" class="level1 page-columns page-full">
+<h1>Implementation Workflow for 2026</h1>
+<p>The change in this entire field is so fast-paced. Even as a student, it is hard to keep up the change. It should be exciting. But when the entire workflow itself that produces these change gets overturend every year (or even every month,) it starts to become a fatigue. This is even worse (or better?) than the daily new JS framework of the pre-LLM era. <em>Wish I was born earlier where saying “no AI used” is not an achievement but the default.</em></p>
+<p>Here are the most common problem (I have encountered) with Claude Code right now:</p>
+<ul>
+<li>Cost/usage: What happens when the 5-hr session limit is reached?</li>
+<li>Multi-tasking: The awkward waiting time between responses/requests that is too long to wait but too short to do meaningful side-work.</li>
+<li>Inefficiency: Hallucination, verbosity, confusion, etc.</li>
+</ul>
+<section id="costusage" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="costusage">Cost/usage</h2>
+<p>While a single project rarely runs over session limit<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, two project simulatenously does. And if we ever need to achieve higher efficiency (i.e., more simulatenous runs), we have to start looking for alternative models.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;IIRC, ChatGPT last year did not have this and seriously got duped by Anthropic by this annoying, transient limit.</p></div></div><ul>
+<li>Claude Code CLI (annual Pro plan) **baseline
+<ul>
+<li>$16.67/mo.</li>
+<li>Models: <em>practically</em> limited to Sonnet, Opus, Haiku</li>
+</ul></li>
+<li>Codex CLI (monthly Plus plan)
+<ul>
+<li>$20/mo.
+<ul>
+<li>ChatGPT has a cheaper plan but doesn’t have Codex</li>
+</ul></li>
+<li>Better for initial exploratory coding plan (according to the internet)</li>
+<li>More usage and likely still does not have session limits (?)</li>
+<li>Models: <em>practically</em> limited to ChatGPT Codex models
+<ul>
+<li>Seems Codex has their own variation of the same model (e.g., fine-tuned?)</li>
+</ul></li>
+</ul></li>
+<li>Antigravity CLI (annual Pro plan)
+<ul>
+<li>$16.67/mo.</li>
+<li>Close 3rd in terms of coding (according to the internet)
+<ul>
+<li>And in general tbh</li>
+</ul></li>
+<li>Long context length and a lot of random cloud features (<strong>and notably includes NotebookLM</strong>)</li>
+<li>Models: <em>practically</em> limited to Gemini models <a href="https://antigravity.google/docs/models">(source)</a></li>
+</ul></li>
+<li>Opencode CLI (Go)
+<ul>
+<li>$10/mo. ($5 on 1st mo.)</li>
+<li>6x monthly “Leverage” <a href="https://opencode.ai/docs/go/#usage-limits">(source)</a></li>
+<li>Restrictive (no pay as you go)</li>
+<li>Models: Open-weight models (GLM, Deepseek, Kimi, Qwen, etc.)</li>
+</ul></li>
+<li>Opencode CLI (Zen)
+<ul>
+<li>$20/mo. + $1.23/mo. (credit card fee)</li>
+<li>Per-request</li>
+<li>Pay as you go</li>
+<li>Models: Go plan + the classic three (Claude, GPT, Gemini) + Grok</li>
+</ul></li>
+<li>Aider
+<ul>
+<li>Minimalist (per-file, minimal orchestration)</li>
+<li>Highly auditable</li>
+<li>git native</li>
+<li>Emphasis on locally ran models (OpenRouter)</li>
+<li>Models: BYOK (Pay-as-you-go / API)</li>
+</ul></li>
+<li>ZCode ADE + remote control
+<ul>
+<li>Pricing: <em>some promotion going on (need further research)</em></li>
+<li>Not CLI (no ssh/tmux), but has (mobile) remote control + remote notification</li>
+<li>Models: <em>GLM + others? (need further research)</em></li>
+</ul></li>
+</ul>
+<p><em>Other models/harness/orchestrator not considered: Cursor CLI, Devin CLI (Windsurf), OpenRouter CLI, Goose CLI, Droid CLI, Amp CLI, KIMI Code CLI, Mistral Vibe CLI, BLACKBOX CLI, Kiro CLI, Command Code, Charmbracelet/Crush, Kilo Code CLI, Qwen Code, Plandex, Pi</em></p>
+</section>
+<section id="multi-tasking" class="level2">
+<h2 class="anchored" data-anchor-id="multi-tasking">Multi-tasking</h2>
+<p>Most of the time it is the fear of forgetting to continue prompting Claude Code. Claude Code CLI has built-in notification, which is the reason for switching from their VS Code extension (doesn’t work well with SSH/TMUX).</p>
+<p><em>Check future works.</em></p>
+</section>
+<section id="inefficiency" class="level2">
+<h2 class="anchored" data-anchor-id="inefficiency">Inefficiency</h2>
+<p>Compaction works 0% of the time. Per <a href="https://www.skool.com/cliefnotes/no-vibes-allowed-solving-hard-problems-in-complex-codebases-dex-horthy-humanlayer">Dex Horthy</a>, we actually should try to limit our context well below the model’s stated context length, and leave compaction to ourselves via context engineering via markdown files.</p>
+<p><code>CLAUDE.md</code> and <a href="https://agents.md"><code>AGENTS.md</code></a> does the job for us. Notably, <code>.claude/*</code> and <code>.agents/*</code> support finer-grain setting to be loaded on-demand (to keep the initial context small.)</p>
+<p>Modularized specification-driven development (SDD) helps reduce context where we treat code as an artifact and the specification itself as the truth. This helps depending on how specific the specification gets. The more specific it is the less it helps, so it’s another tradeoff against specificity/reproducability. [^1]: It will be interesting if we can do SDD based on LaTeX Overleaf project.</p>
+<p>Think <code>AGENTS.md</code> as project constant and SDD as the project description that changes.</p>
+<p><em>Check future works.</em></p>
+<!-- ## Summary -->
+<!---->
+<!-- Previous ancient workflow: -->
+<!---->
+<!-- Current updated workflow: -->
+<!-- We'll look at the workflow from an ECS-style rather than OOP-style.
+
+Four key concepts (i.e., component) in today's vibecoding to accelerate the implementation aspect of research:
+
+* Specification-driven development (SDD)
+  * Clarify architectural problems and project motive without the noise of pure code and environment management.
+  * Saves time and expensive trial and error with more flexible free-form human input.
+* Context engineering
+* Multi-agent orchestration
+* Models, cost, deployment -->
+<!--
+Before we decide what platform to use, there's so many secondary tools that's hard to filter out.
+Let's start with some common problems:
+
+* Cost. If local deployment is feasible in any way, we should consider using it. (3090 Ti)
+* Multi-tasking. The awkward waiting time between responses that is too long to wait but too short to do meaningful side-work.
+* a
+-->
+<!-- Twenty-most popular platforms (i.e., entity) that incorporates these working key concepts:
+
+* Github Spec-Kit (100K+ GH stars)
+* *...* (too many)
+
+There's a noticeable gap in platform that focuses on implementing code from papers. While most
+existing platform does this fine end-to-end, it could still be a difficult problem in itself.
+Although, many aforementioned platforms closes a significant gap from a more manageable higher-level "code" description of the paper
+to working code.
+
+Reference:
+* https://github.com/engineering4ai/awesome-spec-driven-development -->
+</section>
+</section>
+<section id="future-work" class="level1">
+<h1>Future Work</h1>
+<p>The near future is either bleak or a biological integration of some form with the super intelligent being, so might as well just think about what biological integration of current technology could look like.</p>
+<p>Regarding workflows, more time is needed to look at the OpenCode plan and ZCode promotion and remote control feature, which is similiar to a problem I’ve been trying to solve with Termius (iOS) + Claude Code (Linux via ssh/tmux) with notifications. SDD seems to be not worth-while on small-scale research codebase and might look into intent-driven development where markdowns are reserved for high-level description while self-documenting code still reigns as the supreme documentation. Regardless, I will probably come back to this ASAP for a more comprehensive analysis.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+
+
+</main> <!-- /main -->
+<button class="t86-switch" id="t86-switch" aria-label="Toggle dark mode">
+    <div class="t86-plate">
+        <div class="t86-rocker">
+            <div class="t86-nub"></div>
+            <svg class="t86-indicator" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+                <circle class="t86-led" cx="10" cy="10" r="4.5"></circle>
+            </svg>
+        </div>
+    </div>
+</button>
+<script>
+(function () {
+    var btn = document.getElementById('t86-switch');
+
+    function isDark() {
+        /* Palette is inverted: quarto-light (primary) = dark, quarto-dark (alternate) = light.
+           The button should show "dark" when the page is visually dark = NOT in alternate. */
+        var s = localStorage.getItem('quarto-color-scheme');
+        return s !== 'alternate';
+    }
+
+    function sync() { btn.classList.toggle('t86-dark', isDark()); }
+
+    btn.addEventListener('click', function () {
+        try { window.quartoToggleColorScheme(); } catch (e) {}
+        setTimeout(sync, 30);
+    });
+
+    /* Initial sync after Quarto's own theme scripts have settled */
+    setTimeout(sync, 0);
+
+    /* Stay in sync with OS preference changes */
+    if (window.matchMedia)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', sync);
+
+    /* Watch Quarto's toggle in case it changes independently */
+    setTimeout(function () {
+        var qt = document.querySelector('.quarto-color-scheme-toggle');
+        if (qt) new MutationObserver(sync).observe(qt, { attributes: true });
+    }, 200);
+})();
+</script>
+<script>
+/* Quarto adds .anchored to h2+ but skips h1.
+   setTimeout(fn,0) defers until after all DOMContentLoaded handlers
+   (including Quarto's anchorJS.add('.anchored') pass) have completed. */
+window.document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+        document.querySelectorAll('section.level1[id] > h1').forEach(function (h1) {
+            var id = h1.closest('section.level1').id;
+            h1.setAttribute('data-anchor-id', id);
+            h1.classList.add('anchored');
+        });
+        if (window.AnchorJS) {
+            var h1anchors = new window.AnchorJS();
+            h1anchors.options = { placement: 'right', icon: '' };
+            h1anchors.add('h1.anchored');
+        }
+    }, 0);
+});
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../20notes";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

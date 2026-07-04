@@ -4,7 +4,14 @@
     "href": "20notes_entry.html",
     "title": "",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n\n\n\n\n\n\n\n\n\n\n\nJul 1, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n\n\n\n\n\n\n\n\n\n\n\nJul 4, 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJul 1, 2026\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "20notes/110.html",
+    "href": "20notes/110.html",
+    "title": "Notes",
+    "section": "",
+    "text": "3D is perhaps the most powerful framework any algorithms, models, or systems can employ. In some sense, the idea of it is general enough to make connections with many important subjects and fields, but also the world we live, breathe, sense, and experience in is also three-dimension—something fundamental that even the SOTA model in different areas still lack (e.g., autoregressive-transformer LLMs) or struggle (e.g., inverse rendering).\n\nProblems Beyond\nForward rendering, reconstruction, and other classical problems still have a lot of work to be done. However, the end goal has always been enriching our experience of this world. Some problems are clear about this. For example, better rendering to appease our thirst for certain appearance such as realism (e.g., PBR materials and path tracing) or the retro computer era of the 80s (e.g., surface-stable fractal dithering). Yet, other problems such as reconstruction are rather unclear about it. In this case, let’s say we reconstructed a scene with all of its lighting, materials, and geometry… cool. Now what? Satisfy your own curiosity—sure. But if anyone wants it anytime soon, it has to go through other problems also: Re-render the reconstructed scene after it has been spatially manipulated for training humanoid robotics to better navigate around the house or re-simulate the reconstructed scene to infer consequences of current actions (or the lack thereof) to guide infrastructural decisions that reduces risks of flooding.\n\nWhat do people want? What do businesses want? (What do interviewers want?) What do we all want?\n\n\n\n\nProcesses of “spatial computing,” defined as anything concerned with the manipulation or understanding of the Euclidean space (explicitly/implicitly) that includes the traditional rendering-to-a-flat-screen.\n\n\nFor extensive existing work in “spatial computing” to expand into exciting new domains beyond 2030s, it first has to go beyond a simple 2D screen. Sure, LLMs brings a huge wild card and questions the need to go beyond an intelligent-like chatbot that could answer your spatial questions and alike, but that really misses the point of 3D and not using its fullest potential. In the times where greater amount of our attention is spent on backlit screen or just flat screens in general, I think consumers (you, me, and others) would appreciate something a bit different, something more immersive.\n\n\n\n\n\nFuture Work\nRobotics, AR, and other active forms of immersive interaction of the physical space will be looked into. Commonly overlooked problems where “spatial computing” methods can be shown to immensely help or solve will also be discussed. Additionally, current state of industry and where are people heading into in regards to “spatial computing” will also be looked into. This line of thought will be shelved for now as other important works take precedence."
   },
   {
     "objectID": "20blog_entry.html",
@@ -14,17 +21,31 @@
     "text": "Order By\n      Default\n      \n        Title\n      \n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "20notes/110.html",
-    "href": "20notes/110.html",
+    "objectID": "20notes/120.html",
+    "href": "20notes/120.html",
     "title": "Notes",
     "section": "",
-    "text": "3D is perhaps the most powerful framework any algorithms, models, or systems can employ. In some sense, the idea of it is general enough to make connections with many important subjects and fields, but also the world we live, breathe, sense, and experience in is also three-dimension—something fundamental that even the SOTA model in different areas still lack (e.g., autoregressive-transformer LLMs) or struggle (e.g., inverse rendering)."
+    "text": "Dead internet theory is more alive then ever, and will be more so in the coming years. What comes next is dead reality theory. By the time we have working humanoid robotics, we will likely have reached singularity (e.g., no more drunk PhDs) with machines that not only talk intelligently but act intelligently. Or, rather, is an intelligent, reproductive sentient organism—a human. A cat, fish, or any other animal might be smart enough to deduce when their (responsible) owner will repeatedly feed them (and people generally underestimate how smart these creatures can be,) they will never know why this higher-being, the human, always give them food. Although this is always debatable, it is undebatable that they are subject to the whims of the owner’s will (or the lack thereof.) Within our lifetime, a reality at the subject of some higher-being’s whim will be the end of humanity. Sure, we could live on just like how cats, as a species, continue to live ever since they were domesticated long time ago. But, we may never know what the higher-being’s true intention is. Note: we are specifically interested in the case where this higher-being is digital/electronic and frequently interacts with/for us in obvious, direct ways.\nAlthough it has been shown that domestication does alter the domesticatee’s behavior around the domesticator, the domesticatee such as cats continue to just be themselves. When the time comes, some are fine with the new reality and play along being human while others might not and get domesticated out. If we can’t control our own curiosity, why not join with it? An alternate reality where human is augmented with super-intelligent machine bounded into one unified mind. An artifical evolution between carbon and silicon.\nThis is what people likely want if singularity has been achieved and here to stay. Biological integration with electronics is the most comfortable way forward and there’s no time to waste."
   },
   {
-    "objectID": "20notes/110.html#emerging-problems",
-    "href": "20notes/110.html#emerging-problems",
+    "objectID": "20notes/120.html#costusage",
+    "href": "20notes/120.html#costusage",
     "title": "Notes",
-    "section": "Emerging Problems",
-    "text": "Emerging Problems"
+    "section": "Cost/usage",
+    "text": "Cost/usage\nWhile a single project rarely runs over session limit1, two project simulatenously does. And if we ever need to achieve higher efficiency (i.e., more simulatenous runs), we have to start looking for alternative models.\n1 IIRC, ChatGPT last year did not have this and seriously got duped by Anthropic by this annoying, transient limit.\nClaude Code CLI (annual Pro plan) **baseline\n\n$16.67/mo.\nModels: practically limited to Sonnet, Opus, Haiku\n\nCodex CLI (monthly Plus plan)\n\n$20/mo.\n\nChatGPT has a cheaper plan but doesn’t have Codex\n\nBetter for initial exploratory coding plan (according to the internet)\nMore usage and likely still does not have session limits (?)\nModels: practically limited to ChatGPT Codex models\n\nSeems Codex has their own variation of the same model (e.g., fine-tuned?)\n\n\nAntigravity CLI (annual Pro plan)\n\n$16.67/mo.\nClose 3rd in terms of coding (according to the internet)\n\nAnd in general tbh\n\nLong context length and a lot of random cloud features (and notably includes NotebookLM)\nModels: practically limited to Gemini models (source)\n\nOpencode CLI (Go)\n\n$10/mo. ($5 on 1st mo.)\n6x monthly “Leverage” (source)\nRestrictive (no pay as you go)\nModels: Open-weight models (GLM, Deepseek, Kimi, Qwen, etc.)\n\nOpencode CLI (Zen)\n\n$20/mo. + $1.23/mo. (credit card fee)\nPer-request\nPay as you go\nModels: Go plan + the classic three (Claude, GPT, Gemini) + Grok\n\nAider\n\nMinimalist (per-file, minimal orchestration)\nHighly auditable\ngit native\nEmphasis on locally ran models (OpenRouter)\nModels: BYOK (Pay-as-you-go / API)\n\nZCode ADE + remote control\n\nPricing: some promotion going on (need further research)\nNot CLI (no ssh/tmux), but has (mobile) remote control + remote notification\nModels: GLM + others? (need further research)\n\n\nOther models/harness/orchestrator not considered: Cursor CLI, Devin CLI (Windsurf), OpenRouter CLI, Goose CLI, Droid CLI, Amp CLI, KIMI Code CLI, Mistral Vibe CLI, BLACKBOX CLI, Kiro CLI, Command Code, Charmbracelet/Crush, Kilo Code CLI, Qwen Code, Plandex, Pi"
+  },
+  {
+    "objectID": "20notes/120.html#multi-tasking",
+    "href": "20notes/120.html#multi-tasking",
+    "title": "Notes",
+    "section": "Multi-tasking",
+    "text": "Multi-tasking\nMost of the time it is the fear of forgetting to continue prompting Claude Code. Claude Code CLI has built-in notification, which is the reason for switching from their VS Code extension (doesn’t work well with SSH/TMUX).\nCheck future works."
+  },
+  {
+    "objectID": "20notes/120.html#inefficiency",
+    "href": "20notes/120.html#inefficiency",
+    "title": "Notes",
+    "section": "Inefficiency",
+    "text": "Inefficiency\nCompaction works 0% of the time. Per Dex Horthy, we actually should try to limit our context well below the model’s stated context length, and leave compaction to ourselves via context engineering via markdown files.\nCLAUDE.md and AGENTS.md does the job for us. Notably, .claude/* and .agents/* support finer-grain setting to be loaded on-demand (to keep the initial context small.)\nModularized specification-driven development (SDD) helps reduce context where we treat code as an artifact and the specification itself as the truth. This helps depending on how specific the specification gets. The more specific it is the less it helps, so it’s another tradeoff against specificity/reproducability. [^1]: It will be interesting if we can do SDD based on LaTeX Overleaf project.\nThink AGENTS.md as project constant and SDD as the project description that changes.\nCheck future works."
   }
 ]
