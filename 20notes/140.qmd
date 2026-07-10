@@ -1,0 +1,142 @@
+---
+title: "Notes"
+subtitle: "IV. Spatial reservoir re-sampling & SIGGRAPH '26 interesting papers"
+image: ???
+date: ???
+# date-modified: last-modified
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+<!-- # Tangent: End of Reading??? -->
+<!---->
+<!-- *The Atlantic*'s [The End of Reading is Here](https://www.theatlantic.com/magazine/2026/08/reading-crisis-postliterate-age/687618/) -->
+<!-- by Rose Horowitch is another pathetic, click-baity, rage-baiting magazine. I don't know why I keep -->
+<!-- getting recommended to this  -->
+<!---->
+
+# Tangent: Stripping Ubuntu to the barebone
+
+It is easy to obsess over simplifying the booting process by reducing files or OS complexity (e.g., headless Ubuntu)
+to achieve the goal of the most barebone booting process, but an unconstrained goal is a pointless goal.
+What are we even trying to achieve here? To ground the obsession a bit, we still simplify the process but keep
+the end environment (e.g., PID 1) mostly familiar. Any deviations from the standard environment will be noted and
+would usually be fine in-practice (if any.) A natural follow-up arises: What constitutes Ubuntu, Ubuntu? Clearly,
+after installing Arch Linux, one notices it's literally just Ubuntu (e.g., screen sharing and Zoom meeting are
+equally broken)[^hhh].
+
+[^hhh]: If you really want to be weird, try NixOS.
+
+We'll start with headless Ubuntu, so this will mostly be exploring on how to optimize the boot process
+of common development servers (since they're usually headless Ubuntu?). We start with a press of a button and end
+with logged-in TTY shell in the Ubuntu environment.
+
+1. Hardware/firmware-specific
+    1. Button press
+    2. [JFP1](https://download-2.msi.com/archive/mnu_exe/mb/MAGX870TOMAHAWKWIFI_English.pdf) power switch connector shorted
+    3. Chipset (e.g., AMD [X870](https://en.wikipedia.org/wiki/List_of_AMD_chipsets))
+    4. AMD FCH (SoC??) / Intel PCH <-> PSU power on and power good signal
+        1. *We can't really do much here so we'll just keep it vague; not a lot of open documentation here.*
+    5. AMD PSP / Intel ME micro-OS boot
+        1. *There's a conspiracy where the government has the backdoor access to all our computers via this.*
+    6. UEFI[^k] firmware loaded to CPU registers, instructions clocking, etc. etc.
+        1. Each motherboard models has their own UEFI firmware.
+    7. [Security (SEC) phase](https://uefi.org/specs/PI/1.8/V1_Security_SEC_Phase_Information.html)
+    8. [Pre-EFI initialization (PEI) phase](https://uefi.org/specs/PI/1.8/V1_Overview.html) & PEIMs (modules within PEI phase)
+    9. [Direct execution environment (DXE) phase](https://uefi.org/specs/PI/1.8/V2_DXE_Foundation.html): [GCD (Global Coherency Domain) service](https://uefi.org/specs/PI/1.8/V2_Services_DXE_Services.html#global-coherency-domain-services) initialization
+        1. Abstracts hardware components (e.g., chipset architecture, CPUs) via HOBs (Hand-off blocks)
+        2. Written as `.efi` file, a binary-executable PE/COFF format following Window's `.exe`/`.dll` format
+    10. [DXE phase: Early DXE drivers dispatch](https://uefi.org/specs/PI/1.8/V2_UEFI_System_Table.html)
+    11. [DXE phase: Late DXE drivers dispatch](https://uefi.org/specs/PI/1.8/V2_DXE_Drivers.html#dxe-drivers-that-follow-the-uefi-driver-model)
+        1. Follows the UEFI Driver Model to setup the BDS phase
+    12. [Boot device selection (BDS) phase](https://uefi.org/specs/PI/1.8/V2_Boot_Manager.html)
+        1. *i.e., [Boot Manager](https://uefi.org/specs/UEFI/2.11/03_Boot_Manager.html)*
+2. UEFI [Boot Manager](https://uefi.org/specs/UEFI/2.11/02_Overview.html) & UEFI OS Loader
+    1. Load all necessary, additional drivers via [`EFI_BOOT_SERVICES.LoadImage(..., devicePath, ...)`](https://uefi.org/specs/UEFI/2.11/07_Services_Boot_Services.html#efi-boot-services-loadimage) from boot service
+        1. Via [`GetNextVariableName()`](https://uefi.org/specs/UEFI/2.11/08_Services_Runtime_Services.html#getnextvariablename) of [`DriverOrder`](https://uefi.org/specs/UEFI/2.11/03_Boot_Manager.html#global-variables) and `GetVariable()` from specific `Driver####` with type of [`EFI_LOAD_OPTION`](https://uefi.org/specs/UEFI/2.11/07_Services_Boot_Services.html#efi-boot-services-loadimage) using runtime service
+        2. IIRC, this is to connect hardware-agnostic UEFI services to physical device drivers, descriptors, handlers, etc. or other early DXE drivers
+    2. Load the earliest successful `Boot####` UEFI OS Loader from `BootOrder` from the same global non-volatile RAM (NVRAM) with the same aformentioned process
+    3. UEFI OS Loader entry: Windows (Windows Boot Manager), Linux (**GRUB**, systemd-boot)
+    4. [Linux EFI Kernel (6.17.0)](https://github.com/torvalds/linux/tree/e5f0a698b34ed76002dc5cff3804a61c80233a7a/drivers/firmware/efi/libstub)
+        1. *Future work: A lot of interesting stuff going here where we start with EFI entry, handover logic, and UEFI exiting while technically under Linux kernel. GRUB no longer handles the UEFI <-> OS handover.*
+    5. [EFI_BOOT_SERVICES.ExitBootServices()](https://uefi.org/specs/UEFI/2.11/07_Services_Boot_Services.html#efi-boot-services-exitbootservices)
+3. Software-specific
+    1. *Future work: Linux-proper kernel initialization, PID 1, systemd, services, and, importantly, distro-specific services.*
+
+[^k]: BIOS works the same way initially, but later steps differ. We'll focus on UEFI.
+
+# Spatial reservoir re-sampling
+
+<!-- We will look at the ReSTIR paper and ignore their temporal reuse algorithm for now. -->
+
+Key background idea: candidate sampling and Monte-Carlo sampling. Monte-Carlo samples are to be
+averaged given each samples' corresponding PDF while candidate sampling, instead of averaging,
+just discretely takes a single sample given by their weights (e.g., Python's `random.choice(candidates, weights=PDFs, k=1)[0]`).
+
+The core idea: Each pixel are sampled SPP (samples per pixel) amount of times as usual,
+but we can re-use the samples on *neighboring* pixels to re-sample the pixel of interest,
+effectively scaling the number of samples used to produce the pixel of interest without
+increasing the SPP rate. In other words, the *effective* SPP has been exponentiated (w.r.t. how much we re-use) at minimal
+computational and storage cost.
+
+In Algo. 1 line 13, it says "using C to sample w_z" where w is the italicized and bolded version, which per earlier paragraph means
+MIS weight. Yet, Algo. 1 says nothing about MIS weight, it just talks about RIS itself and RIS weight. This is 6 years old
+and I'm just not going to spend more time trying to understand it completely. There's many more recent paper re-iterating
+it (and probably does it better.)
+
+# SIGGRAPH '26 interesting papers
+
+*Future work / deferred*
+
+# Tangent: Building Trust on Coding Agents
+
+It is easy to trust coding agents to handle builds because it is simple, verifiable, and
+reproducible. However, when it comes to training pipeline and empirical validation that comes with
+a research code, most of the time it fails to do what it is asked for. Although a big reason is likely
+because a lot of stuff expected in our domain are visual (2D or 3D,) which is kind of ironic since
+it suggests we need better VLMs to help our tasks, a big markdown file is not going to work.
+Might as well read it like a well-commented vibecode (which mean it could still be illogical on a high-level.)
+To be honest, maybe a markdown "rendering"/formatting extension on a `nvim` was not a really good idea.
+Maybe it is better to have the agent write latex document to be rendered into PDF (e.g., a reporter agent)
+that generates a nice looking report to make the text more visually palatable. If ten paper is read every day,
+ten additional simple reports shouldn't hurt at all (hopefully.)
+
+Like the main point was having Sonnet think and plan and have coding agents like Deepseek V4 implement the plan,
+which requires a different skillset (i.e., instruction following / IF.) However, most of the time it just sort of
+re-thinks for itself.
+
+* Pre-impl (Plan mode): manually scan through the code and plan mode should *minimally* plan with your own list of things-to-watch-out-for.
+* During impl.: check for notifications
+* Post-impl: write a latex PDF on the summary with clear reference from code or external sources and reasoning.
+* Post-analysis: lowkey write a rebuttal at this point and upload the rebuttal PDF (or latex code) to the agent.
+  * This is probably good because a nice looking document always invite effort; a cheap feel from markdown output from an session window
+  that feels impersonal, foreign, and difficult (to work with.) Maybe some AI-generated charts also.
+  * The rebuttal can be fed in again in a new session by ensuring everything in the AI-generated write-up looks right.
+  This means when the agent generates the PDF, it needs to show all of its derivation, logic, proofs, implementation (code snippets),
+  numerical evaluations, benchmarks, visualizations, etc. Basically everything down to a report.
+    * Maybe even have a report rebuttal <-> agent loop that has the following template.
+      * Summary of previous report. Emphasize on stuff thta was fixed.
+      * Generate a report on new stuff (not fixes to the previous report.)
+        * When a human writes a rebuttal, it also wants the same format as the AI-generated one to keep it consistent.
+        So a template parity between the one that AI writes from coding or planning agent and the Overleaf environment.
+
+# Future Work
+
+Nothing to note of.
+
+<!-- A visualization process of the spatial resoervoir re-sampling would be interesting to see, although -->
+<!-- the math as-is should be sufficient (and the provided example in the paper). -->
+<!-- There's no ground-breaking concepts that are hard to visualize mentally. -->
+<!---->
+
