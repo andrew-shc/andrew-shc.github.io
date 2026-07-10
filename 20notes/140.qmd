@@ -2,7 +2,7 @@
 title: "Notes"
 subtitle: "IV. Spatial reservoir re-sampling & SIGGRAPH '26 interesting papers"
 image: ???
-date: ???
+date: 7/10/26
 # date-modified: last-modified
 format:
     r-wasm/live-html:
