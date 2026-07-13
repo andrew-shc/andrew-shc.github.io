@@ -1,0 +1,248 @@
+---
+title: "Notes"
+subtitle: "IV. SIGGRAPH '26 interesting papers & Coding Agents"
+image: ???
+date: ???
+# date-modified: last-modified
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+# SIGGRAPH '26 interesting papers
+
+Geometric processing: Point clouds are easy to collect, but are hard to work with. It is inevitable
+that current geometries of all kind (e.g., surfaces) needs to work with the rising prevelance of point clouds.
+
+* [Numerical Geometry a la Mode](https://s2026.conference-schedule.org/session/?sess=sess127)
+* [Winding Numbers & Surface Representations](https://s2026.conference-schedule.org/session/?sess=sess149)
+* [Creating & Iso-Surfacing SDFs](https://s2026.conference-schedule.org/session/?sess=sess146)
+* [Parametric Surfaces](https://s2026.conference-schedule.org/session/?sess=sess125)
+
+Geometric synthesis: Geometry is not limited to record the state of our physical world, it can also be
+used to generate new geometrically interesting ways for human consumption.
+
+* [Generative 3D & Editing](https://s2026.conference-schedule.org/session/?sess=sess151)
+* [Generative 3D (2)](https://s2026.conference-schedule.org/session/?sess=sess112)
+* [3D Generation](https://s2026.conference-schedule.org/session/?sess=sess121)
+
+Radiances: Light is fast, is everywhere, is directional, etc. It transmits information very well and how
+most of us perceive the world, the reality, before we interact.
+
+* [Real-Time Rendering](https://s2026.conference-schedule.org/session/?sess=sess134)
+* [Light Transport](https://s2026.conference-schedule.org/session/?sess=sess131)
+* [Shading, Relighting, and Volumes](https://s2026.conference-schedule.org/session/?sess=sess139)
+* [Efficient Sampling: ReSTIR and More](https://s2026.conference-schedule.org/session/?sess=sess141)
+* [Walk This Way: Monte Carlo Geometry](https://s2026.conference-schedule.org/session/?sess=sess123)
+
+Reconstruction: Check my first note.
+
+* [Fluid Reconstruction & Optimization](https://s2026.conference-schedule.org/session/?sess=sess123)
+* [Dynamic Scenes](https://s2026.conference-schedule.org/session/?sess=sess144)
+  * i.e., Articulated (Interactable) Scenes
+* [Reconstruction](https://s2026.conference-schedule.org/session/?sess=sess153)
+* [Reconstruction & Sampling](https://s2026.conference-schedule.org/session/?sess=sess124)
+* [Differentiable Geometry Processing & Flow Maps](https://s2026.conference-schedule.org/session/?sess=sess184)
+* [Inverse Rendering](https://s2026.conference-schedule.org/session/?sess=sess133)
+
+Every so often, siggraph hosts some paper on terrain modeling.
+
+* [*Stochastic geomorphological transport for terrain erosion simulation*](https://s2026.conference-schedule.org/presentation/?id=papers_735&sess=sess108)
+  * This is a link to an actual paper, not a general session
+
+# Coding Agents
+
+Currently, GLM-5.2 is the best open-weight coding model out there in-practice (according to internet) but plagued with cost issues, while the quality
+is being compared to Opus-level even. What does it take to run the model locally?
+
+Officially supported inference platform: [SGLang](https://docs.sglang.io/cookbook/autoregressive/GLM/GLM-5.2), [vLLM](https://recipes.vllm.ai/zai-org/GLM-5.2), [ktransformers](https://github.com/kvcache-ai/ktransformers/blob/main/doc/en/kt-kernel/GLM-5.2-Tutorial.md), [unsloth](https://unsloth.ai/docs/models/glm-5.2).
+
+Actually, don't.
+
+For a GPU, you won't get your money back even if you use the $200 monthly plan for at least 5 years.
+More models like GLM-5.2 are using more reasoning and agentic workflows that even makes CPU-based runtime
+unworkable. Don't even try dreaming about your next own Opus-level coding agent workstation. GPU Cloud services
+does not seem too good either, especially when the utility of building your workstation is at play here also.
+
+Something more useful is probably analyzing the cost of various hardware models at different (V)RAM
+capacity per unit that equates to 4TB (V)RAM for comparison sake.
+
+<!-- and, importantly, their history. -->
+
+
+@ 4TB=4000GB (V)RAM
+
+| Processor | (Video) Memory Bandwith | Features | Power Draw | **Very Rough** Cost (Amazon) |
+| - | -| -|-|-|
+| L4 24GB | | | | 575K |
+| L40 48GB | | | | 500K |
+| H100 94GB | | | | 1,423K |
+| A100 80GB | | | | 820K |
+| A100 40GB | | | | 472K |
+| A40 48GB | | | | 500K |
+| A16 4x16GB | | | | 271K |
+| A2 16GB | | | 10kW-15kW | 190K |
+| T4 16GB | | | 17.5kW | 200K |
+| V100 32GB | | | 31kW-33kW | 113K |
+| V100 16GB | | | 62.5kW-75kW | 150K |
+| P100 16GB | | | 62.5kW-75kW | 68K |
+| P40 24GB  | | | 41.7kW | 84K |
+| M60 2x8GB  | | | | 50K |
+| M40 24GB | | | | 50K |
+| M10 4x8GB | | | | 44K |
+| K80 2x12GB | | | | 30K |
+| 6000 BW 96GB | | | | 584K |
+| 5000 BW 72GB | | | | 612K |
+| 5000 BW 48GB | | | | 625K |
+| 4000 BW 24GB | | | | 417K |
+| 2000 BW 16GB | | | 17.5kW | 275K |
+| 6000 Ada 48GB | | | | 625K |
+| 5000 Ada 32GB | | | | 575K |
+| 4500 Ada 24GB | | | | 500K |
+| 4000 Ada 20GB | | | | 500K |
+| 2000 Ada 16GB | | | 17.5kW | 188K |
+| A6000 48GB | | | | 459K |
+| A5500 24GB | | | | 500K |
+| A5000 24GB | | | 38.4kW | 467K |
+| A4500 20GB | | | 40kW | 260K |
+| A4000 16GB | | | 25kW | 325K |
+| Quadro 8000 48GB | | | | 290K |
+| Quadro 6000 24GB | | | | 250K |
+| Quadro 5000 16GB | | | | 175K |
+| Quadro GV100 32GB | | | | 250K |
+| Quadro GP100 16GB | | | | 175K |
+| Quadro P6000 24GB | | | | 150K |
+| Quadro P5000 16GB | | | | 100K |
+| Quadro M6000 24GB | | | | 100K |
+| Quadro M6000 12GB | | | | 133K |
+| 5090 32GB | | | | 562K |
+| 5080 16GB | | | | 375K |
+| 5070 Ti 16GB | | | 75kW | 250K |
+| 5060 Ti 16GB | | | 45kW | 150K |
+| 4090 24GB | | | | 600K |
+| 4080 (Super) 16GB | | | 80kW | 250K-375K |
+| 4070 Ti Super 16GB | | | 71.3kW | 213K |
+| 3090 Ti 24GB | | | 75kW | 267K |
+| 3090 24GB | | | 58.4kW | 267K |
+| Titan RTX 24GB | | | | 217K |
+| DDR4 64GB | | | | 35K |
+| DDR5 64GB | | | | 69K |
+| DDR4 128GB | | | | 38K |
+| DDR5 128GB | | | | 44K |
+| DDR4 256GB | | | | 22K-50K |
+| DDR5 256GB | | | | 78K-141K|
+| DDR4 512GB | | | | 20K-40K |
+| DDR5 512GB | | | | 50K-100K |
+| Radeon VII 16GB | | | | 250K |
+| Radeon RX 6800 16GB | | | | 113K |
+| Radeon RX 6800 XT 16GB | | | | 150K |
+| Radeon RX 6900 XT 16GB | | | | 175K-350K |
+| Radeon RX 6950 XT 16GB | | | | 275K |
+| Radeon RX 7600 XT 16GB | | | | 125K |
+| Radeon RX 7800 XT 16GB | | | | 225K |
+| Radeon RX 7900 GRE 16GB | | | | 300K |
+| Radeon RX 7900 XT 20GB | | | | 220K |
+| Radeon RX 7900 XTX 24GB | | | | 234K |
+| Radeon RX 9060 XT 16GB | | | | 125K |
+| Radeon RX 9070 (XT) 16GB | | | | 175K |
+
+
+## Shortlisted version
+
+
+| Processor | Internal Memory Bandwith (overall bitrate) | Features | Power Draw | **Very Rough** Cost (Amazon) | W/K$ | Overall bitrate (TB/s) / Power Draw (kW) |
+| - | -| -|-|-|-|-|
+| A2 16GB | 50TB/s | | 10kW-15kW | 190K | 53-79 | 3.3-5 |
+| T4 16GB | 80TB/s | | 17.5kW | 200K | 88 | 4.57 |
+| V100 32GB | 112TB/s | | 31kW-33kW | 113K | 274-292 | 3.39-3.61 |
+| V100 16GB | 207-225TB/s | | 62.5kW-75kW | 150K | 417-500 | 2.76-3.6 |
+| P100 16GB | 183TB/s | | 62.5kW-75kW | 68K | 919-1102 | 2.44-2.93 |
+| P40 24GB  | 57.6TB/s | | 41.7kW | 84K | 496 | 1.38 |
+| 2000 BW 16GB | 72TB/s | | 17.5kW | 275K | 64 | 4.11 |
+| 2000 Ada 16GB | 56TB/s | | 17.5kW | 188K | 93 | 3.2 |
+| A5000 24GB | 74.7TB/s | | 38.4kW | 467K | 82 | 1.95 |
+| A4500 20GB | 102TB/s | | 40kW | 260K | 154 | 2.55 |
+| A4000 16GB | 96TB/s | | 25kW | 325K | 77 | 3.84 |
+| 5070 Ti 16GB | 224TB/s | | 75kW | 250K | 300 | 2.99 |
+| 5060 Ti 16GB | 112TB/s | | 45kW | 150K | 300 | 2.49 |
+| 4080 (Super) 16GB | 179.2-184TB/s| | 80kW | 250K-375K | 213-320 | 2.24-2.3 |
+| 4070 Ti Super 16GB | 168TB/s | | 71.3kW | 213K | 335 | 2.36 |
+| 3090 Ti 24GB | 168TB/s | | 75kW | 267K | 281 | 2.24 |
+| 3090 24GB | 156TB/s | | 58.4kW | 267K | 219 | 2.67 |
+
+
+## Short-shortlisted version
+
+Unless we're renting out an office space, most household has very limited wattage rating (for the whole house.)
+Even if we have unlimited money, we are still limited by power, which means power-efficient processors (basically GPUs)
+becomes very important. We want the lowest W/K$ (power efficiency in cost) and highest (TB/s)/kW (bitrate efficiency over power).
+
+| Processor | Internal Memory Bandwith (overall bitrate) | Features | Power Draw | **Very Rough** Cost (Amazon) | W/K$ | Overall bitrate (TB/s) / Power Draw (kW) |
+| - | -| -|-|-|-|-|
+| A2 16GB | 50TB/s | | 10kW-15kW | 190K | 53-79 | 3.3-5 |
+| T4 16GB | 80TB/s | | 17.5kW | 200K | 88 | 4.57 |
+| 2000 BW 16GB | 72TB/s | | 17.5kW | 275K | 64 | 4.11 |
+| 2000 Ada 16GB | 56TB/s | | 17.5kW | 188K | 93 | 3.2 |
+| A4000 16GB | 96TB/s | | 25kW | 325K | 77 | 3.84 |
+
+As expected, with prices as of today, workstation and datacenter cards are power efficient in investment[^tft]
+and higher bitrate for the same power. Interestingly, they are all *usually* 16GB cards,
+but the prices are volatile so it could change also.
+
+Unfortunately, running GLM-5.2 requires us to rent an external office/commercial space; it's not even possible
+to do it in a standard household. Let's consider the x16 of A2 16GB, around ~1kW that is well under the hard power limit
+in standard household wiring, we would get around 256GB VRAM. If we follow the standard rule of 2:1 ratio of
+system to video RAM, we could get up 97.5% accuracy to the original GLM-5.2 (FP8) via quantization (per the inference provider *unsloth*.) There's the MOE,
+context activation, agentic workflows, etc. that makes the numbers muddier, so let's just say x16 A2 16GB GPUs.
+How would one even build a ~~homelab~~ homeserver of this quantity?
+
+[^tft]: Per cost as a proxy to the quality of the processor. In itself, it's useless or sometimes bad (if it get's suspicously low,) but
+useful when comparing it relatively against other processors.
+
+*Designing this theoretical homeserver will be left as future work.*
+
+<!-- ## The Homeserver -->
+
+<!-- Each A2 runs on PCIe Gen4 x8. -->
+
+
+
+
+
+<!--
+Quantization and support for these quantization will be important.
+ -->
+
+<!-- Regardless, we still have to go through
+the official inference provider for the best usage of the model.
+
+* BF16:
+* FP8:
+* GGUF Quants:
+  * x86 CPUs w/ AVX2 [256], AVX-512 [512] *preferred* (most have SSE [128] from 1999)
+  * ARM CPUs w/ NEON [128], SVE/SVE2 [scalable], i8mm
+  * GPU is doable, but usually has better quantization.
+* NVFP4: Blackwell Nvidia GPUs
+ -->
+<!-- General runtime requirements: -->
+<!-- * 1-4TB (V)RAM -->
+<!--   * At full context; the range is for different quantization (1 to 16 bit). Quadratic scaling of KV cache in-practice is quite linear relative to context, weights, and quantization. -->
+<!-- * 8TB SDD -->
+<!-- * High-bandwith processors (CPU/GPU) -->
+<!---->
+
+# Future Work
+
+Another interesting aspect regarding coding agents are people are beginning to explore other areas where a local GPU
+can save costs. Instead of re-hosting LLMs on slow consumer GPUs with even the most quantized/lobotomized models, reranker from RAG
+are being explored on top of vector embedding similarity score that has been done many times with OK quality.
