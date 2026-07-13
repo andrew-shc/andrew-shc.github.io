@@ -2,7 +2,7 @@
 title: "Notes"
 subtitle: "IV. SIGGRAPH '26 interesting papers & Coding Agents"
 image: ???
-date: ???
+date: 7/12/26
 # date-modified: last-modified
 format:
     r-wasm/live-html:
