@@ -1,0 +1,152 @@
+---
+title: "Notes"
+subtitle: "V. Actual papers"
+image: ???
+date: 7/15/26
+# date-modified: last-modified
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+# An Overview
+
+*Note: each papers are my initial thoughts and obviously needs further investigation (might contain miscomprehension.)*
+
+Geometric processing
+
+* [Subgrid Marching Tetrahedra](https://arxiv.org/pdf/2606.00454)
+  * Marching cube (and other similiar marching-based meshing algorithm) but better that preserves finer features at the same grid resolution and time
+    * Supposedly, their claim is it would fix the notorious reconstruction artifacts that breaks the immersion when viewed up-close
+    * Similiar to how 3DGS uses anistropic kernel to, try, model such fine features
+  * No reference to memory cost.
+  * Context: most marching algorithms records single face; quality purely on the hands of the grid resolution and visible artifacts.
+  * Idea: use generalized normal coordinates with arbitrary amount of intersections to encode more surface informations *within* a grid (hence, subgrid.)
+* [Dual Contouring of Signed Distance Data](https://arxiv.org/pdf/2604.00157)
+  * Hermite mentioned; referenced in O-Voxel from TRELLIS.2 to bridge the unstructured point cloud to a more structured dual space that better supports flow models
+  * Seems to better remove the aliasing from marching cubes on grid-sampled SDFs specifically.
+    * But seems to not really improve the reconstruction of high-frequency features, although it does seem to have reduce the amount of holes and blobs---a common problem.
+  * Idea: iterative minimization of a cost function tailor-made for this specific popular problem space.
+    * Uses some SDF values to re-triangulate and find a better solution to the meshing
+* [SAND: Spatially Adaptive Network Depth for Fast Sampling of Neural Implicit Surfaces](https://arxiv.org/pdf/2604.25936)
+  * NeRF with LOD
+  * Idea: train a NeRF-like network that supports evaluation and training at various depth and another network for querying how deep to evaluate the network at the queried point.
+    * Allows conditional early stopping of network evaluation
+  * Reminds me of ResNet and diffusion/flow models. Can we do something similiar (e.g., spatially-varying step frequency)---efficiently?
+* [Points as Tori: Fast Pointwise Signed Distance for Point Clouds](https://nzfeng.github.io/research/PointsAsTori/PointsAsTori.pdf)
+  * Idea: torus can asymptotically represent cylindrical/planar surfaces, and also spherical/ellipsoidal/*saddles*, while also having an analytical SDF that is parallelizable. We let each point in the point cloud be represented by some parts (or all) of the torus.
+  * Personally, while it might achieve better surface reconstruction against other methods at equal amount of points, most point clouds are not dense enough to produce an immersive reconstruction.
+    * However, a human obviously can still reconstruct a pointcloud immersively. For an immersive reconstruction, it likely needs some priors of some kind (e.g., semantic, generative, etc.) A blend of metrologically-accurate hard constraint with visually-pleasing realistic fill-ins.
+* [NeuBase: Spline Surfaces with Neural Basis Functions](https://dl.acm.org/doi/epdf/10.1145/3811355)
+  * Idea: reconstruction with real-time deformation of the digitally reconstructed object
+    * Uses neural parametric surface instead of neural implicit surface (e.g., occupancy, volume, SDF)
+    * Allows deformation without re-training
+  * This shows the importance of reconstruction: Allowing arbitrary manipulation/control without the hassle of physical reality, but also only useful if there's a way to transport this digitally manipulated object back to reality.
+* [NeuPPS: Neural Piecewise Parametric Surfaces](https://dl.acm.org/doi/epdf/10.1145/3771546)
+  * By the same group (?) and seems to be superseded by NeuBase.
+* [Continuity-Enhancing Degree Elevation and Splits](https://graphics.cs.utah.edu/research/projects/continuity-enhancement/)
+  * The infamous discontinuity in reflection problem. Who knew derivatives will be important here?
+  * Idea: Enables $C^2$ continuity on Bezier curves (while B-spline curves are $C^2$ by default.)
+
+Geometric synthesis
+
+*(Has a distinctive CVPR-style of empirical emphasis)*
+
+* [Prox-E: Fine-grained 3D Shape Editing via Primitive-based Abstractions](https://arxiv.org/pdf/2604.23774)
+  * "Cambrian explosion" strongly implies a coming mass extinction...
+  * Idea: 3D editing via 3D-native manipulation without 2D multi-view image editing proxy using TRELLIS (*ding*)
+    * Manipulation of the latent space during sparse-structure or fine-geometric stage, or fine-appearance stage.
+  * Clearly, TRELLIS(2) has become an integral research to experiment how to effectively manipulate the 3D space itself *semantically* via compact latent spaces and conditional/interpolated generative flow model(s).
+* [CubePart: An Open-Vocabulary Part-Controllable 3D Generator](https://arxiv.org/pdf/2605.28763)
+  * Idea: Parts-segmented 3D generation for object articulation
+  * Explicit mentioning of the manipulation of the 3D latent space and VAEs; again, similiar to TRELLIS(2).
+* [Strips as Tokens: Artist Mesh Generation with Native UV Segmentation](https://arxiv.org/pdf/2604.09132)
+  * Idea: mesh reconstruction from point clouds via autoregressive model and native semantically-meaningful UV island segmentation
+* [MeshFlow: Mesh Generation with Equivariant Flow Matching](https://arxiv.org/pdf/2606.23489)
+  * Idea: mesh-native flow-based generation by respecting invariances/symmetries to the permutation of faces and cyclical rotation of vertices of the triangle.
+    * Note: it starts with a *fixed*-size triangle soup
+  * Comparisons have been done against existing mesh-based generation, it would be interesting to see how it does against TRELLIS and how well it does in reconstruction.
+* [Matern Noise for Triangulation-Agnostic Flow Matching on Meshes](https://arxiv.org/pdf/2605.19305)
+  * Idea: *deformation-based* mesh generation that uses Matern Noise instead of Gaussian noise for better better flow-generation specifically over triangles.
+
+Radiances
+
+* [Differentiable Neutron Transport](https://dl.acm.org/doi/epdf/10.1145/3811296)
+  * Idea: replace photos with neutrons from differentiable rendering to differentiable neutron transport
+    * Not far fetched of an idea since radiative propagation (including EM waves) are used to describe volumetric effect in participating medias
+  * It will be interesting to see how differentiable rendering can be extended to other works (e.g., pose optimization---which has been done before)
+* [A Generalizable Light Transport 3D Embedding for Global Illumination](https://arxiv.org/pdf/2510.18189)
+  * Big, if true.
+    * Where's the frames per second or speed comparison?
+  * Where's the code?
+* [8DNA: 8D Neural Asset Light Transport by Distribution Learning](https://arxiv.org/pdf/2604.25129)
+  * Idea: neural near-field (similiar to reflectance field and radiance field) learnt on the convex hull of an object with complex appearances
+  * Follows the line of work on using deep models to make standard path tracer faster.
+    * I think there's a general trend in trying to reach feed-forward renderer model; it's just the idea is still infeasible and requires restrictive scene assumption (per above paper) or something small like here.
+      <!-- * Actually, I do want to take a step back. Reconstruction methods that VGGT solves are, before, strictly iterative and needs time, while forward rendering is not  -->
+* [Taming Optimization Variance in Compact Neural Shading Networks](https://research.nvidia.com/labs/rtr/publication/bitterli2026taming/)
+  * *Paper not released*
+  * Similiar to the note from above
+* [Adaptive Ray Marching for Rendering Gaussian Process Implicit Surfaces](https://projects.shuangz.com/fast_gpis-sg26/fast_gpis-sg26.pdf)
+  * Idea: Better, much faster rendering of GPIS
+  * Would the idea of GPIS hold-up with the inevitable data-driven (inverse) renderer?
+    * While generalization is always cool, is this something we see on a continuum, spatially? If not, can't we just discretely partition the class of space like usual?
+* [ToF ReSTIR: Time-of-Flight Rendering with Spatio-temporal Reservoir Resampling](https://arxiv.org/pdf/2605.11536)
+  * Idea: ReSTIR on ToF (time-of-flight) rendering
+  * ToF rendering is important if we want (actually, super precise) metrologically-accurate reconstruction (e.g., NLoS reconstruction via light pulses, etc.)
+* [ReSTIR BDPT: Bidirectional ReSTIR Path Tracing with Caustics](https://research.nvidia.com/labs/rtr/publication/hedstrom2025restir/hedstrom2025restir.pdf)
+  * Idea: ReSTIR on BDPT via caustic reservoirs
+* [Real-Time Level-of-Detail Rendering with ReSTIR](https://research.nvidia.com/labs/rtr/publication/wang2026levelOfDetail/wang2026levelOfDetail.pdf)
+  * Idea: ReSTIR and LoD via partially bijective vertex mapping
+* [Multi-Layer Reservoir Splatting for Temporal Reuse under Disocclusion](https://graphics.cs.utah.edu/research/projects/multi-layer-restir/)
+  * Idea: Reservoir splatting (based on ReSTIR) for disocclusion via multiple pixel-space layers of reservoirs
+* MC rendering applied to "elliptic PDEs" (e.g., "Laplace's equation", "Poisson's equation") via "Walk on Spheres (WoS)", "Walk on Stars (WoSt)", etc. (similiar to ray marching but not actually constrained in one direction.)
+  * Based on Muller's 1956 paper, somehow common rendering methods can be applied back to these classical simulation problems in engineering.
+    * Would it be possible to extend this cloud simulation, terrain modelling, etc.? Apparently, the model that describes the realistic feature of our natural world can be succinctly described via PDEs.
+    While many are not "elliptic", it would need a further "class" in these classical numerical PDEs to better understand how, if any, graphics methods can be applied here.
+  * [Gradient Domain Reconstruction for Monte-Carlo PDE Solvers](https://dl.acm.org/doi/epdf/10.1145/3811295)
+  * [Walk on Decomposed Subdomains: A Hybrid Monte-Carlo-Deterministic Solver for Elliptic PDEs](https://clementjambon.github.io/wods/index.html)
+  * [Walking on Spheres and Talking to Neighbors: Variance Reduction for Laplace's Equation](https://arxiv.org/pdf/2404.17692)
+* [Neural Quadrature Rule and Autoregressive Adaptive Sampling](https://suikasibyl.github.io/files/nqr/paper.pdf)
+  * Idea: the title speaks for itself, but also shows applications in winding numbers and specific classes of PDEs (via Walk on Spheres.)
+
+Reconstruction
+
+* [A Bayesian Approach for Task-Specific Next-Best-View Selection with Uncertain Geometry](https://arxiv.org/pdf/2605.05095)
+  * Idea: Active reconstruction on point clouds
+  * Useful if we want to limit cameras movements (or something along the lines of that) for autonomous understanding of our world,
+  especially when we already have an object/scene/region we are interested in.
+* [Gradient-based Approximation of Nonuniform Low-Discrepancy Samples](https://cs.uwaterloo.ca/~thachisu/gradnuld.pdf)
+  * Idea: previously, quasi-Monte Carlo (QMC) uses low-discrepancy uniform samples (not random); combining QMC with importance sampling requires warping the originally low-discrepant uniform samples, but could result in importanced samples that are no longer low-discrepant.
+* [`iskra:` A System for Inverse Geometry Processing](https://arxiv.org/pdf/2602.12105)
+  * Idea: roughly similiar to differentiable rendering where `iskra` is a software platform for geometry that efficiently supports (automatic?) differentiation on common geometric processing operations that bridges the classical numerical algorithms to the modern machine learning frameworks.
+  * While I think this would be immediately useful, would it hold up on the idea of direct, semantic-driven manipulation of space (e.g., geometries) that is increasingly prevalent?
+* [A Few-Step Generative Model on Cumulative Flow Maps](https://arxiv.org/pdf/2605.03623)
+  * Idea: faster and more flexible generative modelling via cumulative-field parameterization
+    * Also show applications in 3D SDF generation as steps over functions representing the 3D SDF.
+* [Generative Modeling with Orbit-Space Particle Flow Matching](https://arxiv.org/pdf/2605.02222)
+  * Idea: particle generation via flow matching that handles permutation invariant inherent in point clouds; however, it is still fixed on point counts.
+  * Flow-matching and diffusion based methods works well in image/pixel-space since it has a set of common resolution to "diffuse".
+    * However, 3D data does not have a pre-defined common set of resolution, but it should not be a big deal.
+    * Most images and 3D generative models work in latent space now that has pre-defined "resolution" (i.e., dimension.)
+* [Sample Matching for Joint Extinction Gradient Estimation in Differentiable Volume Rendering](https://dl.acm.org/doi/epdf/10.1145/3811329)
+  * Idea: Differentiating w.r.t. the extinction coefficient $\sigma_t$ induces a scattering (on vertices) and transmittance term (on segments.)
+  However, these two terms further induce negative correlation (somehow?) which can be cancelled out to reduce the variance by sharing the same point of evaluation
+  while keeping unbiasedness.
+* [Robust Computation of Boundary Path Integrals Using Kernel-Density Estimation](https://cseweb.ucsd.edu/~ravir/peiyusig.pdf)
+  * Idea: soft rasterization but for PSDR.
+
+# Future Work
+
+Interesting papers need further investigation.
+
