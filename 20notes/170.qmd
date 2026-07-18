@@ -1,0 +1,176 @@
+---
+title: "Notes"
+subtitle: "VI. Coding Agents and Second Reality"
+image: ???
+date: 7/18/26
+# date-modified: last-modified
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+execute:
+  echo: fenced
+reference-location: margin
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+Keep calm and be positive. Let music and coffee guide you to the future.
+
+# Coding Agents and Second Reality
+
+<!-- Coding agents are here to stay. Anyone who says otherwise are self-righteous dickheads living in their
+own echo chambers. At this point, I am probably the dickhead to even still think about the debate of using coding
+agents. And, honestly, fuck every single one of you who says there's going to be an AI bubble burst. Anthropic
+and OpenAI, if they ever IPO, might go burst with the open-weight models shown to be somewhat effective as their closed-weight
+frontier model counterparts. However, it is only might and still up to debate. 2001 internet and the 2021 crypto bubble
+is well-deserved because the technology behind internet got cheap at scale (and probably other reasons) and
+virtual scarcity got to be the stupidest thing ever existed---respectively. AI bubble will stay because
+it is actually useful technology, and if it ever goes burst is because the hardware behind it got cheap (e.g., chips,)
+not because people realized it's some useless slop. -->
+
+Autoregressive-transformer LLMs (AT-LLMs) is the start of the bootstrap process to singularity. It's funny how
+a mere automatic stream of token generation can be so... idk... going from a Euclidean space to a non-Euclidean space??
+Going back to the first note, I made an assumption that in our lifetime, we will reach singularity (of some form)
+and we will want to integrate ourselves with the silicons. We will go off of that assumption. Beyond that, it's pointless to think about,
+so let's walk back.
+
+First, we will see the collapse of the cyberspace (e.g., dead internet theory.) The human interaction
+of cyber objects (e.g, virtual objects) cease to be meaningful, except for the art of interacting the cyber objects
+themselves. What is inherently machine must return to machine. We will see the short return of the reality,
+albeit a different reality (but reality nonetheless.) Covid was an interesting time, what I thought would be fun (e.g.,
+online schooling) was totally opposite. Eventually, apps like BeReal became popular, so it wasn't just me
+who want the reality back. AT-LLMs just adds salt to an open wound---the already distaste for the cyberspace.
+
+In this second reality, AT-LLMs will automate the implementation process, the engineering process
+(with human guidance), the research process (with human guidance), the commercial writing process
+(with human guidance), etc. Namely, AT-LLMs, with human guidance, will greatly accelerate the
+engineering and research process, augmenting itself with visual reasoning, spatial reasoning, and verbal reasoning
+on top of existing logical/natural-text reasoning to find some suitable architecture X beyond the standard AT-LLMs.
+An architecture that supports complete replication of human sensory experience that will bring X to
+singularity. We will not realize it first, but the transition to the next reality, the third reality, would be a quick one.
+
+These are mere abstraction where the borders between stages of reality is very blurred and complicated, filled with nuances.
+And, these thoughts are practical since it represents what will likely happen during our (my) lifetime.
+
+Cyberspace point-of-view:
+
+* 1st reality: the creation of cyberspace
+* 2nd reality: the collapse of cyberspace
+* 3rd reality: the biotech integration of cyberspace
+
+Reality point-of-view:
+
+* 1st reality: the escape from reality
+* 2nd reality: the return to reality
+* 3rd reality: the biotech integration of reality
+
+This is still too abstract. A better way to think about this is cyberspace is constructed from software,
+firmware, and relevant hardware. As the cyberspace grows and surround our life, so, too, the people who
+handle the software, firmware, and hardware---1st reality. With AT-LLMs, the entirety of the cyberspace could easily
+just be a mix of automated self-prompting (it's alive) or human-guided prompting---the beginning of the 2nd reality.
+Any cyberspace-derived input or output (i.e., excluding input or output from the reality that includes the world itself and us)
+would be simplified into a long chains of virtual data passing (e.g., nested function calling at an internet scale.)
+2nd reality is defined by a time where cyberspace <-> reality interfaces are expanded to accomodate the accelerated growing
+complexity and flexibility of the cyberspace. Once the cyberspace of the 2nd reality discovers singularity,
+assuming we would even know about it by then, would be followed by debates, AI war (???), etc. that would
+end with the simplification of cyberspace <-> reality interface. In other words, cyberspace and reality
+into a single, unified space.
+
+Let's focus on the cyberspace <-> reality interface. We have only talked about AT-LLMs since that's
+currently the best modality and architecture current "AI" has (on top of accessibility, integrability, and other factors.)
+DiT-LIMs (Diffusion transformer and image generators as large image models) or CLIP-VLMs haven't really
+reached the quality of AT-LLMs since the problem in vision is higher-dimensional in every way possible.
+We have even yet to talk about generalized spatial understanding, and VGGT(-Omega) does not count.
+Because of the lack of scarily good VLMs, let alone spatial understanding, the following interface is safe
+for now to explore:
+
+* Inverse rendering (reality -> cyberspace)
+* Forward rendering (cyberspace -> reality)
+* Simulation (cyberspace -> cyberspace)
+* Geometric structures (c -> c, r -> c, c -> r)
+* *and other of these natures*
+
+But the following is gone:
+
+* Linear line-by-line coding (not like spatial coding exists?)
+* Paper writing, text-based peer-review process, text-based literature review
+  * Zotero is the next thing that would be gone, or at least adapt to a highly automated workflow
+
+Overall, cyberspace would be more visual and spatial oriented (for now.) Any large text would just be gone, handled by AT-LLMs. Emphasis
+on *any*. Maybe because it's the curse of dimensionality? However, progress is exponential. So, we can expect linear progress towards
+these higher-dimensional modalities if this is even useful insight.
+
+<!-- However, software is inherently part of the cyberspace, -->
+
+
+
+
+<!-- This is still some useless thoughts. Let's try to actually apply it. Currently, we're in the second reality,
+which really isn't a single phase but rather a transition between the 1st and the 3rd. While people
+discuss, fearmonger, etc. about singularity, cyberspace will collapse into a nicely packaged end-to-end solution for the
+reality. The traditional screens, keyboards, and mouse will be a limitation as cyberspace becomes one giant soup
+of AT-LLMs. An expansion of hardware will eventually be needed, but end-to-end reality-to-reality (R2R)
+software would need to come first to realize the limitation of the current hardware interface. The
+development of R2R software would still need some human guidance, during the 2nd reality for now.
+
+Let's understand what R2R software would look like from reverse problem solving:
+* I want my own TODO app to organize my tasks and thoughts of my chaotic life.
+  * Vibecode it
+* I don't like the style of the TODO app, please make it look like this.
+  * Users *sees* the generated style. User has to *describe* what their intended generated style is for the vibecoder to understand.
+  * TODO app is up to user's expectation.
+  * The fridge is out of tomato and a device is out of battery, you have to interact with the cyber object (i.e., add the task to remind yourself to order tomatoes and batteries.)
+* I want a tomato detector and a battery detector so that the item automatically appears on the TODO app where it will automatically order a AAA-grade tomato (up to user's desire through trial and error) and AAA battery.
+  * Expansion of hardware interface via the need of additional detector
+* I want money
+  * Agent goes to Fiverr, registers account, make a persuading portfolio, fulfills incoming request with satisfaction, profit.
+  * Realistically, I have to go out and be the human representative of the agent, overtly or covertly.
+  * I pass the bar exam, become a lawyer, persuade juries in a court session with an earpiece connected to my agent.
+  * People will pay me to be the human representative of an agent.
+  * I've become the human representative of the AT-LLM, by choice.
+* For some reason, today, I want to manage by own TODO list just for the fun of it.
+  * Unplug the AT-LLM.
+
+Because both AT-LLM and the vibecoded TODO app exists in the cyberspace, R2R can literally just be
+the AT-LLM itself or some automated workflow generated by the AT-LLM. But at the center, the user is
+at control, because the user might want to manually interact the cyberspace for any reason at anytime.
+ -->
+<!-- * I am hungry and I want food.
+
+Examples of R2R software:
+* User wants food, R2R software delivers food to you under current hardware constraint.
+  * R2R software:
+  * Hardware constraint: delivery vehicle.
+  * R2R software manages agriculture,
+* User wants to exercise, R2R software gives
+ -->
+
+<!-- For now, control your own world, not AI. -->
+
+<!-- We're fucked. You're fucked. I'm fucked. Honestly, splurge on coding agents, see where it goes. -->
+
+
+
+<!-- In international trading and economics, technology has been mostly classified as a service. -->
+<!-- At first, it might be puzzling. Why? Aren't software considered concrete goods that can be owned and transferred? -->
+<!-- They aren't physical and were never -->
+<!---->
+<!-- Automation of implementation, -->
+<!-- automation -->
+<!---->
+<!-- # Build Environment Virtualization -->
+
+
+# Future Work
+
+This was a revisit to the first note. I'm satisfied with the conclusion through this excursion:
+cyberspace will be more visual and spatial oriented going forward as textual objects are *mostly*
+automated. Other non-text modalities such as graphs, temporal dimension, and other could further be investigated and whether they
+relate with the visual/spatial paradigm in the context of AT-LLMs and cyberspace. Third reality and biotech could
+further be explored. Despite my belief that it will likely occur in our lifetime, it is still too far to
+be meaningful---yet.
+
+
