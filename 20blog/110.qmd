@@ -1,0 +1,144 @@
+---
+title: "Hypothesis *Ichi*"
+subtitle: "Getting the Job"
+image: ./img/110.jpg
+date: 9/11/26
+# date-modified: last-modified
+icsl: acm-sig-proceedings.csl
+format:
+    r-wasm/live-html:
+      grid:
+        margin-width: 350px
+      pyodide:
+        packages: [plotly]
+execute:
+  echo: fenced
+reference-location: margin
+citation-location: margin
+bibliography: main.bib
+toc: true
+toc-location: left
+---
+
+<!-- [TL;ND]{.tlnd} -->
+
+...in hopes to better structure the second hypothesis---what it means to live as a person.
+
+
+# Superlinear Growth of (Personal) Projects
+
+Minecraft. It's everywhere. Many play it; many watch it. A video gets released online showing *some guy*
+developed a whole Minecraft clone in some programming language inspiring many of the audience.
+On the next day, thousands of Trello board are instantly instantiated somewhere in the internet to *organize*, *plan out*, *brainstorm*, or *structure* this
+latest hit project idea. Backlog/backburner; frontburner; WIP/TODO; done; **red** priority label; **pink** *enhancement🌟* label.
+Millions of pristine-white bevelled rectangular task cards gets slotted into those Kanban columns with each having meticulously
+crafted descriptions and expected date of completion. Some of them might even have step-by-step checklists for tasks that are *expected* to be complex.
+And the first thing before any code gets touched are linker errors between the source code and [GLM](https://github.com/g-truc/glm) or something and spend the *entire*
+next week fixing it. Forget about the expected date of completion!
+
+Obviously prior experiences help *a lot* on the time estimated to complete a project, or even
+the estimated cost. However, what if there's a lack of *the prior*? Actually, one can just substitute the lack of their personal
+prior with a generative prior like AT-LLMs and call it done. Domain-expert at the fingertip.
+
+> The answer was thought to be a bit more longer. However, in hindsight, writing things out *in an organized manner* does help one
+find answers that feels comically intuitive from an outsider yet hidden, and tangled, from within.
+
+# Ideation
+
+Minecraft. It's a three-dimensional sandbox game. It is able to mysteriously generate realistic terrain without
+satellite information or any information based in reality---strictly speaking. How does it work? Would many people be interested?
+Interested enough to give some monetary value in return? Maybe some people, but obviously not many people.
+Why? Because it doesn't serve *many* people. A project that serves *many* people is a project that connects
+with *many* people. For a project that connects *many* people, a project must intrinsically be more fundamental
+to the point where the fundamental object is *innately shared*---resonates---with many people. Generalize to a more
+shared experience yet specialize on one specific *aspect* of the shared experience[^1].
+
+[^1]: It goes without saying that the generalization and specialization is subjective and the question about Minecraft
+can definitely be already generalized, and specialized, enough for one's purpose. Rather, it is an emphasis to redirect
+the meta question on the *shared experience* and how one should generalize/specialize based on *that.*
+
+Now, the ultimate project idea would answer the most general aspect of the shared experience. This would
+include many elephants in the room. However, the path to *the* ultimate project that serve people is still highly convolved and contorted
+against the current reality because it suggests to dismantle the circulation of money[^2]. In other words,
+business entities must exist to serve people for some revenue which would be used to pay people---employers or employees---that
+*need* the job because of specialization. At least nowadays it is possible to even envision specializations automated away to let
+people truly become a specialist in their *own* respective ways.
+
+[^2]: Too lazy to change this (probably wrong also) but it could be anything the majority would like to see changed. Even if it's some wildest thought that
+one can only ever dream of. Just as long it's a *shared* thought---experience---with many people.
+
+If the ultimate project idea can't realistically be worked on, what can? Staying on the internet looking at primary sources, a shadow of the world,
+reduced down to text
+only unveils a problem only in terms of text that would only be solved in terms of text. Going out and touching grass certainly works, but that
+only unveils a problem only in terms of going out and touching grass that would only be solved in terms of going out and touching grass.
+A frog at the bottom of the well can only see a small portion of the sky. Hence, the frog can only see problem
+within the same portion of the sky and solve with only the same portion of the sky (with the well of course.)
+In other words, an age old problem.
+
+It seems like everything sort of just reduces down to one should be the witness (of the world) instead of following primary sources or be the bird
+instead of the frog, or *countless* similiar analogies and discussion in different flavors.
+
+With the prevalence of AT-LLMs (autoregressive-transformer-based LLMs) circulating in the cyberspace (i.e., internet,)
+text-based problems and solutions could soon be irrelevant, since AT-LLMs would automate all the away.
+While images, videos, or even Google Map street views would certainly help, the screen quickly becomes a glaring limitation.
+If a project is to be general, yet specific, towards the shared experience of many people in a new and unseen way, one might as well immerse
+themself with the world.
+
+Basically touch grass a thousand mile away and let the inspiration room be the world.
+
+
+
+<!-- # Effective Ideation
+
+Minecraft. It's a game; relax. Enjoy the full flexibility a sandbox game has to offer and get no project done.
+This is a business trip on a mission to uncover projects that are general, yet specific, and novel.
+ -->
+
+<!-- Literally touch grass (but beyond.) -->
+
+<!-- Every individuals have their desires and needs. Projects can automate away time-intensive ta minimize their need to take time in
+earning salary to maximize their want such as discretionary spending.
+
+Individuals have certain desires and also certain needs. When projects originate from the digital realm,
+automation becomes a central idea that transforms the individual in question into a user interested to minimize their need so they
+can maximize the want.
+
+ -->
+
+
+
+
+
+
+
+
+
+<!-- The great Americas, isolated by the vast Pacific Ocean and Atlantic Ocean since 10,000--20,000 years ago, are once *only* inhabitated
+by Native Americans. They---undoubtly---independently formed their first civilization called Caral-Supe while the
+Sumerians largely started the first civilization ~3500 BCE. Unless there were prior written shared documents kept for thousands of
+years during the last ice age, or even Polynesians crossing the oceans and communication ideas to the Americas, it is highly
+unlikely there were any cross communications. Yet, trading still occurs on both within Americas and outside of Americas.
+ -->
+
+
+
+<!--
+# Point of Entry
+
+Handshake, LinkedIn, Indeed, Glassdoor, etc... What do they serve? They help expose employers to vast
+pool of labor market so they can *select* prospective employees that are the best for them. Preferably,
+a job seeker would want to expose themselves so they can *select* prospective employers that are the best
+for them. Unfortunately, most employers cannot *sustain* this and soon will go bankrupt, eventually
+there will be less employers than employees. The dynamics follows
+
+
+Handshake, LinkedIn, Indeed, Glassdoor, etc... They are all virtual platforms to make the labor
+market more efficient. However, large models
+
+AT-LLM
+DiT-LIM
+CLIP-VLM
+ -->
+
+
+
