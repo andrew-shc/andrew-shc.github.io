@@ -1,8 +1,8 @@
 ---
 title: "First Project"
 subtitle: "An Eternal View of Our World"
-image: ???
-date: ???
+image: img/120_x_1_1_rocket.png
+date: 9/28/26
 # date-modified: last-modified
 icsl: acm-sig-proceedings.csl
 format:
